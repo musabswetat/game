@@ -17,20 +17,21 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '21'
+          java-version: '17'
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install Dependencies
+      - name: Install Global Capacitor CLI & Dependencies
         run: |
+          npm install -g @capacitor/cli
           npm install
 
       - name: Sync Capacitor
         run: |
-          npx cap sync android
+          npx @capacitor/cli sync android
 
       - name: Grant Execute Permission for Gradle
         run: |
