@@ -24,24 +24,19 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Global Capacitor CLI & Dependencies
+      - name: Clean & Reinstall Dependencies
         run: |
-          npm install -g @capacitor/cli
+          rm -rf node_modules package-lock.json
           npm install
 
-      - name: Sync Capacitor
+      - name: Grant All Permissions to Android
         run: |
-          npx @capacitor/cli sync android
-
-      - name: Grant Execute Permission for Gradle
-        run: |
-          cd android
-          chmod +x gradlew
+          chmod -R +x android/
 
       - name: Build Debug APK
         run: |
           cd android
-          ./gradlew assembleDebug --stacktrace
+          ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
