@@ -24,18 +24,18 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Dependencies & Sync Capacitor
+      - name: Install Dependencies
         run: |
-          npm install
-          npx cap sync android
+          npm ci || npm install
 
-      - name: Grant Gradle Permissions
+      - name: Sync Capacitor
         run: |
-          chmod +x android/gradlew
+          ./node_modules/.bin/cap sync android || npx cap sync android
 
       - name: Build Debug APK
         run: |
           cd android
+          chmod +x gradlew
           ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: Upload APK Artifact
