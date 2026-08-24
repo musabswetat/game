@@ -14,7 +14,7 @@
       -webkit-tap-highlight-color: transparent;
     }
     body {
-      background: #f1f5f9;
+      background: #090d16;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -22,29 +22,29 @@
       min-height: 100vh;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       overflow: hidden;
-      color: #1e293b;
+      color: #f8fafc;
       touch-action: none;
     }
     #gameContainer {
       position: relative;
       width: 100%;
-      max-width: 380px;
+      max-width: 400px;
       height: 100vh;
-      max-height: 660px;
+      max-height: 700px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     canvas {
-      border-radius: 28px;
-      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
       touch-action: none;
       display: block;
-      background: #ffffff;
+      background: #0f172a;
       width: 100%;
       height: 100%;
-      max-width: 380px;
-      max-height: 660px;
+      max-width: 400px;
+      max-height: 700px;
     }
     .modal {
       position: absolute;
@@ -52,9 +52,9 @@
       left: 0;
       width: 100%;
       height: 100%;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-radius: 28px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 24px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -62,20 +62,21 @@
       z-index: 10;
       padding: 24px;
       text-align: center;
+      background: rgba(15, 23, 42, 0.94);
     }
     .btn {
-      background: #2563eb;
+      background: #3b82f6;
       border: none;
       color: white;
-      padding: 13px 20px;
-      font-size: 1rem;
+      padding: 14px 20px;
+      font-size: 1.05rem;
       border-radius: 16px;
       cursor: pointer;
       font-weight: 700;
-      margin: 5px 0;
+      margin: 6px 0;
       width: 100%;
-      max-width: 270px;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+      max-width: 280px;
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
       transition: transform 0.1s;
     }
     .btn:active {
@@ -83,19 +84,22 @@
     }
     .btn-gold {
       background: linear-gradient(135deg, #f59e0b, #d97706);
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
     }
     .btn-green {
       background: #10b981;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
     }
     .btn-secondary {
-      background: #e2e8f0;
-      color: #334155;
+      background: #1e293b;
+      color: #cbd5e1;
       box-shadow: none;
+      border: 1px solid #334155;
     }
 
     #mapModal {
       display: none;
-      background: rgba(248, 250, 252, 0.98);
+      background: rgba(15, 23, 42, 0.98);
       justify-content: flex-start;
       padding-top: 20px;
     }
@@ -105,22 +109,22 @@
       align-items: center;
       width: 100%;
       padding: 0 8px 12px;
-      border-bottom: 2px solid #e2e8f0;
+      border-bottom: 2px solid #1e293b;
     }
     .levels-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
       width: 100%;
-      max-height: 470px;
+      max-height: 490px;
       overflow-y: auto;
       padding: 12px 4px;
     }
     .level-node {
-      background: #ffffff;
-      border: 2px solid #e2e8f0;
+      background: #1e293b;
+      border: 2px solid #334155;
       border-radius: 16px;
-      padding: 8px 4px;
+      padding: 10px 4px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -129,32 +133,31 @@
     }
     .level-node.unlocked {
       border-color: #38bdf8;
-      background: #f0f9ff;
+      background: #0f2744;
     }
     .level-node.completed {
       border-color: #10b981;
-      background: #ecfdf5;
+      background: #064e3b;
     }
     .level-node.boss-level {
       border-color: #ef4444;
-      background: #fef2f2;
+      background: #450a0a;
     }
     .level-node.locked {
-      opacity: 0.45;
+      opacity: 0.35;
       cursor: not-allowed;
     }
     .level-num {
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       font-weight: 800;
-      color: #0f172a;
+      color: #f8fafc;
     }
     .level-badge {
       font-size: 0.65rem;
       font-weight: 700;
-      color: #64748b;
+      color: #94a3b8;
     }
 
-    /* شريط التحكم الهادئ عند الخسارة دون حجب اللوحة */
     #lossControlBar {
       position: absolute;
       bottom: 20px;
@@ -172,39 +175,39 @@
       display: none;
     }
     .guide-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
+      background: #1e293b;
+      border: 1px solid #334155;
       border-radius: 24px;
-      padding: 22px 18px;
+      padding: 24px 20px;
       width: 92%;
       max-width: 320px;
       text-align: center;
-      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     }
   </style>
 </head>
 <body>
 
   <div id="gameContainer">
-    <canvas id="gameCanvas" width="380" height="660"></canvas>
+    <canvas id="gameCanvas" width="400" height="700"></canvas>
 
     <!-- القائمة الرئيسية -->
-    <div id="startModal" class="modal" style="background: rgba(255, 255, 255, 0.98);">
-      <div style="font-size: 2.6rem; margin-bottom: 4px;">🧩</div>
-      <h1 style="font-size: 2.2rem; font-weight: 900; margin-bottom: 6px; color: #0f172a;">musab sw</h1>
-      <p style="font-size: 0.92rem; color: #64748b; margin-bottom: 24px; font-weight: 500;">تحدي الذكاء الاستراتيجي • 100 مرحلة</p>
+    <div id="startModal" class="modal">
+      <div style="font-size: 2.8rem; margin-bottom: 4px;">🧩</div>
+      <h1 style="font-size: 2.3rem; font-weight: 900; margin-bottom: 6px; color: #38bdf8; letter-spacing: -0.5px;">musab sw</h1>
+      <p style="font-size: 0.95rem; color: #94a3b8; margin-bottom: 24px; font-weight: 500;">تحدي الذكاء الاستراتيجي • 100 مرحلة</p>
       
       <button class="btn btn-gold" onclick="openLevelMap()">🗺️ خريطة الـ 100 مرحلة</button>
       <button class="btn" onclick="initAndCheckGuide('daily')">⭐ التحدي اليومي الخاص</button>
       <button class="btn btn-secondary" onclick="initAndCheckGuide('classic')">♾️ اللعب اللانهائي التكتيكي</button>
     </div>
 
-    <!-- نافذة الإرشادات لمرة واحدة -->
-    <div id="guideModal" class="modal" style="background: rgba(248, 250, 252, 0.92);">
+    <!-- نافذة الإرشادات -->
+    <div id="guideModal" class="modal">
       <div class="guide-card">
         <div id="guideIcon" style="font-size: 2.8rem; margin-bottom: 10px;">⭐</div>
-        <div id="guideTitle" style="font-size: 1.3rem; font-weight: 800; color: #0f172a; margin-bottom: 8px;">تعليمات النمط</div>
-        <div id="guideDesc" style="font-size: 0.92rem; color: #475569; line-height: 1.55; margin-bottom: 20px;">الشرح هنا...</div>
+        <div id="guideTitle" style="font-size: 1.3rem; font-weight: 800; color: #f8fafc; margin-bottom: 8px;">تعليمات النمط</div>
+        <div id="guideDesc" style="font-size: 0.92rem; color: #cbd5e1; line-height: 1.55; margin-bottom: 20px;">الشرح هنا...</div>
         <button class="btn btn-green" onclick="startAfterGuide()">فهمت، ابدأ الآن 🚀</button>
       </div>
     </div>
@@ -213,25 +216,25 @@
     <div id="mapModal" class="modal">
       <div class="map-header">
         <div>
-          <h2 style="font-size: 1.3rem; font-weight: 800; color: #0f172a;">خريطة المراحل</h2>
-          <span id="biomeName" style="font-size: 0.78rem; font-weight: 600; color: #2563eb;">العالم 1</span>
+          <h2 style="font-size: 1.3rem; font-weight: 800; color: #f8fafc;">خريطة المراحل</h2>
+          <span id="biomeName" style="font-size: 0.78rem; font-weight: 600; color: #38bdf8;">العالم 1</span>
         </div>
-        <span id="totalStarsCount" style="color: #d97706; font-weight: 800; font-size: 1.05rem;">🏆 0</span>
+        <span id="totalStarsCount" style="color: #fbbf24; font-weight: 800; font-size: 1.05rem;">🏆 0</span>
       </div>
       <div class="levels-grid" id="levelsGridContainer"></div>
       <button class="btn btn-secondary" style="margin-top: 10px;" onclick="closeLevelMap()">العودة للقائمة</button>
     </div>
 
     <!-- نافذة الفوز -->
-    <div id="winModal" class="modal" style="background: rgba(255, 255, 255, 0.96);">
+    <div id="winModal" class="modal">
       <div style="font-size: 2.8rem; margin-bottom: 6px;">🎉</div>
-      <h2 style="font-size: 1.9rem; font-weight: 900; color: #059669; margin-bottom: 8px;">اكتملت المرحلة!</h2>
-      <p id="winSubtext" style="font-size: 0.95rem; margin-bottom: 22px; color: #475569; line-height: 1.5; font-weight: 500;"></p>
+      <h2 style="font-size: 2rem; font-weight: 900; color: #10b981; margin-bottom: 8px;">اكتملت المرحلة!</h2>
+      <p id="winSubtext" style="font-size: 0.95rem; margin-bottom: 22px; color: #cbd5e1; line-height: 1.5; font-weight: 500;"></p>
       <button id="nextLevelBtn" class="btn btn-green" onclick="goToNextLevel()">المرحلة التالية ⏭️</button>
       <button class="btn btn-secondary" onclick="openLevelMapFromGame()">خريطة المراحل 🗺️</button>
     </div>
 
-    <!-- أزرار الخسارة السفلية مع إبقاء اللوحة واضحة للدراسة -->
+    <!-- شريط الخسارة الهادئ -->
     <div id="lossControlBar">
       <button id="reviveBtn" class="btn btn-green" onclick="useRevive()">🛡️ فرصة أخيرة (تفريغ الوسط)</button>
       <button class="btn" onclick="restartCurrentMode()">إعادة المحاولة</button>
@@ -258,32 +261,38 @@
     const reviveBtn = document.getElementById("reviveBtn");
 
     // ==========================================
-    // 1. نظام الصوتيات والمؤثرات
+    // 1. ضبط دقة الشاشة الفائقة (Retina HD Fix)
+    // ==========================================
+    function setupHighDPI() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = (rect.width || 400) * dpr;
+      canvas.height = (rect.height || 700) * dpr;
+      ctx.scale(dpr, dpr);
+    }
+    setupHighDPI();
+    window.addEventListener("resize", setupHighDPI);
+
+    // ==========================================
+    // 2. الصوت والاهتزاز
     // ==========================================
     let audioCtx = null;
     function initAudio() {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
 
-    function playSoftTone(freq, duration = 0.18, maxGain = 0.12) {
+    function playSoftTone(freq, duration = 0.14, maxGain = 0.15) {
       if (!audioCtx) return;
       try {
         const now = audioCtx.currentTime;
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
-        const filter = audioCtx.createBiquadFilter();
-
-        filter.type = "lowpass";
-        filter.frequency.setValueAtTime(850, now);
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, now);
-
         gain.gain.setValueAtTime(0.001, now);
         gain.gain.exponentialRampToValueAtTime(maxGain, now + 0.02);
         gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-
-        osc.connect(filter);
-        filter.connect(gain);
+        osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start(now);
         osc.stop(now + duration);
@@ -297,7 +306,7 @@
     }
 
     // ==========================================
-    // 2. إيماءة التمرير من الحافة للرجوع (Edge Swipe)
+    // 3. التمرير للرجوع (Edge Swipe)
     // ==========================================
     let touchStartX = 0;
     let touchStartY = 0;
@@ -314,31 +323,25 @@
       const diffY = Math.abs(touchEndY - touchStartY);
 
       if (touchStartX > window.innerWidth - 60 && diffX < -80 && diffY < 60) {
-        handleBackNavigation();
+        if (mapModal.style.display === "flex") closeLevelMap();
+        else if (gameLoopActive) {
+          autoSaveCurrentMode();
+          gameLoopActive = false;
+          startModal.style.display = "flex";
+        }
       }
     }, { passive: true });
 
-    function handleBackNavigation() {
-      if (mapModal.style.display === "flex") {
-        closeLevelMap();
-      } else if (gameLoopActive) {
-        autoSaveCurrentMode();
-        gameLoopActive = false;
-        startModal.style.display = "flex";
-      }
-    }
-
     // ==========================================
-    // 3. عوالم الـ 100 مرحلة
+    // 4. خريطة الـ 100 مرحلة
     // ==========================================
     const TOTAL_LEVELS = 100;
-
     const BIOMES = [
-      { name: "العالم 1: السحاب الأبيض", bg: "#f1f5f9", canvasBg: "#ffffff", emptyCell: "#f1f5f9", blockedCell: "#fee2e2", text: "#0f172a" },
-      { name: "العالم 2: الواحة الزمردية", bg: "#ecfdf5", canvasBg: "#ffffff", emptyCell: "#e6fcf5", blockedCell: "#fee2e2", text: "#065f46" },
-      { name: "العالم 3: الكثبان الذهبية", bg: "#fffbeb", canvasBg: "#ffffff", emptyCell: "#fef3c7", blockedCell: "#fee2e2", text: "#92400e" },
-      { name: "العالم 4: الشفق الوردي", bg: "#fdf2f8", canvasBg: "#ffffff", emptyCell: "#fce7f3", blockedCell: "#fee2e2", text: "#831843" },
-      { name: "العالم 5: الهضاب الكريستالية", bg: "#f5f3ff", canvasBg: "#ffffff", emptyCell: "#ede9fe", blockedCell: "#fee2e2", text: "#5b21b6" }
+      { name: "العالم 1: السديم الأزرق", bg: "#090d16", canvasBg: "#0f172a", emptyCell: "#1e293b", blockedCell: "#3b1717", text: "#38bdf8" },
+      { name: "العالم 2: الغابة الليلية", bg: "#06130d", canvasBg: "#092015", emptyCell: "#113824", blockedCell: "#3b1717", text: "#34d399" },
+      { name: "العالم 3: الكثبان الذهبية", bg: "#130e06", canvasBg: "#221708", emptyCell: "#3d2b0e", blockedCell: "#3b1717", text: "#fbbf24" },
+      { name: "العالم 4: الشفق الوردي", bg: "#140810", canvasBg: "#240e1c", emptyCell: "#411832", blockedCell: "#3b1717", text: "#f472b6" },
+      { name: "العالم 5: الهضاب البنفسجية", bg: "#0e0818", canvasBg: "#170c28", emptyCell: "#2c174d", blockedCell: "#3b1717", text: "#c084fc" }
     ];
 
     function getCurrentBiome(lvl) {
@@ -348,10 +351,7 @@
 
     function getLevelConfiguration(lvl) {
       const isBoss = (lvl % 7 === 0);
-      let goalType = "score";
-      let reqScore = 0;
-      let reqStars = 0;
-      let rockObstacles = 0;
+      let goalType = "score", reqScore = 0, reqStars = 0, rockObstacles = 0;
 
       if (lvl > 20) rockObstacles = 1;
       if (lvl > 50) rockObstacles = 2;
@@ -373,15 +373,7 @@
         reqStars = 3 + Math.floor(lvl * 0.18);
       }
 
-      return {
-        level: lvl,
-        isBoss: isBoss,
-        goalType: goalType,
-        targetScore: reqScore,
-        targetStars: reqStars,
-        hasTimer: isBoss,
-        rockObstacles: rockObstacles
-      };
+      return { level: lvl, isBoss, goalType, targetScore: reqScore, targetStars: reqStars, hasTimer: isBoss, rockObstacles };
     }
 
     let levelProgress = JSON.parse(localStorage.getItem("bb_100_levels")) || { 1: true };
@@ -405,12 +397,7 @@
         const node = document.createElement("div");
         node.className = `level-node ${isUnlocked ? "unlocked" : "locked"} ${isCompleted ? "completed" : ""} ${cfg.isBoss ? "boss-level" : ""}`;
 
-        let badge = "";
-        if (cfg.isBoss) badge = "⚡ تحدي";
-        else if (cfg.goalType === "score") badge = `🎯 ${cfg.targetScore}`;
-        else if (cfg.goalType === "stars") badge = `⭐ ${cfg.targetStars}`;
-        else badge = `🎯+⭐`;
-
+        let badge = cfg.isBoss ? "⚡ تحدي" : cfg.goalType === "score" ? `🎯 ${cfg.targetScore}` : cfg.goalType === "stars" ? `⭐ ${cfg.targetStars}` : `🎯+⭐`;
         node.innerHTML = `
           <div class="level-num">${isUnlocked ? (cfg.isBoss ? "🔥" + i : i) : "🔒"}</div>
           <div class="level-badge">${isUnlocked ? badge : ""}</div>
@@ -444,7 +431,7 @@
     }
 
     // ==========================================
-    // 4. التعليمات لمرة واحدة
+    // 5. نظام التوجيه الذكي
     // ==========================================
     let seenGuides = JSON.parse(localStorage.getItem("bb_seen_guides_v2")) || {};
     let pendingStartMode = "classic";
@@ -457,12 +444,7 @@
       startModal.style.display = "none";
       mapModal.style.display = "none";
 
-      let guideKey = mode;
-      if (mode === "levels") {
-        const cfg = getLevelConfiguration(lvl);
-        guideKey = `level_${cfg.goalType}`;
-      }
-
+      let guideKey = mode === "levels" ? `level_${getLevelConfiguration(lvl).goalType}` : mode;
       if (seenGuides[guideKey]) {
         executeGameStart();
         return;
@@ -470,42 +452,24 @@
 
       if (mode === "levels") {
         const cfg = getLevelConfiguration(lvl);
-        if (cfg.isBoss) {
-          guideIcon.textContent = "⏱️🔥";
-          guideTitle.textContent = "تحدي النبضات والوقت";
-          guideDesc.textContent = "مرحلة صعبة تبدأ بمهلة دقيقتين. يزداد التحدي مع مرور الوقت وتتطلب دراسة المساحات جيداً!";
-        } else if (cfg.goalType === "score") {
-          guideIcon.textContent = "🎯";
-          guideTitle.textContent = "نمط جمع النقاط";
-          guideDesc.textContent = "النقاط الكبرى تأتي من تفجير عدة خطوط معاً وصناعة الكومبو المتتالي!";
-        } else if (cfg.goalType === "stars") {
-          guideIcon.textContent = "⭐";
-          guideTitle.textContent = "نمط جمع النجوم";
-          guideDesc.textContent = "اجمع النجوم الموزعة على اللوحة والمثبتة في بعض القطع عن طريق تفجير صفوفها.";
-        } else {
-          guideIcon.textContent = "💎⭐";
-          guideTitle.textContent = "النمط المزدوج";
-          guideDesc.textContent = "اجمع النقاط والنجوم معاً واحرص على عدم انسداد اللوحة.";
-        }
+        guideIcon.textContent = cfg.isBoss ? "⏱️🔥" : cfg.goalType === "score" ? "🎯" : cfg.goalType === "stars" ? "⭐" : "💎⭐";
+        guideTitle.textContent = cfg.isBoss ? "تحدي النبضات والوقت" : cfg.goalType === "score" ? "نمط جمع النقاط" : cfg.goalType === "stars" ? "نمط جمع النجوم" : "النمط المزدوج";
+        guideDesc.textContent = "فكّر بذكاء، خطط لكل حركة مسبقاً، واصنع الكومبو لتحقيق الهدف!";
       } else if (mode === "daily") {
         guideIcon.textContent = "📅⭐";
         guideTitle.textContent = "التحدي اليومي الخاص";
-        guideDesc.textContent = "لغز اليوم يتطلب تحقيق 1200 نقطة مع جمع 5 نجوم وقنابل متفجرة 💣 دون قيود حركات.";
+        guideDesc.textContent = "اجمع 1200 نقطة و 5 نجوم وقنابل متفجرة 💣 لإحراز الشارة اليومية!";
       } else {
         guideIcon.textContent = "♾️";
         guideTitle.textContent = "النمط اللانهائي التكتيكي";
-        guideDesc.textContent = "صعوبة ديناميكية على شكل نبضات القلب، وعند الوصول لنقاط عالية ستدخل في اختبار استراتيجي حاسم!";
+        guideDesc.textContent = "صعوبة تصاعدية، واختبار حاسم لدقيقتين عند بلوغ الأرقام القياسية!";
       }
 
       guideModal.style.display = "flex";
     }
 
     function startAfterGuide() {
-      let guideKey = pendingStartMode;
-      if (pendingStartMode === "levels") {
-        const cfg = getLevelConfiguration(pendingStartLevel);
-        guideKey = `level_${cfg.goalType}`;
-      }
+      let guideKey = pendingStartMode === "levels" ? `level_${getLevelConfiguration(pendingStartLevel).goalType}` : pendingStartMode;
       seenGuides[guideKey] = true;
       localStorage.setItem("bb_seen_guides_v2", JSON.stringify(seenGuides));
       guideModal.style.display = "none";
@@ -518,89 +482,64 @@
     }
 
     // ==========================================
-    // 5. إعدادات الشبكة ومكتبة الأشكال
+    // 6. إعدادات الشبكة المكبرة ومكتبة الأشكال
     // ==========================================
     const GRID_SIZE = 8;
-    const CELL_SIZE = 38;
-    const GRID_OFFSET_X = (canvas.width - GRID_SIZE * CELL_SIZE) / 2;
-    const GRID_OFFSET_Y = 115;
+    const CELL_SIZE = 43; // تكبير المربعات من 38 إلى 43
+    const GRID_OFFSET_X = (400 - GRID_SIZE * CELL_SIZE) / 2; // توسيط في الـ 400px
+    const GRID_OFFSET_Y = 100;
 
-    let gameMode = "classic";
-    let activeLevel = 1;
-    let score = 0;
-    let starsCollected = 0;
+    let gameMode = "classic", activeLevel = 1, score = 0, starsCollected = 0;
     let currentConfig = null;
     let highScore = parseInt(localStorage.getItem("bb_final_high")) || 0;
     let grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
 
-    let bossSecondsElapsed = 0;
-    let bossTimerInterval = null;
-    let hasUsedRevive = false;
-    let comboStreak = 0;
-    let gameLoopActive = false;
-    let isGameOverState = false;
-    let screenShake = 0;
-
-    let movesCounter = 0;
-    let inEliteTest = false;
-    let eliteTimer = 120;
-
-    const RESCUE_DOT = { id: "dot", color: "#0284c7", blocks: [[0, 0]], complexity: 1 };
+    let bossSecondsElapsed = 0, bossTimerInterval = null, hasUsedRevive = false;
+    let comboStreak = 0, gameLoopActive = false, isGameOverState = false;
+    let movesCounter = 0, inEliteTest = false, eliteTimer = 120;
 
     const SHAPES_CATALOG = [
-      { id: "line_2_h", color: "#0284c7", blocks: [[0, 0], [0, 1]], complexity: 1 },
-      { id: "line_2_v", color: "#0284c7", blocks: [[0, 0], [1, 0]], complexity: 1 },
-      { id: "line_3_h", color: "#059669", blocks: [[0, 0], [0, 1], [0, 2]], complexity: 2 },
-      { id: "line_3_v", color: "#059669", blocks: [[0, 0], [1, 0], [2, 0]], complexity: 2 },
-      { id: "square_2x2", color: "#d97706", blocks: [[0, 0], [0, 1], [1, 0], [1, 1]], complexity: 2 },
-      { id: "corner", color: "#7c3aed", blocks: [[0, 0], [1, 0], [1, 1]], complexity: 2 },
-      { id: "corner_rev", color: "#7c3aed", blocks: [[0, 1], [1, 1], [1, 0]], complexity: 2 },
-      { id: "l_shape", color: "#ea580c", blocks: [[0, 0], [1, 0], [2, 0], [2, 1]], complexity: 3 },
-      { id: "j_shape", color: "#ea580c", blocks: [[0, 1], [1, 1], [2, 1], [2, 0]], complexity: 3 },
-      { id: "line_4_h", color: "#2563eb", blocks: [[0, 0], [0, 1], [0, 2], [0, 3]], complexity: 3 },
-      { id: "line_4_v", color: "#2563eb", blocks: [[0, 0], [1, 0], [2, 0], [3, 0]], complexity: 3 },
-      { id: "square_3x3", color: "#db2777", blocks: [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]], complexity: 4 }
+      { id: "line_2_h", color: "#0ea5e9", blocks: [[0, 0], [0, 1]] },
+      { id: "line_2_v", color: "#0ea5e9", blocks: [[0, 0], [1, 0]] },
+      { id: "line_3_h", color: "#10b981", blocks: [[0, 0], [0, 1], [0, 2]] },
+      { id: "line_3_v", color: "#10b981", blocks: [[0, 0], [1, 0], [2, 0]] },
+      { id: "square_2x2", color: "#f59e0b", blocks: [[0, 0], [0, 1], [1, 0], [1, 1]] },
+      { id: "corner", color: "#8b5cf6", blocks: [[0, 0], [1, 0], [1, 1]] },
+      { id: "corner_rev", color: "#8b5cf6", blocks: [[0, 1], [1, 1], [1, 0]] },
+      { id: "l_shape", color: "#f97316", blocks: [[0, 0], [1, 0], [2, 0], [2, 1]] },
+      { id: "j_shape", color: "#f97316", blocks: [[0, 1], [1, 1], [2, 1], [2, 0]] },
+      { id: "line_4_h", color: "#3b82f6", blocks: [[0, 0], [0, 1], [0, 2], [0, 3]] },
+      { id: "line_4_v", color: "#3b82f6", blocks: [[0, 0], [1, 0], [2, 0], [3, 0]] },
+      { id: "square_3x3", color: "#ec4899", blocks: [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]] }
     ];
 
     let hand = [];
     let draggedPiece = null;
-    let dragOffsetX = 0;
-    let dragOffsetY = 0;
+    let dragOffsetX = 0, dragOffsetY = 0;
     let previewTarget = null;
-
-    const particles = [];
-    const trailParticles = [];
     const floatingTexts = [];
-    const flyingGems = [];
 
     // ==========================================
-    // 6. الحفظ التلقائي لكل نمط
+    // 7. الحفظ التلقائي لكل نمط
     // ==========================================
     function autoSaveCurrentMode() {
       if (!gameLoopActive) return;
-      const data = {
-        score, starsCollected, bossSecondsElapsed, hasUsedRevive,
-        grid, hand, activeLevel, movesCounter, inEliteTest, eliteTimer
-      };
+      const data = { score, starsCollected, bossSecondsElapsed, hasUsedRevive, grid, hand, activeLevel, movesCounter, inEliteTest, eliteTimer };
       localStorage.setItem(`bb_autosave_${gameMode}`, JSON.stringify(data));
     }
 
     function loadModeSave(mode) {
       const saved = localStorage.getItem(`bb_autosave_${mode}`);
-      if (!saved) return null;
-      return JSON.parse(saved);
+      return saved ? JSON.parse(saved) : null;
     }
 
     // ==========================================
-    // 7. محرك التوليد الذكي
+    // 8. منطق التوليد (قاعدة المخرج الواحد)
     // ==========================================
     function canPlace(shape, r0, c0) {
       for (const [dr, dc] of shape.blocks) {
-        const r = r0 + dr;
-        const c = c0 + dc;
-        if (r < 0 || r >= GRID_SIZE || c < 0 || c >= GRID_SIZE || grid[r][c] !== 0) {
-          return false;
-        }
+        const r = r0 + dr, c = c0 + dc;
+        if (r < 0 || r >= GRID_SIZE || c < 0 || c >= GRID_SIZE || grid[r][c] !== 0) return false;
       }
       return true;
     }
@@ -615,169 +554,66 @@
       return count;
     }
 
-    function getGridFillRatio() {
-      let filled = 0;
-      for (let r = 0; r < GRID_SIZE; r++) {
-        for (let c = 0; c < GRID_SIZE; c++) {
-          if (grid[r][c] !== 0) filled++;
-        }
-      }
-      return filled / (GRID_SIZE * GRID_SIZE);
-    }
-
     function generateSmartHand() {
-      const fillRatio = getGridFillRatio();
-
-      let validShapes = SHAPES_CATALOG.map(shape => ({
-        ...shape,
-        validCount: countValidPositions(shape)
-      })).filter(s => s.validCount > 0);
-
-      if (fillRatio > 0.80 && countValidPositions(RESCUE_DOT) > 0) {
-        validShapes.unshift({ ...RESCUE_DOT, validCount: countValidPositions(RESCUE_DOT) });
-      }
-
+      let validShapes = SHAPES_CATALOG.filter(s => countValidPositions(s) > 0);
       if (validShapes.length === 0) {
         triggerGameOver();
         return;
       }
 
-      let maxComplexity = 2;
-      if (gameMode === "classic") {
-        const heartbeatWave = Math.sin(movesCounter / 4);
-        maxComplexity = heartbeatWave > 0.3 ? 3 : 2;
-        if (score >= 4000 || inEliteTest) maxComplexity = 4;
-      } else {
-        if (activeLevel >= 30) maxComplexity = 4;
-        else if (activeLevel >= 12 || currentConfig?.isBoss) maxComplexity = 3;
+      const selected = [JSON.parse(JSON.stringify(validShapes[Math.floor(Math.random() * validShapes.length)]))];
+      for (let i = 1; i < 3; i++) {
+        selected.push(JSON.parse(JSON.stringify(SHAPES_CATALOG[Math.floor(Math.random() * SHAPES_CATALOG.length)])));
       }
 
-      if (fillRatio > 0.65) maxComplexity = Math.min(maxComplexity, 2);
-
-      const selected = [];
-      const usedIds = new Set();
-
-      for (let i = 0; i < 3; i++) {
-        let pool = validShapes.filter(s => s.complexity <= maxComplexity && !usedIds.has(s.id));
-        if (pool.length === 0) pool = validShapes;
-
-        let candidate = pool[Math.floor(Math.random() * pool.length)];
-        selected.push(JSON.parse(JSON.stringify(candidate)));
-        usedIds.add(candidate.id);
+      // خلط القطع
+      for (let i = selected.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [selected[i], selected[j]] = [selected[j], selected[i]];
       }
 
       const needsStars = currentConfig && (currentConfig.goalType === "stars" || currentConfig.goalType === "hybrid" || currentConfig.isBoss);
       const starPieceIdx = needsStars ? (Math.random() < 0.75 ? Math.floor(Math.random() * 3) : -1) : -1;
 
-      const slotWidth = canvas.width / 3;
+      const slotWidth = 400 / 3;
       hand = selected.map((p, idx) => {
-        const shapeW = (Math.max(...p.blocks.map(b => b[1])) + 1) * 16;
-        const shapeH = (Math.max(...p.blocks.map(b => b[0])) + 1) * 16;
+        const shapeW = (Math.max(...p.blocks.map(b => b[1])) + 1) * 19;
+        const shapeH = (Math.max(...p.blocks.map(b => b[0])) + 1) * 19;
         const cx = slotWidth * idx + slotWidth / 2 - shapeW / 2;
-        const cy = 540 - shapeH / 2;
+        const cy = 560 - shapeH / 2;
+        const starIdx = (idx === starPieceIdx) ? Math.floor(Math.random() * p.blocks.length) : -1;
 
-        const isStarBearer = (idx === starPieceIdx);
-        const starIdx = isStarBearer ? Math.floor(Math.random() * p.blocks.length) : -1;
-
-        return {
-          ...p,
-          x: cx, y: cy, origX: cx, origY: cy, size: 16,
-          starBlockIndex: starIdx
-        };
+        return { ...p, x: cx, y: cy, origX: cx, origY: cy, size: 19, starBlockIndex: starIdx };
       });
 
       autoSaveCurrentMode();
       checkGameState();
     }
 
-    // ==========================================
-    // 8. زرع الجواهر والصخور
-    // ==========================================
     function spawnInitialElements(gemCount, rockCount) {
       grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
-
       let rocksPlaced = 0;
       while (rocksPlaced < rockCount) {
-        const r = Math.floor(Math.random() * 6) + 1;
-        const c = Math.floor(Math.random() * 6) + 1;
+        const r = Math.floor(Math.random() * 6) + 1, c = Math.floor(Math.random() * 6) + 1;
         if (grid[r][c] === 0) {
-          grid[r][c] = { color: "#64748b", isRock: true };
+          grid[r][c] = { color: "#475569", isRock: true };
           rocksPlaced++;
         }
       }
 
       let placed = 0;
       while (placed < gemCount) {
-        const r = Math.floor(Math.random() * GRID_SIZE);
-        const c = Math.floor(Math.random() * GRID_SIZE);
+        const r = Math.floor(Math.random() * GRID_SIZE), c = Math.floor(Math.random() * GRID_SIZE);
         if (grid[r][c] === 0) {
           const isBomb = Math.random() < 0.28;
-          grid[r][c] = {
-            color: isBomb ? "#ef4444" : "#2563eb",
-            hasGem: true,
-            isBomb: isBomb
-          };
+          grid[r][c] = { color: isBomb ? "#ef4444" : "#3b82f6", hasGem: true, isBomb };
           placed++;
         }
       }
     }
 
-    function triggerBombExplosion(bombR, bombC) {
-      screenShake = 12;
-      triggerHaptic(60);
-      playSoftTone(110, 0.45, 0.25);
-
-      floatingTexts.push({
-        text: "💥 BOOM!",
-        x: GRID_OFFSET_X + bombC * CELL_SIZE + CELL_SIZE / 2,
-        y: GRID_OFFSET_Y + bombR * CELL_SIZE,
-        alpha: 1.8
-      });
-
-      launchFlyingStar(bombR, bombC);
-
-      for (let dr = -1; dr <= 1; dr++) {
-        for (let dc = -1; dc <= 1; dc++) {
-          const nr = bombR + dr;
-          const nc = bombC + dc;
-
-          if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE) {
-            if (grid[nr][nc] !== 0) {
-              if (grid[nr][nc].hasGem && !grid[nr][nc].isBomb) starsCollected++;
-              createExplosion(nr, nc, "#ea580c");
-              grid[nr][nc] = 0;
-            }
-          }
-        }
-      }
-    }
-
-    function launchFlyingStar(fromR, fromC) {
-      const startX = GRID_OFFSET_X + fromC * CELL_SIZE + CELL_SIZE / 2;
-      const startY = GRID_OFFSET_Y + fromR * CELL_SIZE + CELL_SIZE / 2;
-
-      const emptyCells = [];
-      for (let r = 0; r < GRID_SIZE; r++) {
-        for (let c = 0; c < GRID_SIZE; c++) {
-          if (grid[r][c] === 0 && (r !== fromR || c !== fromC)) emptyCells.push({ r, c });
-        }
-      }
-
-      if (emptyCells.length === 0) return;
-
-      const target = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-      const targetX = GRID_OFFSET_X + target.c * CELL_SIZE + CELL_SIZE / 2;
-      const targetY = GRID_OFFSET_Y + target.r * CELL_SIZE + CELL_SIZE / 2;
-
-      flyingGems.push({
-        x: startX, y: startY, startX, startY,
-        targetX, targetY, targetR: target.r, targetC: target.c,
-        progress: 0
-      });
-    }
-
     // ==========================================
-    // 9. تشغيل الأنماط
+    // 9. تشغيل الأنماط والحسابات
     // ==========================================
     function startSpecificLevel(lvl) {
       gameMode = "levels";
@@ -788,18 +624,11 @@
 
       const saved = loadModeSave("levels");
       if (saved && saved.activeLevel === lvl && saved.grid) {
-        score = saved.score;
-        starsCollected = saved.starsCollected;
-        bossSecondsElapsed = saved.bossSecondsElapsed;
-        hasUsedRevive = saved.hasUsedRevive;
-        grid = saved.grid;
-        hand = saved.hand;
+        score = saved.score; starsCollected = saved.starsCollected;
+        bossSecondsElapsed = saved.bossSecondsElapsed; hasUsedRevive = saved.hasUsedRevive;
+        grid = saved.grid; hand = saved.hand;
       } else {
-        score = 0;
-        starsCollected = 0;
-        bossSecondsElapsed = 0;
-        hasUsedRevive = false;
-
+        score = 0; starsCollected = 0; bossSecondsElapsed = 0; hasUsedRevive = false;
         const gemTarget = (currentConfig.goalType === "stars" || currentConfig.goalType === "hybrid" || currentConfig.isBoss)
           ? Math.max(2, Math.floor(currentConfig.targetStars * 0.4)) : 0;
         spawnInitialElements(gemTarget, currentConfig.rockObstacles);
@@ -813,28 +642,16 @@
 
     function startGame(mode) {
       gameMode = mode;
-      hasUsedRevive = false;
-      isGameOverState = false;
+      hasUsedRevive = false; isGameOverState = false;
       lossControlBar.style.display = "none";
       const saved = loadModeSave(mode);
 
       if (saved && saved.grid) {
-        score = saved.score;
-        starsCollected = saved.starsCollected;
-        bossSecondsElapsed = saved.bossSecondsElapsed;
-        grid = saved.grid;
-        hand = saved.hand;
-        movesCounter = saved.movesCounter || 0;
-        inEliteTest = saved.inEliteTest || false;
-        eliteTimer = saved.eliteTimer || 120;
+        score = saved.score; starsCollected = saved.starsCollected; bossSecondsElapsed = saved.bossSecondsElapsed;
+        grid = saved.grid; hand = saved.hand; movesCounter = saved.movesCounter || 0;
+        inEliteTest = saved.inEliteTest || false; eliteTimer = saved.eliteTimer || 120;
       } else {
-        score = 0;
-        starsCollected = 0;
-        bossSecondsElapsed = 0;
-        movesCounter = 0;
-        inEliteTest = false;
-        eliteTimer = 120;
-
+        score = 0; starsCollected = 0; bossSecondsElapsed = 0; movesCounter = 0; inEliteTest = false; eliteTimer = 120;
         if (mode === "daily") {
           currentConfig = { isBoss: false, goalType: "hybrid", targetScore: 1200, targetStars: 5, hasTimer: false };
           spawnInitialElements(3, 1);
@@ -854,7 +671,6 @@
       bossTimerInterval = setInterval(() => {
         if (!gameLoopActive) return;
         bossSecondsElapsed++;
-
         if (inEliteTest) {
           eliteTimer--;
           if (eliteTimer <= 0) triggerGameOver();
@@ -866,87 +682,37 @@
 
     function placeAndProcess(piece, tr, tc) {
       movesCounter++;
-
       piece.blocks.forEach(([dr, dc], idx) => {
-        const isStar = (piece.starBlockIndex === idx);
-        if (isStar) {
-          grid[tr + dr][tc + dc] = { color: piece.color, hasGem: true, isBomb: false };
-        } else {
-          grid[tr + dr][tc + dc] = piece.color;
-        }
+        grid[tr + dr][tc + dc] = (piece.starBlockIndex === idx)
+          ? { color: piece.color, hasGem: true, isBomb: false }
+          : piece.color;
       });
 
-      let pointsPerBlock = 3;
-      if (currentConfig && currentConfig.targetScore > 0) {
-        if (currentConfig.targetScore >= 4000) pointsPerBlock = 10;
-        else if (currentConfig.targetScore >= 2000) pointsPerBlock = 6;
-      } else if (gameMode === "classic") {
-        if (score >= 4000) pointsPerBlock = 10;
-        else if (score >= 2000) pointsPerBlock = 6;
-      }
+      score += piece.blocks.length * 5;
 
-      score += piece.blocks.length * pointsPerBlock;
-
-      if (gameMode === "classic" && score >= 5000 && !inEliteTest) {
-        inEliteTest = true;
-        eliteTimer = 120;
-        startTimer();
-        floatingTexts.push({ text: "🧠 بدء الاختبار الاستراتيجي!", x: canvas.width / 2, y: 150, alpha: 2.0 });
-      }
-
-      let rowsToClear = [];
-      let colsToClear = [];
-
-      for (let r = 0; r < GRID_SIZE; r++) {
-        if (grid[r].every(c => c !== 0)) rowsToClear.push(r);
-      }
-      for (let c = 0; c < GRID_SIZE; c++) {
-        if (grid.every(row => row[c] !== 0)) colsToClear.push(c);
-      }
+      let rowsToClear = [], colsToClear = [];
+      for (let r = 0; r < GRID_SIZE; r++) { if (grid[r].every(c => c !== 0)) rowsToClear.push(r); }
+      for (let c = 0; c < GRID_SIZE; c++) { if (grid.every(row => row[c] !== 0)) colsToClear.push(c); }
 
       const totalLines = rowsToClear.length + colsToClear.length;
       if (totalLines > 0) {
         comboStreak++;
-        screenShake = Math.min(8, 3 + totalLines * 1.5);
-        triggerHaptic(35);
+        triggerHaptic(40);
+        playSoftTone(PENTATONIC[Math.min(comboStreak - 1, PENTATONIC.length - 1)], 0.22, 0.25);
 
-        const noteIndex = Math.min(comboStreak - 1, PENTATONIC.length - 1);
-        playSoftTone(PENTATONIC[noteIndex], 0.28, 0.2);
-
-        let triggeredBombs = [];
-
-        const checkAndCollectCell = (r, c) => {
+        const checkAndClear = (r, c) => {
           const cell = grid[r][c];
-          if (cell && cell.hasGem) {
-            if (cell.isBomb) triggeredBombs.push({ r, c });
-            else {
-              starsCollected++;
-              playSoftTone(880, 0.3, 0.25);
-              floatingTexts.push({ text: "⭐ +1", x: GRID_OFFSET_X + c * CELL_SIZE + CELL_SIZE / 2, y: GRID_OFFSET_Y + r * CELL_SIZE, alpha: 1.5 });
-            }
-          }
-          createExplosion(r, c, cell?.color || cell || "#0284c7");
+          if (cell && cell.hasGem && !cell.isBomb) starsCollected++;
+          grid[r][c] = 0;
         };
 
-        rowsToClear.forEach(r => {
-          for (let c = 0; c < GRID_SIZE; c++) checkAndCollectCell(r, c);
-        });
-        colsToClear.forEach(c => {
-          for (let r = 0; r < GRID_SIZE; r++) {
-            if (!rowsToClear.includes(r)) checkAndCollectCell(r, c);
-          }
-        });
+        rowsToClear.forEach(r => { for (let c = 0; c < GRID_SIZE; c++) checkAndClear(r, c); });
+        colsToClear.forEach(c => { for (let r = 0; r < GRID_SIZE; r++) checkAndClear(r, c); });
 
-        rowsToClear.forEach(r => grid[r].fill(0));
-        colsToClear.forEach(c => {
-          for (let r = 0; r < GRID_SIZE; r++) grid[r][c] = 0;
-        });
-
-        triggeredBombs.forEach(b => triggerBombExplosion(b.r, b.c));
         score += totalLines * 120 * comboStreak;
       } else {
         comboStreak = 0;
-        playSoftTone(200, 0.1, 0.08);
+        playSoftTone(220, 0.08, 0.1);
       }
 
       if (score > highScore) {
@@ -971,7 +737,6 @@
     function checkWinConditions() {
       if (gameMode !== "levels" && gameMode !== "daily") return false;
       if (!currentConfig) return false;
-
       if (currentConfig.goalType === "score") return score >= currentConfig.targetScore;
       if (currentConfig.goalType === "stars") return starsCollected >= currentConfig.targetStars;
       if (currentConfig.goalType === "hybrid" || currentConfig.goalType === "boss_timer") {
@@ -990,7 +755,6 @@
         }
         return false;
       });
-
       if (!directFit) triggerGameOver();
     }
 
@@ -999,24 +763,18 @@
       if (bossTimerInterval) clearInterval(bossTimerInterval);
       localStorage.removeItem(`bb_autosave_${gameMode}`);
 
-      playSoftTone(523.25, 0.3, 0.2);
-      setTimeout(() => playSoftTone(659.25, 0.3, 0.2), 100);
-      setTimeout(() => playSoftTone(783.99, 0.4, 0.2), 200);
+      playSoftTone(523.25, 0.2, 0.2);
+      setTimeout(() => playSoftTone(659.25, 0.2, 0.2), 80);
+      setTimeout(() => playSoftTone(783.99, 0.3, 0.2), 160);
 
       if (gameMode === "levels") {
         saveLevelCompleted(activeLevel);
-        let winMsg = `أنجزت المرحلة ${activeLevel} بنجاح!`;
-        if (currentConfig.goalType === "score") winMsg += `\nالنقاط: ${score}`;
-        else if (currentConfig.goalType === "stars") winMsg += `\nالنجوم: ${starsCollected}`;
-        else winMsg += `\nالنقاط: ${score} | النجوم: ${starsCollected}`;
-
-        winSubtext.textContent = winMsg;
+        winSubtext.textContent = `المرحلة ${activeLevel} مكتملة! النقاط: ${score} | النجوم: ${starsCollected}`;
         nextLevelBtn.style.display = activeLevel < TOTAL_LEVELS ? "block" : "none";
       } else {
         winSubtext.textContent = `أنهيت لغز اليوم بنجاح وجمعت الشارة الذهبية ⭐`;
         nextLevelBtn.style.display = "none";
       }
-
       winModal.style.display = "flex";
     }
 
@@ -1025,22 +783,19 @@
       initAndCheckGuide("levels", activeLevel + 1);
     }
 
-    // الخسارة غير المفاجئة: إبقاء اللوحة واضحة للدراسة والتفكير
     function triggerGameOver() {
       isGameOverState = true;
       gameLoopActive = false;
       if (bossTimerInterval) clearInterval(bossTimerInterval);
       localStorage.removeItem(`bb_autosave_${gameMode}`);
 
-      playSoftTone(140, 0.4, 0.25);
+      playSoftTone(140, 0.3, 0.3);
       triggerHaptic(70);
 
       reviveBtn.style.display = hasUsedRevive ? "none" : "block";
-      
-      // إظهار أزرار التحكم بعد ثوانٍ لترك وقت للاعب ليرى اللوحة
       setTimeout(() => {
         if (isGameOverState) lossControlBar.style.display = "flex";
-      }, 1200);
+      }, 1000);
     }
 
     function useRevive() {
@@ -1049,18 +804,7 @@
       lossControlBar.style.display = "none";
 
       for (let r = 2; r <= 5; r++) {
-        for (let c = 2; c <= 5; c++) {
-          if (grid[r][c]) {
-            if (grid[r][c].hasGem) starsCollected++;
-            createExplosion(r, c, grid[r][c]?.color || grid[r][c]);
-          }
-          grid[r][c] = 0;
-        }
-      }
-
-      if (checkWinConditions()) {
-        triggerWin();
-        return;
+        for (let c = 2; c <= 5; c++) grid[r][c] = 0;
       }
 
       gameLoopActive = true;
@@ -1078,31 +822,16 @@
       else startGame(gameMode);
     }
 
-    function createExplosion(r, c, color) {
-      const cx = GRID_OFFSET_X + c * CELL_SIZE + CELL_SIZE / 2;
-      const cy = GRID_OFFSET_Y + r * CELL_SIZE + CELL_SIZE / 2;
-      for (let i = 0; i < 6; i++) {
-        particles.push({
-          x: cx, y: cy, color: color || "#0284c7",
-          vx: (Math.random() - 0.5) * 5, vy: (Math.random() - 0.5) * 5,
-          size: Math.random() * 4 + 2, alpha: 1
-        });
-      }
-    }
-
     // ==========================================
-    // 10. التحكم الحريري باللمس للهواتف
+    // 10. اللمس الفائق مع الارتفاع والظهور الواضح
     // ==========================================
     function getCanvasCoords(e) {
       const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
+      const scaleX = 400 / rect.width;
+      const scaleY = 700 / rect.height;
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      return {
-        x: (clientX - rect.left) * scaleX,
-        y: (clientY - rect.top) * scaleY
-      };
+      return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
     }
 
     canvas.addEventListener("touchstart", onDown, { passive: false });
@@ -1113,10 +842,7 @@
     window.addEventListener("mouseup", onUp);
 
     function onDown(e) {
-      if (isGameOverState) {
-        lossControlBar.style.display = "flex";
-        return;
-      }
+      if (isGameOverState) { lossControlBar.style.display = "flex"; return; }
       if (!gameLoopActive) return;
       initAudio();
       const pos = getCanvasCoords(e);
@@ -1124,12 +850,20 @@
       for (const piece of hand) {
         const w = (Math.max(...piece.blocks.map(b => b[1])) + 1) * piece.size;
         const h = (Math.max(...piece.blocks.map(b => b[0])) + 1) * piece.size;
-        if (pos.x >= piece.x - 14 && pos.x <= piece.x + w + 14 &&
-            pos.y >= piece.y - 14 && pos.y <= piece.y + h + 14) {
+        if (pos.x >= piece.x - 18 && pos.x <= piece.x + w + 18 &&
+            pos.y >= piece.y - 18 && pos.y <= piece.y + h + 18) {
           draggedPiece = piece;
-          dragOffsetX = pos.x - piece.x;
-          dragOffsetY = pos.y - piece.y;
-          piece.size = CELL_SIZE;
+          piece.size = CELL_SIZE; // تكبير القطعة فوراً لمقاس اللوحة الحقيقي
+
+          // توسيط القطعة أفقياً ورفعها 85px للأعلى لتكون واضحة بالكامل فوق الإصبع
+          const fullW = (Math.max(...piece.blocks.map(b => b[1])) + 1) * CELL_SIZE;
+          const fullH = (Math.max(...piece.blocks.map(b => b[0])) + 1) * CELL_SIZE;
+          dragOffsetX = fullW / 2;
+          dragOffsetY = fullH + 85;
+
+          draggedPiece.x = pos.x - dragOffsetX;
+          draggedPiece.y = pos.y - dragOffsetY;
+
           if (e.cancelable) e.preventDefault();
           break;
         }
@@ -1140,20 +874,12 @@
       if (!draggedPiece) return;
       const pos = getCanvasCoords(e);
       draggedPiece.x = pos.x - dragOffsetX;
-      // إزاحة للأعلى بمقدار 60px حتى لا يحجب الإصبع القطعة أثناء السحب
-      draggedPiece.y = pos.y - dragOffsetY - 60;
-
-      trailParticles.push({
-        x: pos.x, y: pos.y - 40,
-        color: draggedPiece.color, size: 4, alpha: 0.7
-      });
+      draggedPiece.y = pos.y - dragOffsetY;
 
       const tc = Math.round((draggedPiece.x - GRID_OFFSET_X) / CELL_SIZE);
       const tr = Math.round((draggedPiece.y - GRID_OFFSET_Y) / CELL_SIZE);
 
-      if (canPlace(draggedPiece, tr, tc)) previewTarget = { r: tr, c: tc };
-      else previewTarget = null;
-
+      previewTarget = canPlace(draggedPiece, tr, tc) ? { r: tr, c: tc } : null;
       if (e.cancelable) e.preventDefault();
     }
 
@@ -1167,7 +893,7 @@
       } else {
         draggedPiece.x = draggedPiece.origX;
         draggedPiece.y = draggedPiece.origY;
-        draggedPiece.size = 16;
+        draggedPiece.size = 19;
       }
 
       previewTarget = null;
@@ -1175,124 +901,68 @@
     }
 
     // ==========================================
-    // 11. حلقة الرسم (Clean White Theme)
+    // 11. حلقة الرسم فائقة النقاء (Ultra Crisp Render)
     // ==========================================
     function draw() {
-      ctx.save();
-
-      if (screenShake > 0) {
-        const sx = (Math.random() - 0.5) * screenShake;
-        const sy = (Math.random() - 0.5) * screenShake;
-        ctx.translate(sx, sy);
-        screenShake *= 0.85;
-        if (screenShake < 0.5) screenShake = 0;
-      }
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, 400, 700);
       const currentBiome = getCurrentBiome(activeLevel);
 
       // الشريط العلوي
-      ctx.fillStyle = "#0f172a";
-      ctx.font = "bold 18px system-ui";
+      ctx.fillStyle = "#f8fafc";
+      ctx.font = "bold 19px system-ui";
       ctx.textAlign = "right";
-      ctx.fillText(`النقاط: ${score}`, canvas.width - 24, 38);
+      ctx.fillText(`النقاط: ${score}`, 375, 42);
 
       ctx.fillStyle = "#94a3b8";
       ctx.font = "14px system-ui";
       ctx.textAlign = "left";
-      ctx.fillText(`الأعلى: ${highScore}`, 24, 38);
+      ctx.fillText(`الأعلى: ${highScore}`, 25, 42);
 
-      // تفاصيل الهدف
+      // نص الهدف
+      ctx.fillStyle = currentBiome.text;
+      ctx.font = "bold 14px system-ui";
+      ctx.textAlign = "center";
       if (gameMode === "levels") {
-        ctx.fillStyle = currentConfig?.isBoss ? "#dc2626" : currentBiome.text;
-        ctx.font = "bold 13px system-ui";
-        ctx.textAlign = "center";
-
-        let goalStr = "";
-        if (currentConfig.goalType === "score") {
-          goalStr = `المرحلة ${activeLevel}  |  الهدف: 🎯 ${score}/${currentConfig.targetScore}ن`;
-        } else if (currentConfig.goalType === "stars") {
-          goalStr = `المرحلة ${activeLevel}  |  الهدف: ⭐ ${starsCollected}/${currentConfig.targetStars}`;
-        } else {
-          goalStr = `المرحلة ${activeLevel}  |  🎯 ${score}/${currentConfig.targetScore}  •  ⭐ ${starsCollected}/${currentConfig.targetStars}`;
-        }
-
-        if (currentConfig.hasTimer) {
-          const m = Math.floor(bossSecondsElapsed / 60);
-          const s = bossSecondsElapsed % 60;
-          goalStr += `  |  ⏱️ ${m}:${s < 10 ? '0' : ''}${s}`;
-        }
-        ctx.fillText(goalStr, canvas.width / 2, 75);
+        let str = currentConfig.goalType === "score"
+          ? `المرحلة ${activeLevel}  |  الهدف: 🎯 ${score}/${currentConfig.targetScore}`
+          : `المرحلة ${activeLevel}  |  الهدف: ⭐ ${starsCollected}/${currentConfig.targetStars}`;
+        if (currentConfig.hasTimer) str += `  |  ⏱️ ${Math.floor(bossSecondsElapsed / 60)}:${bossSecondsElapsed % 60 < 10 ? '0' : ''}${bossSecondsElapsed % 60}`;
+        ctx.fillText(str, 200, 75);
       } else if (gameMode === "daily") {
-        ctx.fillStyle = "#d97706";
-        ctx.font = "bold 13px system-ui";
-        ctx.textAlign = "center";
-        ctx.fillText(`⭐ التحدي اليومي  |  🎯 ${score}/1200ن  •  ⭐ ${starsCollected}/5`, canvas.width / 2, 75);
+        ctx.fillText(`⭐ التحدي اليومي  |  🎯 ${score}/1200  •  ⭐ ${starsCollected}/5`, 200, 75);
       } else {
-        ctx.fillStyle = inEliteTest ? "#dc2626" : "#475569";
-        ctx.font = "bold 13px system-ui";
-        ctx.textAlign = "center";
-        if (inEliteTest) ctx.fillText(`🧠 اختبار النخبة الاستراتيجي  |  ⏱️ ${eliteTimer} ثانية`, canvas.width / 2, 75);
-        else ctx.fillText(`♾️ اللعب اللانهائي التكتيكي`, canvas.width / 2, 75);
+        ctx.fillText(`♾️ اللعب اللانهائي التكتيكي`, 200, 75);
       }
 
-      // رسم الشبكة (مع تمييز حالة الخسارة بهدوء)
+      // رسم شبكة اللعبة المريحة
       for (let r = 0; r < GRID_SIZE; r++) {
         for (let c = 0; c < GRID_SIZE; c++) {
           const x = GRID_OFFSET_X + c * CELL_SIZE;
           const y = GRID_OFFSET_Y + r * CELL_SIZE;
           const cell = grid[r][c];
 
-          if (isGameOverState && cell === 0) {
-            ctx.fillStyle = currentBiome.blockedCell;
-          } else {
-            ctx.fillStyle = cell ? (cell.color || cell) : currentBiome.emptyCell;
-          }
-
+          ctx.fillStyle = isGameOverState && cell === 0 ? currentBiome.blockedCell : cell ? (cell.color || cell) : currentBiome.emptyCell;
           ctx.beginPath();
           ctx.roundRect(x + 2, y + 2, CELL_SIZE - 4, CELL_SIZE - 4, 8);
           ctx.fill();
 
           if (cell && cell.hasGem) {
             ctx.fillStyle = "#ffffff";
-            ctx.font = "16px system-ui";
+            ctx.font = "18px system-ui";
             ctx.textAlign = "center";
-            ctx.fillText(cell.isBomb ? "💣" : "⭐", x + CELL_SIZE / 2, y + CELL_SIZE / 2 + 5);
+            ctx.fillText(cell.isBomb ? "💣" : "⭐", x + CELL_SIZE / 2, y + CELL_SIZE / 2 + 6);
           } else if (cell && cell.isRock) {
             ctx.fillStyle = "#ffffff";
-            ctx.font = "14px system-ui";
+            ctx.font = "16px system-ui";
             ctx.textAlign = "center";
-            ctx.fillText("🪨", x + CELL_SIZE / 2, y + CELL_SIZE / 2 + 5);
+            ctx.fillText("🪨", x + CELL_SIZE / 2, y + CELL_SIZE / 2 + 6);
           }
-        }
-      }
-
-      // تحريك النجوم الطائرة
-      for (let i = 0; i < flyingGems.length; i++) {
-        const fg = flyingGems[i];
-        fg.progress += 0.04;
-        const curX = fg.startX + (fg.targetX - fg.startX) * fg.progress;
-        const curY = fg.startY + (fg.targetY - fg.startY) * fg.progress - Math.sin(fg.progress * Math.PI) * 45;
-
-        ctx.fillStyle = "#f59e0b";
-        ctx.font = "20px system-ui";
-        ctx.textAlign = "center";
-        ctx.fillText("⭐", curX, curY);
-
-        if (fg.progress >= 1) {
-          if (grid[fg.targetR][fg.targetC] === 0) {
-            grid[fg.targetR][fg.targetC] = { color: "#2563eb", hasGem: true, isBomb: false };
-          }
-          playSoftTone(700, 0.15, 0.1);
-          createExplosion(fg.targetR, fg.targetC, "#f59e0b");
-          flyingGems.splice(i, 1);
-          i--;
         }
       }
 
       // شبح التنسيق
       if (draggedPiece && previewTarget && !isGameOverState) {
-        ctx.fillStyle = "rgba(37, 99, 235, 0.2)";
+        ctx.fillStyle = "rgba(56, 189, 248, 0.35)";
         for (const [dr, dc] of draggedPiece.blocks) {
           const gx = GRID_OFFSET_X + (previewTarget.c + dc) * CELL_SIZE;
           const gy = GRID_OFFSET_Y + (previewTarget.r + dr) * CELL_SIZE;
@@ -1302,55 +972,14 @@
         }
       }
 
-      // ذيل الحركة
-      for (let i = 0; i < trailParticles.length; i++) {
-        const tp = trailParticles[i];
-        tp.alpha -= 0.04;
-        ctx.save();
-        ctx.globalAlpha = Math.max(0, tp.alpha);
-        ctx.fillStyle = tp.color;
-        ctx.beginPath();
-        ctx.arc(tp.x, tp.y, tp.size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-        if (tp.alpha <= 0) { trailParticles.splice(i, 1); i--; }
-      }
-
-      // جزيئات الانفجار
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        p.x += p.vx; p.y += p.vy; p.alpha -= 0.025;
-        ctx.save();
-        ctx.globalAlpha = Math.max(0, p.alpha);
-        ctx.fillStyle = p.color;
-        ctx.fillRect(p.x, p.y, p.size, p.size);
-        ctx.restore();
-        if (p.alpha <= 0) { particles.splice(i, 1); i--; }
-      }
-
-      // النصوص العائمة
-      for (let i = 0; i < floatingTexts.length; i++) {
-        const t = floatingTexts[i];
-        t.y -= 0.7; t.alpha -= 0.015;
-        ctx.save();
-        ctx.globalAlpha = Math.max(0, t.alpha);
-        ctx.fillStyle = "#2563eb";
-        ctx.font = "bold 15px system-ui";
-        ctx.textAlign = "center";
-        ctx.fillText(t.text, t.x, t.y);
-        ctx.restore();
-        if (t.alpha <= 0) { floatingTexts.splice(i, 1); i--; }
-      }
-
-      // رسم قطع اليد
+      // رسم القطع
       hand.forEach(p => {
         if (p === draggedPiece) return;
-        drawShape(p, isGameOverState ? 0.4 : 1.0);
+        drawShape(p, isGameOverState ? 0.35 : 1.0);
       });
 
       if (draggedPiece) drawShape(draggedPiece, 1.0);
 
-      ctx.restore();
       requestAnimationFrame(draw);
     }
 
@@ -1362,14 +991,14 @@
         const x = piece.x + dc * piece.size;
         const y = piece.y + dr * piece.size;
         ctx.beginPath();
-        ctx.roundRect(x + 1, y + 1, piece.size - 2, piece.size - 2, 6);
+        ctx.roundRect(x + 1, y + 1, piece.size - 2, piece.size - 2, 7);
         ctx.fill();
 
         if (piece.starBlockIndex === idx) {
           ctx.fillStyle = "#ffffff";
-          ctx.font = `${Math.floor(piece.size * 0.7)}px system-ui`;
+          ctx.font = `${Math.floor(piece.size * 0.65)}px system-ui`;
           ctx.textAlign = "center";
-          ctx.fillText("⭐", x + piece.size / 2, y + piece.size / 2 + (piece.size * 0.25));
+          ctx.fillText("⭐", x + piece.size / 2, y + piece.size / 2 + (piece.size * 0.22));
           ctx.fillStyle = piece.color;
         }
       });
