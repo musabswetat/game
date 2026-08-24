@@ -13,25 +13,25 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Clean & Reinstall Dependencies
+      - name: Install Dependencies & Sync Capacitor
         run: |
-          rm -rf node_modules package-lock.json
           npm install
+          npx cap sync android
 
-      - name: Grant All Permissions to Android
+      - name: Grant Gradle Permissions
         run: |
-          chmod -R +x android/
+          chmod +x android/gradlew
 
       - name: Build Debug APK
         run: |
