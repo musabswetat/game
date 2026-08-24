@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">lifeos</string>
+    <string name="title_activity_main">lifeos</string>
+    <string name="package_name">com.mosaab.lifeos</string>
+    <string name="custom_url_scheme">com.mosaab.lifeos</string>
+</resources>
