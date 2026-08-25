@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">lifeos</string>
-    <string name="title_activity_main">lifeos</string>
-    <string name="package_name">com.mosaab.lifeos</string>
-    <string name="custom_url_scheme">com.mosaab.lifeos</string>
+    <string name="app_name">AZ-S Blcok</string>
+    <string name="title_activity_main">AZ-S Blcok</string>
+    <string name="package_name">com.azsw.AZ-S Blcok</string>
+    <string name="custom_url_scheme">com.azsw.AZ-S Blcok</string>
 </resources>

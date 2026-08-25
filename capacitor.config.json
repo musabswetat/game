@@ -1,5 +1,6 @@
 {
-  "appId": "com.mosaab.lifeos",
-  "appName": "lifeos",
-  "webDir": "www"
+  "appId": "com.swazblock.game",
+  "appName": "AZ Block",
+  "webDir": "www",
+  "bundledWebRuntime": false
 }
