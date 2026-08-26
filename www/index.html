@@ -162,6 +162,13 @@
 
   <script type="module">
     import { AdMob, BannerAdPosition, BannerAdSize } from '@capacitor-community/admob';
+    import { StatusBar } from '@capacitor/status-bar';
+
+    // إخفاء شريط الإشعارات لضمان وضع ملء الشاشة المطلق
+    try {
+      await StatusBar.hide();
+    } catch (e) {}
+
     async function initAdMobSDK() {
       try {
         await AdMob.initialize({ requestTrackingAuthorization: true });
@@ -215,10 +222,6 @@
       { id: "l", weight: 7, blocks: [[0, 0], [1, 0], [2, 0], [2, 1]] },
       { id: "t", weight: 7, blocks: [[0, 1], [1, 0], [1, 1], [1, 2]] }
     ];
-
-    if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.StatusBar) {
-        window.Capacitor.Plugins.StatusBar.hide().catch(()=>{});
-    }
 
     window.addEventListener('load', () => {
       setTimeout(() => { const splash = document.getElementById("splashScreen"); if(splash) { splash.style.opacity = "0"; setTimeout(() => splash.remove(), 600); } }, 1000);
@@ -431,10 +434,9 @@
       gameMode = "levels"; activeLevel = lvl; score = redGemsCollected = blueGemsCollected = reviveCount = 0;
       bossSecondsElapsed = 0; inStrategicMode = false;
 
-      // تعديل المرحلة الأولى لتكون نقطية صافية تماماً بدون جواهر لتبدأ اللعبة بشكل مريح
       let reqRed=0, reqBlue=0, reqScore=500+(lvl*150), hasTimer=false;
       if(lvl === 1) {
-          reqScore = 500; // المرحلة الأولى نقاط صافية
+          reqScore = 500; 
       } else if(lvl%5===0) { 
           hasTimer=true; 
           reqScore = 800+(lvl*200); 
@@ -565,7 +567,6 @@
       ctx.clearRect(0,0,INTERNAL_W,INTERNAL_H);
       ctx.save(); ctx.textAlign="center";
       
-      // ضبط مكان كتابة الأهداف ليصبح تماماً في المكان المطلوب (بين الأزرار واللوح)
       const TEXT_POS_Y = GRID_OFFSET_Y - 25;
 
       if(gameMode==="levels" && currentConfig){
@@ -580,8 +581,15 @@
             }
             ctx.fillStyle="#fff"; ctx.font="900 20px system-ui"; ctx.fillText(`🎯 ${score}/${currentConfig.reqScore}`, INTERNAL_W/2 + 65, TEXT_POS_Y);
         } else if(currentConfig.reqRedGems>0 || currentConfig.reqBlueGems>0){
-          ctx.fillStyle="#f43f5e"; ctx.font="900 20px system-ui"; ctx.fillText(`💎 ${Math.max(0, currentConfig.reqRedGems-redGemsCollected)}`, INTERNAL_W/2 - 50, TEXT_POS_Y);
-          ctx.fillStyle="#38bdf8"; ctx.font="900 20px system-ui"; ctx.fillText(`🔷 ${Math.max(0, currentConfig.reqBlueGems-blueGemsCollected)}`, INTERNAL_W/2 + 50, TEXT_POS_Y);
+          // التعديل الذكي هنا: عرض العداد المطلوب فقط وعدم إظهار الـ 0 للنوع غير المطلوب
+          if (currentConfig.reqRedGems > 0 && currentConfig.reqBlueGems > 0) {
+              ctx.fillStyle="#f43f5e"; ctx.font="900 18px system-ui"; ctx.fillText(`💎 ${Math.max(0, currentConfig.reqRedGems-redGemsCollected)}`, INTERNAL_W/2 - 50, TEXT_POS_Y);
+              ctx.fillStyle="#38bdf8"; ctx.font="900 18px system-ui"; ctx.fillText(`🔷 ${Math.max(0, currentConfig.reqBlueGems-blueGemsCollected)}`, INTERNAL_W/2 + 50, TEXT_POS_Y);
+          } else if (currentConfig.reqRedGems > 0) {
+              ctx.fillStyle="#f43f5e"; ctx.font="900 20px system-ui"; ctx.fillText(`💎 ${Math.max(0, currentConfig.reqRedGems-redGemsCollected)}`, INTERNAL_W/2, TEXT_POS_Y);
+          } else if (currentConfig.reqBlueGems > 0) {
+              ctx.fillStyle="#38bdf8"; ctx.font="900 20px system-ui"; ctx.fillText(`🔷 ${Math.max(0, currentConfig.reqBlueGems-blueGemsCollected)}`, INTERNAL_W/2, TEXT_POS_Y);
+          }
         } else { ctx.fillStyle="#fff"; ctx.font="900 22px system-ui"; ctx.fillText(`الهدف: ${score}/${currentConfig.reqScore}`, INTERNAL_W/2, TEXT_POS_Y); }
       } else if (gameMode==="classic") {
         ctx.fillStyle="#fff"; ctx.font="900 26px system-ui"; ctx.fillText(`${score}`, INTERNAL_W/2, TEXT_POS_Y - 5);
