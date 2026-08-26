@@ -42,18 +42,19 @@
     }
     .ad-badge { border: 1px solid #475569; padding: 2px 6px; border-radius: 4px; margin-left: 8px; color: #94a3b8; }
 
+    /* تنسيق وتوزيع الأزرار العلوية مثل Block Blast */
     .top-nav-btn {
-      position: absolute; top: 20px;
+      position: absolute; top: 15px;
       background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 14px; color: #fff; font-size: 1.5rem; cursor: pointer; pointer-events: auto;
+      border-radius: 14px; color: #fff; font-size: 1.4rem; cursor: pointer; pointer-events: auto;
       z-index: 2000; display: flex; align-items: center; justify-content: center;
-      width: 46px; height: 46px; backdrop-filter: blur(10px);
+      width: 42px; height: 42px; backdrop-filter: blur(10px);
       box-shadow: 0 4px 15px rgba(0,0,0,0.4); transition: transform 0.1s;
     }
     .top-nav-btn:active { transform: scale(0.9); }
-    #backTopBtn { right: 20px; }
-    #settingsTopBtn { left: 20px; }
-    #restartTopBtn { left: 76px; font-size: 1.2rem; display: none; }
+    #backTopBtn { left: 20px; }       /* زر الرجوع أقصى اليسار */
+    #settingsTopBtn { right: 20px; }  /* زر الإعدادات أقصى اليمين */
+    #restartTopBtn { right: 72px; font-size: 1.1rem; display: none; } /* زر الإعادة بجانب الإعدادات دون تداخل */
 
     .modal {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -95,6 +96,7 @@
       <div class="splash-title">musab sw</div>
     </div>
 
+    <!-- الأزرار العلوية المنظمة -->
     <button id="backTopBtn" class="top-nav-btn" onclick="handleHardwareBack()" title="رجوع">❮</button>
     <button id="restartTopBtn" class="top-nav-btn" onclick="askForRestart()" title="إعادة المرحلة">🔄</button>
     <button id="settingsTopBtn" class="top-nav-btn" onclick="openSettings()" title="الإعدادات">⚙️</button>
@@ -183,7 +185,7 @@
     const ctx = canvas.getContext("2d");
 
     let INTERNAL_W = 400, INTERNAL_H = 720;
-    let GRID_OFFSET_X = 24, GRID_OFFSET_Y = 130;
+    let GRID_OFFSET_X = 24, GRID_OFFSET_Y = 120; // مسافة علوية كافية وصافية
     const GRID_SIZE = 8, CELL_SIZE = 44;
 
     let gameMode = "classic", activeLevel = 1, score = 0, redGemsCollected = 0, blueGemsCollected = 0;
@@ -203,7 +205,6 @@
 
     const PALETTES = [ { base: "#3b82f6", light: "#60a5fa", dark: "#1d4ed8" }, { base: "#10b981", light: "#34d399", dark: "#059669" }, { base: "#f59e0b", light: "#fbbf24", dark: "#b45309" }, { base: "#8b5cf6", light: "#a78bfa", dark: "#6d28d9" } ];
     
-    // المربع الفردي (dot) وزنه 1 من أصل أكثر من 80، يعني نسبة ظهوره نادرة جداً
     const ALL_SHAPES = [
       { id: "dot", weight: 1, blocks: [[0, 0]] }, 
       { id: "line2h", weight: 14, blocks: [[0, 0], [0, 1]] },
@@ -240,7 +241,8 @@
       const dpr = window.devicePixelRatio || 1;
       INTERNAL_W = 400; INTERNAL_H = 400 * (rect.height / rect.width);
       canvas.width = INTERNAL_W * dpr; canvas.height = INTERNAL_H * dpr; ctx.scale(dpr, dpr);
-      GRID_OFFSET_X = (INTERNAL_W - (GRID_SIZE * CELL_SIZE)) / 2; GRID_OFFSET_Y = Math.min(130, INTERNAL_H * 0.18);
+      GRID_OFFSET_X = (INTERNAL_W - (GRID_SIZE * CELL_SIZE)) / 2; 
+      GRID_OFFSET_Y = Math.min(115, INTERNAL_H * 0.16); // ضبط مكان اللوح ليترك مساحة كاملة ونظيفة للأهداف بالمنتصف
       if(hand && hand.length > 0) updateHandPositions();
     }
     window.addEventListener("resize", resizeCanvas);
@@ -297,10 +299,8 @@
     window.renderMapGrid = function() {
       const container = document.getElementById("levelsGridContainer"); container.innerHTML = "";
       for (let i = 1; i <= 200; i++) {
-        // الأهداف المنطقية الجديدة المتناسبة مع الصعوبة
         let req = 500 + (i * 150); 
         if (i%5===0) req = 800 + (i * 200);
-        
         let badge = (i%5===0)?`⏱️ ${req}🎯`:((i%3===1)?`💎 ${4+Math.floor(i*0.15)}`:((i%3===2)?`🔷 ${4+Math.floor(i*0.15)}`:`🎯 ${req}`));
         const node = document.createElement("div"); node.className = `level-node unlocked ${(i%5===0)?"boss-level":""}`;
         node.innerHTML = `<div class="level-num">${(i%5===0)?"🔥"+i:i}</div><div style="font-size:0.65rem; color:#bae6fd; font-weight:700;">${badge}</div>`;
@@ -329,12 +329,11 @@
         return JSON.parse(JSON.stringify(ALL_SHAPES[1]));
     }
 
-    // فحص اللوح بذكاء: هل يحتاج اللاعب مساعدة صغيرة؟
     function analyzeBoardForSmartDrop() {
         let needsHelper = false;
         for(let r=0; r<GRID_SIZE; r++) {
             let filledCount = grid[r].filter(c => c !== 0).length;
-            if(filledCount === GRID_SIZE - 1) needsHelper = true; // يحتاج مربعاً لإكمال الخط
+            if(filledCount === GRID_SIZE - 1) needsHelper = true;
         }
         for(let c=0; c<GRID_SIZE; c++) {
             let filledCount = 0;
@@ -353,7 +352,6 @@
 
       for (let i = 0; i < 3; i++) {
         let p;
-        // الذكاء الاصطناعي يقترح قطعة بطول 2 لمساعدتك إذا كنت قريباً من الإنجاز، وليس المربع الفردي!
         if (i === 0 && boardNeedsHelp && Math.random() > 0.5) {
              let helpers = ALL_SHAPES.filter(s => s.id === "line2h" || s.id === "line2v");
              p = JSON.parse(JSON.stringify(helpers[Math.floor(Math.random() * helpers.length)]));
@@ -367,12 +365,10 @@
         hand.push(p);
       }
       
-      // نظام الإنقاذ الأخير (طوق النجاة): إذا اقتربت من الخسارة الحتمية واللوح به فراغ صغير
       let canPlayAny = hand.some(p => { for(let r=0;r<GRID_SIZE;r++) for(let c=0;c<GRID_SIZE;c++) if(canPlace(p,r,c)) return true; return false; });
       if(!canPlayAny) {
           let hasEmptySpace = false;
           for(let r=0;r<GRID_SIZE;r++) for(let c=0;c<GRID_SIZE;c++) if(grid[r][c] === 0) hasEmptySpace = true;
-          // هنا فقط يتدخل المربع الصغير (1x1) لينقذك من الموت
           if(hasEmptySpace) {
               let rescueShape = JSON.parse(JSON.stringify(ALL_SHAPES.find(s => s.id === "dot"))); 
               rescueShape.colorData = PALETTES[0]; rescueShape.size = PREVIEW_SIZE; rescueShape.gemType = null; rescueShape.gemBlockIndex = -1;
@@ -391,8 +387,6 @@
       if(!directFit) { 
         gameLoopActive = false; 
         stopHeartbeatEngine();
-        
-        // التوقف ثانية ونصف ليرى المستخدم أن اللوح ممتلئ تماماً
         setTimeout(() => {
             isGameOverState = true; 
             document.getElementById('lossControlBar').style.display = "flex"; 
@@ -414,14 +408,8 @@
           return;
         }
         bossSecondsElapsed++;
-        
-        if (bossSecondsElapsed >= 105 && bossSecondsElapsed <= 120) {
-          playSound('heartbeat'); triggerHaptic(15);
-        }
-        
-        if (bossSecondsElapsed >= 120) {
-          inStrategicMode = true; stopHeartbeatEngine(); triggerHaptic(40);
-        }
+        if (bossSecondsElapsed >= 105 && bossSecondsElapsed <= 120) { playSound('heartbeat'); triggerHaptic(15); }
+        if (bossSecondsElapsed >= 120) { inStrategicMode = true; stopHeartbeatEngine(); triggerHaptic(40); }
       }, 1000);
     }
 
@@ -443,7 +431,6 @@
       bossSecondsElapsed = 0; inStrategicMode = false;
       document.getElementById('restartTopBtn').style.display = "flex"; 
 
-      // أهداف منطقية وموزونة حسب الصعوبة الجديدة
       let reqRed=0, reqBlue=0, reqScore=500+(lvl*150), hasTimer=false;
       if(lvl%5===0) { hasTimer=true; reqScore = 800+(lvl*200); }
       else if(lvl%3===1) reqRed = 4+Math.floor(lvl*0.15); 
@@ -452,8 +439,7 @@
       currentConfig = { reqScore, reqRedGems:reqRed, reqBlueGems:reqBlue, hasTimer };
       grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
       
-      // تقليل الحد الأقصى للعقبات ليكون منطقياً (أقصى حد 10 عقبات فقط)
-      let difficultyFactor = (lvl % 4 === 0) ? 0.2 : 1.0; // مرحلة استراحة كل 4 مراحل
+      let difficultyFactor = (lvl % 4 === 0) ? 0.2 : 1.0;
       let prefilledAmount = Math.floor(Math.min(10, Math.floor(lvl / 3.5)) * difficultyFactor); 
       
       for(let i=0; i<prefilledAmount; i++) {
@@ -542,7 +528,7 @@
           
           let lines = rows.length + cols.length;
           let lineScore = lines * 150; 
-          if (lines > 1) lineScore += (lines - 1) * 150; // بونص للكومبو
+          if (lines > 1) lineScore += (lines - 1) * 150;
           if (inStrategicMode) lineScore *= 2;
           score += lineScore;
         } else playSound('drop');
@@ -572,24 +558,25 @@
       ctx.clearRect(0,0,INTERNAL_W,INTERNAL_H);
       ctx.save(); ctx.textAlign="center";
       
+      // التنسيق النظيف في المنتصف تماماً مثل Block Blast
       if(gameMode==="levels" && currentConfig){
         if (currentConfig.hasTimer) {
             if (!inStrategicMode) {
                 const mins = Math.floor(bossSecondsElapsed / 60); const secs = bossSecondsElapsed % 60;
-                ctx.fillStyle = (bossSecondsElapsed >= 105) ? "#f43f5e" : "#38bdf8"; ctx.font="900 20px system-ui";
-                ctx.fillText(`⏱️ ${mins}:${secs < 10 ? '0' : ''}${secs}`, INTERNAL_W/2 - 70, Math.min(70, GRID_OFFSET_Y - 40));
+                ctx.fillStyle = (bossSecondsElapsed >= 105) ? "#f43f5e" : "#38bdf8"; ctx.font="900 18px system-ui";
+                ctx.fillText(`⏱️ ${mins}:${secs < 10 ? '0' : ''}${secs}`, INTERNAL_W/2 - 70, 45);
             } else {
-                ctx.fillStyle = "#fbbf24"; ctx.font="900 18px system-ui";
-                ctx.fillText("🧠 استراتيجي!", INTERNAL_W/2 - 70, Math.min(70, GRID_OFFSET_Y - 40));
+                ctx.fillStyle = "#fbbf24"; ctx.font="900 16px system-ui";
+                ctx.fillText("🧠 استراتيجي!", INTERNAL_W/2 - 70, 45);
             }
-            ctx.fillStyle="#fff"; ctx.font="900 22px system-ui"; ctx.fillText(`🎯 ${score}/${currentConfig.reqScore}`, INTERNAL_W/2 + 60, Math.min(70, GRID_OFFSET_Y - 40));
+            ctx.fillStyle="#fff"; ctx.font="900 20px system-ui"; ctx.fillText(`🎯 ${score}/${currentConfig.reqScore}`, INTERNAL_W/2 + 65, 45);
         } else if(currentConfig.reqRedGems>0 || currentConfig.reqBlueGems>0){
-          ctx.fillStyle="#f43f5e"; ctx.font="900 22px system-ui"; ctx.fillText(`💎 ${Math.max(0, currentConfig.reqRedGems-redGemsCollected)}`, INTERNAL_W/2 - 60, Math.min(70, GRID_OFFSET_Y - 40));
-          ctx.fillStyle="#38bdf8"; ctx.fillText(`🔷 ${Math.max(0, currentConfig.reqBlueGems-blueGemsCollected)}`, INTERNAL_W/2 + 60, Math.min(70, GRID_OFFSET_Y - 40));
-        } else { ctx.fillStyle="#fff"; ctx.font="900 24px system-ui"; ctx.fillText(`الهدف: ${score}/${currentConfig.reqScore}`, INTERNAL_W/2, Math.min(70, GRID_OFFSET_Y - 40)); }
+          ctx.fillStyle="#f43f5e"; ctx.font="900 20px system-ui"; ctx.fillText(`💎 ${Math.max(0, currentConfig.reqRedGems-redGemsCollected)}`, INTERNAL_W/2 - 50, 45);
+          ctx.fillStyle="#38bdf8"; ctx.font="900 20px system-ui"; ctx.fillText(`🔷 ${Math.max(0, currentConfig.reqBlueGems-blueGemsCollected)}`, INTERNAL_W/2 + 50, 45);
+        } else { ctx.fillStyle="#fff"; ctx.font="900 22px system-ui"; ctx.fillText(`الهدف: ${score}/${currentConfig.reqScore}`, INTERNAL_W/2, 45); }
       } else if (gameMode==="classic") {
-        ctx.fillStyle="#fff"; ctx.font="900 28px system-ui"; ctx.fillText(`${score}`, INTERNAL_W/2, Math.min(60, GRID_OFFSET_Y - 45));
-        ctx.fillStyle="#94a3b8"; ctx.font="700 14px system-ui"; ctx.fillText(`🏆 الأعلى: ${highScore}`, INTERNAL_W/2, Math.min(90, GRID_OFFSET_Y - 15));
+        ctx.fillStyle="#fff"; ctx.font="900 26px system-ui"; ctx.fillText(`${score}`, INTERNAL_W/2, 40);
+        ctx.fillStyle="#94a3b8"; ctx.font="700 13px system-ui"; ctx.fillText(`🏆 الأعلى: ${highScore}`, INTERNAL_W/2, 65);
       }
       ctx.restore();
 
