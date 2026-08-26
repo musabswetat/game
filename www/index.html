@@ -17,18 +17,19 @@
     }
 
     #gameContainer {
-      position: relative; width: 100%; max-width: 450px; height: 100vh;
+      position: relative; width: 100vw; max-width: 450px; height: 100vh;
       background: radial-gradient(circle at center, #1e1b4b 0%, #020617 100%);
       overflow: hidden; box-shadow: 0 0 30px rgba(0,0,0,0.8);
     }
 
+    /* شاشة البداية (تم زيادة مدة العرض لتصبح أطول وأنيق) */
     #splashScreen {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: linear-gradient(135deg, #0f172a 0%, #312e81 100%);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      z-index: 9999; transition: opacity 0.5s ease;
+      z-index: 9999; transition: opacity 0.8s ease;
     }
-    .splash-logo { font-size: 5rem; margin-bottom: 15px; animation: pulse 1.5s infinite alternate; }
+    .splash-logo { font-size: 5.5rem; margin-bottom: 15px; animation: pulse 1.5s infinite alternate; }
     @keyframes pulse { 0% { transform: scale(0.9); } 100% { transform: scale(1.1); } }
     .splash-title { font-size: 3.5rem; font-weight: 900; color: #38bdf8; text-shadow: 0 4px 15px rgba(0,0,0,0.6); }
 
@@ -94,6 +95,7 @@
       <div class="splash-title">musab sw</div>
     </div>
 
+    <!-- زر الرجوع (يعيدك للقائمة بأمان تام) -->
     <button id="backTopBtn" class="top-nav-btn" onclick="handleHardwareBack()" title="رجوع">❮</button>
     <button id="settingsTopBtn" class="top-nav-btn" onclick="openSettings()" title="الإعدادات">⚙️</button>
 
@@ -164,7 +166,6 @@
     import { AdMob, BannerAdPosition, BannerAdSize } from '@capacitor-community/admob';
     import { StatusBar } from '@capacitor/status-bar';
 
-    // إخفاء شريط الإشعارات لضمان وضع ملء الشاشة المطلق
     try {
       await StatusBar.hide();
     } catch (e) {}
@@ -205,6 +206,7 @@
     let audioCtx = null;
     
     let bossSecondsElapsed = 0, heartbeatTimerInterval = null, inStrategicMode = false;
+    let floatingTexts = []; // للمؤثرات البصرية والعبارات العائمة (Great, Combo)
 
     let userSettings = JSON.parse(localStorage.getItem("msw_settings")) || { sound: true, haptic: true };
     document.getElementById("soundToggle").checked = userSettings.sound;
@@ -212,19 +214,21 @@
 
     const PALETTES = [ { base: "#3b82f6", light: "#60a5fa", dark: "#1d4ed8" }, { base: "#10b981", light: "#34d399", dark: "#059669" }, { base: "#f59e0b", light: "#fbbf24", dark: "#b45309" }, { base: "#8b5cf6", light: "#a78bfa", dark: "#6d28d9" } ];
     
+    // المربع الفردي نادر جداً (وزن 1) ولا يظهر إلا كإنقاذ أخير
     const ALL_SHAPES = [
       { id: "dot", weight: 1, blocks: [[0, 0]] }, 
-      { id: "line2h", weight: 14, blocks: [[0, 0], [0, 1]] },
-      { id: "line2v", weight: 14, blocks: [[0, 0], [1, 0]] },
-      { id: "line3h", weight: 10, blocks: [[0, 0], [0, 1], [0, 2]] },
-      { id: "line3v", weight: 10, blocks: [[0, 0], [1, 0], [2, 0]] },
-      { id: "sq2", weight: 8, blocks: [[0, 0], [0, 1], [1, 0], [1, 1]] },
-      { id: "l", weight: 7, blocks: [[0, 0], [1, 0], [2, 0], [2, 1]] },
-      { id: "t", weight: 7, blocks: [[0, 1], [1, 0], [1, 1], [1, 2]] }
+      { id: "line2h", weight: 16, blocks: [[0, 0], [0, 1]] },
+      { id: "line2v", weight: 16, blocks: [[0, 0], [1, 0]] },
+      { id: "line3h", weight: 12, blocks: [[0, 0], [0, 1], [0, 2]] },
+      { id: "line3v", weight: 12, blocks: [[0, 0], [1, 0], [2, 0]] },
+      { id: "sq2", weight: 10, blocks: [[0, 0], [0, 1], [1, 0], [1, 1]] },
+      { id: "l", weight: 8, blocks: [[0, 0], [1, 0], [2, 0], [2, 1]] },
+      { id: "t", weight: 8, blocks: [[0, 1], [1, 0], [1, 1], [1, 2]] }
     ];
 
     window.addEventListener('load', () => {
-      setTimeout(() => { const splash = document.getElementById("splashScreen"); if(splash) { splash.style.opacity = "0"; setTimeout(() => splash.remove(), 600); } }, 1000);
+      // زيادة وقت عرض شاشة البداية لتصبح أطول وأوضح
+      setTimeout(() => { const splash = document.getElementById("splashScreen"); if(splash) { splash.style.opacity = "0"; setTimeout(() => splash.remove(), 800); } }, 2500);
     });
 
     function updateHandPositions() {
@@ -244,10 +248,8 @@
       const dpr = window.devicePixelRatio || 1;
       INTERNAL_W = 400; INTERNAL_H = 400 * (rect.height / rect.width);
       canvas.width = INTERNAL_W * dpr; canvas.height = INTERNAL_H * dpr; ctx.scale(dpr, dpr);
-      
       GRID_OFFSET_X = (INTERNAL_W - (GRID_SIZE * CELL_SIZE)) / 2; 
       GRID_OFFSET_Y = (INTERNAL_H - (GRID_SIZE * CELL_SIZE)) / 2 - 15; 
-      
       if(hand && hand.length > 0) updateHandPositions();
     }
     window.addEventListener("resize", resizeCanvas);
@@ -269,9 +271,9 @@
           osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now); osc.stop(now + 0.05);
         } else if (type === 'clear') {
           const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-          osc.type = 'sine'; osc.frequency.setValueAtTime(500, now); osc.frequency.exponentialRampToValueAtTime(1200, now + 0.3);
-          gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-          osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now); osc.stop(now + 0.3);
+          osc.type = 'sine'; osc.frequency.setValueAtTime(500, now); osc.frequency.exponentialRampToValueAtTime(1400, now + 0.35);
+          gain.gain.setValueAtTime(0.35, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now); osc.stop(now + 0.35);
         } else if (type === 'heartbeat') { 
           const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
           osc.type = 'sine'; osc.frequency.setValueAtTime(65, now); osc.frequency.exponentialRampToValueAtTime(35, now + 0.1);
@@ -282,6 +284,7 @@
     }
     function triggerHaptic(ms = 25) { if (userSettings.haptic && navigator.vibrate) { try { navigator.vibrate(ms); } catch (e) {} } }
 
+    // زر الرجوع الآمن (يعيدك للقائمة أو الخريطة دون إغلاق التطبيق)
     window.handleHardwareBack = function() {
       if(document.getElementById('mapModal').style.display === "flex") { closeLevelMap(); return; }
       if(document.getElementById('settingsModal').style.display === "flex") { closeSettings(); return; }
@@ -291,6 +294,8 @@
           document.getElementById('winModal').style.display = "none";
           document.getElementById('lossControlBar').style.display = "none";
           document.getElementById('startModal').style.display = "flex";
+      } else {
+          openLevelMap();
       }
     }
 
@@ -303,9 +308,16 @@
     window.renderMapGrid = function() {
       const container = document.getElementById("levelsGridContainer"); container.innerHTML = "";
       for (let i = 1; i <= 200; i++) {
-        let req = 500 + (i * 150); 
-        if (i%5===0) req = 800 + (i * 200);
-        let badge = (i%5===0)?`⏱️ ${req}🎯`:((i%3===1)?`💎 ${4+Math.floor(i*0.15)}`:((i%3===2)?`🔷 ${4+Math.floor(i*0.15)}`:`🎯 ${req}`));
+        let req = 400 + (i * 120); 
+        if (i%5===0) req = 800 + (i * 150);
+        
+        // دمج الأهداف (نقاط + جواهر متعددة الألوان إذا دعت الحاجة بذكاء)
+        let badge = "";
+        if(i%5===0) badge = `⏱️ ${req}🎯`;
+        else if(i%3===1) badge = `💎 ${3+Math.floor(i*0.1)}`;
+        else if(i%3===2) badge = `🔷 ${3+Math.floor(i*0.1)}`;
+        else badge = `🎯 ${req}`;
+
         const node = document.createElement("div"); node.className = `level-node unlocked ${(i%5===0)?"boss-level":""}`;
         node.innerHTML = `<div class="level-num">${(i%5===0)?"🔥"+i:i}</div><div style="font-size:0.65rem; color:#bae6fd; font-weight:700;">${badge}</div>`;
         node.onclick = () => startSpecificLevel(i); container.appendChild(node);
@@ -333,42 +345,24 @@
         return JSON.parse(JSON.stringify(ALL_SHAPES[1]));
     }
 
-    function analyzeBoardForSmartDrop() {
-        let needsHelper = false;
-        for(let r=0; r<GRID_SIZE; r++) {
-            let filledCount = grid[r].filter(c => c !== 0).length;
-            if(filledCount === GRID_SIZE - 1) needsHelper = true;
-        }
-        for(let c=0; c<GRID_SIZE; c++) {
-            let filledCount = 0;
-            for(let r=0; r<GRID_SIZE; r++) if(grid[r][c] !== 0) filledCount++;
-            if(filledCount === GRID_SIZE - 1) needsHelper = true;
-        }
-        return needsHelper;
-    }
-
     function generateHand() {
       hand = []; const PREVIEW_SIZE = 22;
-      let targetGem = (gameMode==="levels" && currentConfig) ? (currentConfig.reqRedGems>redGemsCollected?'red':(currentConfig.reqBlueGems>blueGemsCollected?'blue':null)) : null;
+      let targetGem = null;
+      if (gameMode === "levels" && currentConfig) {
+          if (currentConfig.reqRedGems > redGemsCollected) targetGem = 'red';
+          else if (currentConfig.reqBlueGems > blueGemsCollected) targetGem = 'blue';
+      }
       const gemIdx = targetGem ? Math.floor(Math.random()*3) : -1;
-      
-      let boardNeedsHelp = analyzeBoardForSmartDrop();
 
       for (let i = 0; i < 3; i++) {
-        let p;
-        if (i === 0 && boardNeedsHelp && Math.random() > 0.5) {
-             let helpers = ALL_SHAPES.filter(s => s.id === "line2h" || s.id === "line2v");
-             p = JSON.parse(JSON.stringify(helpers[Math.floor(Math.random() * helpers.length)]));
-        } else {
-             p = getWeightedRandomShape();
-        }
-
+        let p = getWeightedRandomShape();
         p.colorData = PALETTES[Math.floor(Math.random() * PALETTES.length)];
         p.size = PREVIEW_SIZE; p.gemType = (i === gemIdx) ? targetGem : null;
         p.gemBlockIndex = (i === gemIdx) ? Math.floor(Math.random() * p.blocks.length) : -1;
         hand.push(p);
       }
       
+      // طوق النجاة (مربع 1x1 نادر جداً لا يظهر إلا للضرورة القصوى)
       let canPlayAny = hand.some(p => { for(let r=0;r<GRID_SIZE;r++) for(let c=0;c<GRID_SIZE;c++) if(canPlace(p,r,c)) return true; return false; });
       if(!canPlayAny) {
           let hasEmptySpace = false;
@@ -406,14 +400,15 @@
 
     function startTimedEngine() {
       stopHeartbeatEngine();
+      bossSecondsElapsed = 0;
       heartbeatTimerInterval = setInterval(() => {
         if (!gameLoopActive || !currentConfig || !currentConfig.hasTimer || inStrategicMode) {
           if (!currentConfig || !currentConfig.hasTimer) stopHeartbeatEngine();
           return;
         }
         bossSecondsElapsed++;
-        if (bossSecondsElapsed >= 105 && bossSecondsElapsed <= 120) { playSound('heartbeat'); triggerHaptic(15); }
-        if (bossSecondsElapsed >= 120) { inStrategicMode = true; stopHeartbeatEngine(); triggerHaptic(40); }
+        if (bossSecondsElapsed >= 75 && bossSecondsElapsed <= 90) { playSound('heartbeat'); triggerHaptic(15); }
+        if (bossSecondsElapsed >= 90) { inStrategicMode = true; stopHeartbeatEngine(); triggerHaptic(40); }
       }, 1000);
     }
 
@@ -434,23 +429,30 @@
       gameMode = "levels"; activeLevel = lvl; score = redGemsCollected = blueGemsCollected = reviveCount = 0;
       bossSecondsElapsed = 0; inStrategicMode = false;
 
-      let reqRed=0, reqBlue=0, reqScore=500+(lvl*150), hasTimer=false;
+      // أهداف مراحل منطقية متصاعدة ومدروسة
+      let reqRed=0, reqBlue=0, reqScore=400+(lvl*120), hasTimer=false;
       if(lvl === 1) {
-          reqScore = 500; 
+          reqScore = 400; // المرحلة الأولى نقاط صافية مريحة
       } else if(lvl%5===0) { 
           hasTimer=true; 
-          reqScore = 800+(lvl*200); 
+          reqScore = 700+(lvl*150); 
       } else if(lvl%3===1) { 
-          reqRed = 4+Math.floor(lvl*0.15); 
+          reqRed = 3+Math.floor(lvl*0.12); 
       } else if(lvl%3===2) { 
-          reqBlue = 4+Math.floor(lvl*0.15); 
+          reqBlue = 3+Math.floor(lvl*0.12); 
       }
       
+      // دمج أهداف متعددة في المراحل المتقدمة (مثلاً بعد المرحلة 20 تتطلب نقاط + جواهر معاً)
+      if (lvl > 20 && lvl % 5 !== 0) {
+          reqRed = 2 + Math.floor(lvl * 0.08);
+          reqScore = 500 + (lvl * 100);
+      }
+
       currentConfig = { reqScore, reqRedGems:reqRed, reqBlueGems:reqBlue, hasTimer };
       grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
       
       let difficultyFactor = (lvl % 4 === 0) ? 0.2 : 1.0;
-      let prefilledAmount = Math.floor(Math.min(10, Math.floor(lvl / 3.5)) * difficultyFactor); 
+      let prefilledAmount = Math.floor(Math.min(10, Math.floor(lvl / 4)) * difficultyFactor); 
       
       for(let i=0; i<prefilledAmount; i++) {
           let r = Math.floor(Math.random()*8), c = Math.floor(Math.random()*8);
@@ -458,12 +460,12 @@
       }
 
       let placedReds = 0;
-      while (placedReds < Math.min(4, reqRed)) {
+      while (placedReds < Math.min(3, reqRed)) {
           let r = Math.floor(Math.random()*8), c = Math.floor(Math.random()*8);
           if(grid[r][c] === 0) { grid[r][c]={colorData:PALETTES[1], gem:'red'}; placedReds++; }
       }
       let placedBlues = 0;
-      while (placedBlues < Math.min(4, reqBlue)) {
+      while (placedBlues < Math.min(3, reqBlue)) {
           let r = Math.floor(Math.random()*8), c = Math.floor(Math.random()*8);
           if(grid[r][c] === 0) { grid[r][c]={colorData:PALETTES[0], gem:'blue'}; placedBlues++; }
       }
@@ -507,14 +509,35 @@
     canvas.addEventListener("touchstart", handleDown, {passive:false});
     canvas.addEventListener("mousedown", handleDown);
 
+    function calculatePredictedLines(shape, targetR, targetC) {
+      if (!shape || targetR === null || targetC === null) return { rows: [], cols: [] };
+      const tempGrid = grid.map(row => row.map(cell => cell !== 0 ? 1 : 0));
+      for (const [dr, dc] of shape.blocks) {
+        const r = targetR + dr, c = targetC + dc;
+        if (r >= 0 && r < GRID_SIZE && c >= 0 && c < GRID_SIZE) tempGrid[r][c] = 1;
+      }
+      const rows = [], cols = [];
+      for (let r = 0; r < GRID_SIZE; r++) { if (tempGrid[r].every(val => val === 1)) rows.push(r); }
+      for (let c = 0; c < GRID_SIZE; c++) { if (tempGrid.every(row => row[c] === 1)) cols.push(c); }
+      return { rows, cols };
+    }
+
     function handleMove(e) {
       if(!draggedPiece) return; if(e.cancelable) e.preventDefault();
       const pos = getCanvasCoords(e); draggedPiece.x = pos.x - dragOffsetX; draggedPiece.y = pos.y - dragOffsetY;
       const tc = Math.round((draggedPiece.x - GRID_OFFSET_X)/CELL_SIZE), tr = Math.round((draggedPiece.y - GRID_OFFSET_Y)/CELL_SIZE);
-      previewTarget = canPlace(draggedPiece, tr, tc) ? {r:tr, c:tc} : null;
+      if (canPlace(draggedPiece, tr, tc)) {
+        previewTarget = {r:tr, c:tc};
+        predictedLines = calculatePredictedLines(draggedPiece, tr, tc);
+      } else { 
+        previewTarget = null; 
+        predictedLines = { rows: [], cols: [] };
+      }
     }
     canvas.addEventListener("touchmove", handleMove, {passive:false});
     canvas.addEventListener("mousemove", handleMove);
+
+    let predictedLines = { rows: [], cols: [] };
 
     function handleUp(e) {
       if(!draggedPiece) return; if(e && e.cancelable) e.preventDefault();
@@ -522,7 +545,7 @@
       if(canPlace(draggedPiece, tr, tc)){
         draggedPiece.blocks.forEach(([dr, dc], i)=>{ grid[tr+dr][tc+dc] = (draggedPiece.gemBlockIndex===i) ? {colorData:draggedPiece.colorData, gem:draggedPiece.gemType} : {colorData:draggedPiece.colorData}; });
         
-        let pointsEarned = draggedPiece.blocks.length * 5;
+        let pointsEarned = draggedPiece.blocks.length; // 1 نقطة لكل مربع تماماً كما طلبت
         if (inStrategicMode) pointsEarned *= 2;
         score += pointsEarned;
 
@@ -536,10 +559,13 @@
           cols.forEach(c=>{ for(let r=0;r<GRID_SIZE;r++){ if(grid[r][c]&&grid[r][c].gem==='red')redGemsCollected++; if(grid[r][c]&&grid[r][c].gem==='blue')blueGemsCollected++; grid[r][c]=0; }});
           
           let lines = rows.length + cols.length;
-          let lineScore = lines * 150; 
-          if (lines > 1) lineScore += (lines - 1) * 150;
+          let lineScore = lines * 100; 
+          if (lines > 1) lineScore += (lines - 1) * 100; // بونص الكومبو
           if (inStrategicMode) lineScore *= 2;
           score += lineScore;
+
+          // إضافة نص عائم بصري تحفيزي (Great, Combo)
+          floatingTexts.push({ text: lines > 1 ? `Combo x${lines}!` : "Great!", x: INTERNAL_W/2, y: GRID_OFFSET_Y + (tr * CELL_SIZE), alpha: 1.0 });
         } else playSound('drop');
 
         if(score>highScore) { highScore = score; localStorage.setItem("msw_high_score", highScore); }
@@ -551,7 +577,7 @@
         
         if(hand.length===0) generateHand(); else checkGameOver();
       } else { draggedPiece.x=draggedPiece.origX; draggedPiece.y=draggedPiece.origY; draggedPiece.size=22; }
-      previewTarget=null; draggedPiece=null;
+      previewTarget=null; predictedLines = { rows: [], cols: [] }; draggedPiece=null;
     }
     canvas.addEventListener("touchend", handleUp, {passive:false});
     canvas.addEventListener("mouseup", handleUp);
@@ -573,15 +599,14 @@
         if (currentConfig.hasTimer) {
             if (!inStrategicMode) {
                 const mins = Math.floor(bossSecondsElapsed / 60); const secs = bossSecondsElapsed % 60;
-                ctx.fillStyle = (bossSecondsElapsed >= 105) ? "#f43f5e" : "#38bdf8"; ctx.font="900 18px system-ui";
+                ctx.fillStyle = (bossSecondsElapsed >= 75) ? "#f43f5e" : "#38bdf8"; ctx.font="900 18px system-ui";
                 ctx.fillText(`⏱️ ${mins}:${secs < 10 ? '0' : ''}${secs}`, INTERNAL_W/2 - 70, TEXT_POS_Y);
             } else {
                 ctx.fillStyle = "#fbbf24"; ctx.font="900 16px system-ui";
                 ctx.fillText("🧠 استراتيجي!", INTERNAL_W/2 - 70, TEXT_POS_Y);
             }
             ctx.fillStyle="#fff"; ctx.font="900 20px system-ui"; ctx.fillText(`🎯 ${score}/${currentConfig.reqScore}`, INTERNAL_W/2 + 65, TEXT_POS_Y);
-        } else if(currentConfig.reqRedGems>0 || currentConfig.reqBlueGems>0){
-          // التعديل الذكي هنا: عرض العداد المطلوب فقط وعدم إظهار الـ 0 للنوع غير المطلوب
+        } else if(currentConfig.reqRedGems > 0 || currentConfig.reqBlueGems > 0){
           if (currentConfig.reqRedGems > 0 && currentConfig.reqBlueGems > 0) {
               ctx.fillStyle="#f43f5e"; ctx.font="900 18px system-ui"; ctx.fillText(`💎 ${Math.max(0, currentConfig.reqRedGems-redGemsCollected)}`, INTERNAL_W/2 - 50, TEXT_POS_Y);
               ctx.fillStyle="#38bdf8"; ctx.font="900 18px system-ui"; ctx.fillText(`🔷 ${Math.max(0, currentConfig.reqBlueGems-blueGemsCollected)}`, INTERNAL_W/2 + 50, TEXT_POS_Y);
@@ -600,13 +625,42 @@
       ctx.fillStyle="#1e293b"; ctx.beginPath(); ctx.roundRect(GRID_OFFSET_X-6, GRID_OFFSET_Y-6, GRID_SIZE*CELL_SIZE+12, GRID_SIZE*CELL_SIZE+12, 16); ctx.fill();
       for(let r=0;r<GRID_SIZE;r++) for(let c=0;c<GRID_SIZE;c++){
         const x=GRID_OFFSET_X+c*CELL_SIZE, y=GRID_OFFSET_Y+r*CELL_SIZE;
-        if(!grid[r][c]) { ctx.fillStyle="#0f172a"; ctx.beginPath(); ctx.roundRect(x+1, y+1, CELL_SIZE-2, CELL_SIZE-2, 6); ctx.fill(); }
-        else { draw3DBlock(x,y,CELL_SIZE,grid[r][c].colorData); if(grid[r][c].gem){ ctx.fillStyle="#fff"; ctx.font="20px system-ui"; ctx.textAlign="center"; ctx.fillText(grid[r][c].gem==='red'?"💎":"🔷", x+CELL_SIZE/2, y+CELL_SIZE/2+7); } }
+        let isGlow = predictedLines.rows.includes(r) || predictedLines.cols.includes(c);
+        if(!grid[r][c]) { 
+          ctx.fillStyle = isGlow ? "rgba(56, 189, 248, 0.4)" : "#0f172a"; 
+          ctx.beginPath(); ctx.roundRect(x+1, y+1, CELL_SIZE-2, CELL_SIZE-2, 6); ctx.fill(); 
+        } else { 
+          draw3DBlock(x,y,CELL_SIZE,grid[r][c].colorData); 
+          if(grid[r][c].gem){ ctx.fillStyle="#fff"; ctx.font="20px system-ui"; ctx.textAlign="center"; ctx.fillText(grid[r][c].gem==='red'?"💎":"🔷", x+CELL_SIZE/2, y+CELL_SIZE/2+7); } 
+        }
       }
 
-      if(draggedPiece && previewTarget){ ctx.save(); ctx.globalAlpha=0.4; draggedPiece.blocks.forEach(([dr,dc])=>{ draw3DBlock(GRID_OFFSET_X+(previewTarget.c+dc)*CELL_SIZE, GRID_OFFSET_Y+(previewTarget.r+dr)*CELL_SIZE, CELL_SIZE, draggedPiece.colorData); }); ctx.restore(); }
+      // شبح القطعة المسحوبة
+      if(draggedPiece && previewTarget){ 
+        ctx.save(); ctx.globalAlpha=0.4; 
+        draggedPiece.blocks.forEach(([dr,dc])=>{ 
+          draw3DBlock(GRID_OFFSET_X+(previewTarget.c+dc)*CELL_SIZE, GRID_OFFSET_Y+(previewTarget.r+dr)*CELL_SIZE, CELL_SIZE, draggedPiece.colorData); 
+        }); 
+        ctx.restore(); 
+      }
+
       hand.forEach(p=>{ if(p!==draggedPiece) { p.blocks.forEach(([dr,dc],i)=>{ draw3DBlock(p.x+dc*p.size, p.y+dr*p.size, p.size, p.colorData); if(p.gemType&&p.gemBlockIndex===i){ ctx.fillStyle="#fff"; ctx.font=`${p.size*0.7}px system-ui`; ctx.textAlign="center"; ctx.fillText(p.gemType==='red'?"💎":"🔷", p.x+dc*p.size+p.size/2, p.y+dr*p.size+p.size*0.75); }}); }});
       if(draggedPiece) draggedPiece.blocks.forEach(([dr,dc],i)=>{ draw3DBlock(draggedPiece.x+dc*draggedPiece.size, draggedPiece.y+dr*draggedPiece.size, draggedPiece.size, draggedPiece.colorData); if(draggedPiece.gemType&&draggedPiece.gemBlockIndex===i){ ctx.fillStyle="#fff"; ctx.font=`${draggedPiece.size*0.7}px system-ui`; ctx.textAlign="center"; ctx.fillText(draggedPiece.gemType==='red'?"💎":"🔷", draggedPiece.x+dc*draggedPiece.size+draggedPiece.size/2, draggedPiece.y+dr*draggedPiece.size+draggedPiece.size*0.75); }});
+
+      // رسم النصوص العائمة التحفيزية
+      floatingTexts.forEach((ft, idx) => {
+        ctx.save();
+        ctx.globalAlpha = ft.alpha;
+        ctx.fillStyle = "#38bdf8";
+        ctx.font = "900 24px system-ui";
+        ctx.textAlign = "center";
+        ctx.fillText(ft.text, ft.x, ft.y);
+        ctx.restore();
+        ft.y -= 1.2;
+        ft.alpha -= 0.03;
+        if (ft.alpha <= 0) floatingTexts.splice(idx, 1);
+      });
+
       requestAnimationFrame(draw);
     }
     draw();
