@@ -2,769 +2,314 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <title>musab sw</title>
   
   <style>
-    * {
-      box-sizing: border-box;
-      user-select: none;
-      -webkit-user-select: none;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; user-select: none; -webkit-user-select: none; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     html, body {
-      overscroll-behavior: none;
-      background: #3b5998;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      overflow: hidden;
-      color: #f8fafc;
-      width: 100%;
-      height: 100%;
-      touch-action: none;
+      overscroll-behavior: none; background: #000; 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow: hidden; color: #f8fafc; width: 100vw; height: 100vh; touch-action: none;
+      display: flex; justify-content: center; align-items: center;
     }
+
     #gameContainer {
-      position: relative;
-      width: 100%;
-      max-width: 420px;
-      height: 100vh;
-      max-height: 840px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      background: #3b5998;
+      position: relative; width: 100%; max-width: 450px; height: 100vh;
+      background: radial-gradient(circle at center, #1e1b4b 0%, #020617 100%);
+      overflow: hidden; box-shadow: 0 0 30px rgba(0,0,0,0.8);
     }
-    canvas {
-      touch-action: none;
-      display: block;
-      background: transparent;
-      width: 100%;
-      flex-grow: 1;
-      max-height: calc(100vh - 50px);
+
+    #splashScreen {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(135deg, #0f172a 0%, #312e81 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 9999; transition: opacity 0.5s ease;
     }
+    .splash-logo { font-size: 5rem; margin-bottom: 15px; animation: pulse 1.5s infinite alternate; }
+    @keyframes pulse { 0% { transform: scale(0.9); } 100% { transform: scale(1.1); } }
+    .splash-title { font-size: 3.5rem; font-weight: 900; color: #38bdf8; text-shadow: 0 4px 15px rgba(0,0,0,0.6); }
+
+    canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+
     #adBannerContainer {
-      width: 100%;
-      height: 50px;
-      background: #1e293b;
-      border-top: 1px solid #334155;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-      color: #94a3b8;
-      z-index: 5;
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 50px;
+      background: #090d16; border-top: 1px solid #1e293b;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; color: #64748b; z-index: 50;
     }
-    .ad-badge {
-      border: 1px solid #64748b;
-      padding: 2px 6px;
-      border-radius: 4px;
-      margin-left: 8px;
-      font-size: 0.65rem;
-    }
+    .ad-badge { border: 1px solid #475569; padding: 2px 6px; border-radius: 4px; margin-left: 8px; color: #94a3b8; }
 
     .top-nav-btn {
-      position: absolute;
-      top: 16px;
-      background: none;
-      border: none;
-      color: #ffffff;
-      font-size: 1.8rem;
-      cursor: pointer;
-      z-index: 6;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 44px;
-      height: 44px;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-      transition: transform 0.1s;
+      position: absolute; top: 20px;
+      background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 14px; color: #fff; font-size: 1.5rem; cursor: pointer; pointer-events: auto;
+      z-index: 2000; display: flex; align-items: center; justify-content: center;
+      width: 46px; height: 46px; backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4); transition: transform 0.1s;
     }
-    .top-nav-btn:active {
-      transform: scale(0.9);
-    }
-    #backTopBtn { right: 16px; transform: scaleX(-1); }
-    #settingsTopBtn { left: 16px; }
-    #restartTopBtn { left: 66px; font-size: 1.4rem; }
+    .top-nav-btn:active { transform: scale(0.9); }
+    #backTopBtn { right: 20px; }
+    #settingsTopBtn { left: 20px; }
+    #restartTopBtn { left: 76px; font-size: 1.2rem; display: none; }
 
     .modal {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-      padding: 24px;
-      text-align: center;
-      background: rgba(15, 23, 42, 0.94);
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 1000; padding: 20px; text-align: center; background: rgba(2, 6, 23, 0.85);
+    }
+    .dialog-card {
+      background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155;
+      border-radius: 30px; padding: 30px 20px; width: 92%; max-width: 340px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.9);
     }
 
     .btn {
-      background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);
-      border: none;
-      border-bottom: 4px solid #1e3a8a;
-      color: white;
-      padding: 14px 20px;
-      font-size: 1.1rem;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: 800;
-      margin: 7px 0;
-      width: 100%;
-      max-width: 290px;
-      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
-      transition: transform 0.08s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+      background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%); border: none; border-bottom: 4px solid #0369a1; color: white;
+      padding: 16px 20px; font-size: 1.15rem; border-radius: 20px; cursor: pointer; font-weight: 800; margin: 8px 0; width: 100%;
+      box-shadow: 0 8px 20px rgba(2,132,199,0.4); transition: transform 0.1s;
     }
-    .btn:active {
-      transform: translateY(3px);
-      border-bottom-width: 1px;
-    }
-    .btn-gold {
-      background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
-      border-bottom-color: #92400e;
-      box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
-    }
-    .btn-green {
-      background: linear-gradient(180deg, #10b981 0%, #059669 100%);
-      border-bottom-color: #064e3b;
-      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
-    }
-    .btn-secondary {
-      background: linear-gradient(180deg, #475569 0%, #334155 100%);
-      border-bottom-color: #1e293b;
-      color: #f1f5f9;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
-    }
+    .btn:active { transform: translateY(4px); border-bottom-width: 0px; }
+    .btn-gold { background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%); border-bottom-color: #b45309; box-shadow: 0 8px 20px rgba(217,119,6,0.4); }
+    .btn-secondary { background: linear-gradient(180deg, #475569 0%, #334155 100%); border-bottom-color: #1e293b; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
 
-    #mapModal { display: none; background: #1e293b; justify-content: flex-start; padding-top: 15px; }
-    .map-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 8px 14px; border-bottom: 2px solid #334155; }
-    .levels-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; max-height: 520px; overflow-y: auto; padding: 12px 4px; }
-    .level-node {
-      background: #334155;
-      border: 2px solid #475569;
-      border-radius: 18px;
-      padding: 12px 4px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-    .level-node.unlocked { border-color: #38bdf8; background: #0284c7; }
-    .level-node.boss-level { border-color: #ef4444; background: #dc2626; }
-    .level-num { font-size: 1.15rem; font-weight: 900; color: #f8fafc; }
-    .level-badge { font-size: 0.65rem; font-weight: 700; color: #e2e8f0; }
-
-    #lossControlBar, #winModal, #settingsModal, #guideModal, #confirmRestartModal { display: none; }
-    .dialog-card {
-      background: #1e293b;
-      border: 2px solid #334155;
-      border-radius: 28px;
-      padding: 26px 20px;
-      width: 92%;
-      max-width: 320px;
-      text-align: center;
-      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.85);
-    }
-    .setting-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 16px 0;
-      font-weight: 700;
-      font-size: 1.05rem;
-    }
+    #mapModal { background: #0f172a; justify-content: flex-start; padding-top: 30px; }
+    .map-header { display: flex; justify-content: space-between; align-items: center; width: 100%; border-bottom: 2px solid #334155; padding-bottom: 15px; margin-bottom: 15px; }
+    .levels-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; max-height: 65vh; overflow-y: auto; padding-right: 5px; }
+    .level-node { background: #1e293b; border: 2px solid #334155; border-radius: 18px; padding: 15px 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
+    .level-node.unlocked { border-color: #38bdf8; background: #0369a1; }
+    .level-node.boss-level { border-color: #f43f5e; background: #be123c; }
+    .level-num { font-size: 1.3rem; font-weight: 900; color: #fff; }
+    
+    .setting-row { display: flex; justify-content: space-between; align-items: center; margin: 20px 0; font-size: 1.1rem; font-weight: 700; }
   </style>
 </head>
 <body>
 
   <div id="gameContainer">
-    <button id="backTopBtn" class="top-nav-btn" onclick="handleHardwareBack()">❮</button>
-    <button id="restartTopBtn" class="top-nav-btn" onclick="askForRestart()" title="إعادة المحاولة">🔄</button>
-    <button id="settingsTopBtn" class="top-nav-btn" onclick="openSettings()">⚙️</button>
+    <div id="splashScreen">
+      <div class="splash-logo">💎</div>
+      <div class="splash-title">musab sw</div>
+    </div>
 
-    <canvas id="gameCanvas" width="400" height="720"></canvas>
+    <button id="backTopBtn" class="top-nav-btn" onclick="handleHardwareBack()" title="رجوع">❮</button>
+    <button id="restartTopBtn" class="top-nav-btn" onclick="askForRestart()" title="إعادة المرحلة">🔄</button>
+    <button id="settingsTopBtn" class="top-nav-btn" onclick="openSettings()" title="الإعدادات">⚙️</button>
 
-    <!-- حاوية البانر السفلي -->
+    <canvas id="gameCanvas"></canvas>
+
     <div id="adBannerContainer">
       <span class="ad-badge">إعلان</span>
       <span id="bannerStatusText">جاري تحميل البانر...</span>
     </div>
 
-    <!-- القائمة الرئيسية -->
-    <div id="startModal" class="modal">
-      <div style="font-size: 3.5rem; margin-bottom: 6px;">💎</div>
-      <h1 style="font-size: 2.6rem; font-weight: 900; margin-bottom: 6px; color: #38bdf8; letter-spacing: -0.5px;">musab sw</h1>
-      <p style="font-size: 0.95rem; color: #cbd5e1; margin-bottom: 26px; font-weight: 600;">تحدي الألغاز الاستراتيجية التكتيكية</p>
-      
-      <button class="btn btn-gold" onclick="openLevelMap()">🗺️ خريطة المراحل (مفتوحة)</button>
-      <button class="btn btn-green" onclick="initAndCheckGuide('daily')">⭐ التحدي اليومي الخاص</button>
-      <button class="btn btn-secondary" onclick="initAndCheckGuide('classic')">♾️ اللعب اللانهائي التكتيكي</button>
+    <div id="startModal" class="modal" style="display:flex;">
+      <div style="font-size: 4.5rem; margin-bottom: 10px;">🧩</div>
+      <h1 style="font-size: 3rem; font-weight: 900; color: #38bdf8; margin-bottom: 30px;">musab sw</h1>
+      <button class="btn btn-gold" onclick="openLevelMap()">🗺️ خريطة المراحل (200)</button>
+      <button class="btn btn-secondary" onclick="startGame('classic')">♾️ اللعب اللانهائي</button>
     </div>
 
-    <!-- بطاقة الإرشاد -->
-    <div id="guideModal" class="modal">
-      <div class="dialog-card">
-        <div id="guideIcon" style="font-size: 3.2rem; margin-bottom: 8px;">⏱️</div>
-        <h2 id="guideTitle" style="font-size: 1.35rem; font-weight: 900; margin-bottom: 10px; color: #38bdf8;">تعليمات النمط</h2>
-        <p id="guideDesc" style="font-size: 0.92rem; color: #cbd5e1; line-height: 1.55; margin-bottom: 20px;">شرح النمط...</p>
-        <button class="btn btn-green" onclick="startAfterGuide()">فهمت، انطلق الآن 🚀</button>
-      </div>
-    </div>
-
-    <!-- نافذة الإعدادات -->
     <div id="settingsModal" class="modal">
       <div class="dialog-card">
-        <h2 style="font-size: 1.4rem; font-weight: 900; margin-bottom: 18px; color: #38bdf8;">⚙️ الإعدادات</h2>
-        
-        <div class="setting-row">
-          <span>🔊 المؤثرات الصوتية</span>
-          <input type="checkbox" id="soundToggle" checked onchange="toggleSound(this.checked)" style="transform: scale(1.4);">
-        </div>
-        <div class="setting-row">
-          <span>📳 الاهتزاز</span>
-          <input type="checkbox" id="hapticToggle" checked onchange="toggleHaptic(this.checked)" style="transform: scale(1.4);">
-        </div>
-
-        <button class="btn btn-green" style="margin-top: 18px;" onclick="closeSettings()">موافق 👍</button>
+        <h2 style="font-size: 1.6rem; color: #38bdf8; margin-bottom: 20px;">⚙️ الإعدادات</h2>
+        <div class="setting-row"><span>🔊 المؤثرات الصوتية</span><input type="checkbox" id="soundToggle" onchange="toggleSound(this.checked)" style="transform: scale(1.5);"></div>
+        <div class="setting-row"><span>📳 الاهتزاز التكتيكي</span><input type="checkbox" id="hapticToggle" onchange="toggleHaptic(this.checked)" style="transform: scale(1.5);"></div>
+        <button class="btn" style="margin-top: 25px;" onclick="closeSettings()">حفظ 👍</button>
       </div>
     </div>
 
-    <!-- نافذة تأكيد إعادة المرحلة -->
     <div id="confirmRestartModal" class="modal">
       <div class="dialog-card">
-        <div style="font-size: 3rem; margin-bottom: 8px;">🔄</div>
-        <h2 style="font-size: 1.35rem; font-weight: 900; margin-bottom: 10px; color: #f8fafc;">إعادة المحاولة</h2>
-        <p style="font-size: 0.95rem; color: #cbd5e1; margin-bottom: 20px; line-height: 1.5;">هل تريد حقاً إعادة هذه المرحلة والبدء من جديد؟</p>
-        <button class="btn btn-gold" onclick="confirmRestartExecution()">نعم، أعد اللعب 🔄</button>
+        <h2 style="font-size: 1.5rem; color: #fff; margin-bottom: 15px;">🔄 إعادة التعيين</h2>
+        <p style="color: #94a3b8; margin-bottom: 25px;">هل تريد مسح الشبكة والبدء من جديد؟</p>
+        <button class="btn btn-gold" onclick="confirmRestartExecution()">نعم 🔄</button>
         <button class="btn btn-secondary" onclick="cancelRestartDialog()">إلغاء ❌</button>
       </div>
     </div>
 
-    <!-- خريطة المراحل -->
     <div id="mapModal" class="modal">
       <div class="map-header">
-        <h2 style="font-size: 1.3rem; font-weight: 800; color: #f8fafc;">خريطة المراحل</h2>
-        <span id="totalStarsCount" style="color: #fbbf24; font-weight: 800; font-size: 1.05rem;">🏆 100/100</span>
+        <h2 style="font-size: 1.5rem; font-weight: 800; color: #fff;">خريطة المراحل</h2>
       </div>
       <div class="levels-grid" id="levelsGridContainer"></div>
-      <button class="btn btn-secondary" style="margin-top: 12px;" onclick="closeLevelMap()">العودة للقائمة</button>
+      <button class="btn btn-secondary" style="margin-top: 20px;" onclick="closeLevelMap()">العودة للقائمة</button>
     </div>
 
-    <!-- نافذة الفوز -->
     <div id="winModal" class="modal">
-      <div style="font-size: 3.2rem; margin-bottom: 6px;">🏆</div>
-      <h2 style="font-size: 2rem; font-weight: 900; color: #10b981; margin-bottom: 8px;">اكتملت المرحلة!</h2>
-      <p id="winSubtext" style="font-size: 0.95rem; margin-bottom: 22px; color: #cbd5e1; line-height: 1.5; font-weight: 500;"></p>
-      <button id="nextLevelBtn" class="btn btn-green" onclick="goToNextLevel()">المرحلة التالية ⏭️</button>
-      <button class="btn btn-secondary" onclick="openLevelMapFromGame()">خريطة المراحل 🗺️</button>
+      <div style="font-size: 4rem; margin-bottom: 10px;">🏆</div>
+      <h2 style="font-size: 2.5rem; font-weight: 900; color: #38bdf8; margin-bottom: 15px;">رائع!</h2>
+      <p id="winSubtext" style="font-size: 1.1rem; color: #cbd5e1; margin-bottom: 30px;"></p>
+      <button id="nextLevelBtn" class="btn" onclick="goToNextLevel()">المرحلة التالية ⏭️</button>
+      <button class="btn btn-secondary" onclick="openLevelMapFromGame()">خريطة المراحل</button>
     </div>
 
-    <!-- شريط الخسارة -->
     <div id="lossControlBar" class="modal">
       <div class="dialog-card">
-        <div style="font-size: 3rem; margin-bottom: 4px;">⚠️</div>
-        <h2 style="font-size: 1.6rem; font-weight: 900; margin-bottom: 6px; color: #ef4444;">لا توجد مساحة كافية!</h2>
-        <p style="font-size: 0.88rem; color: #cbd5e1; margin-bottom: 16px;">القطع المتبقية لا تجد مكاناً شاغراً على الشبكة</p>
-        
-        <button id="reviveAdBtn" class="btn btn-green" onclick="watchRealAdForRevive()">📺 مشاهدة إعلان حقيقي للإنقاذ</button>
-        <button class="btn" onclick="restartCurrentMode()">إعادة المحاولة 🔄</button>
-        <button class="btn btn-secondary" onclick="openLevelMapFromGame()">خريطة المراحل 🗺️</button>
+        <div style="font-size: 3.5rem; margin-bottom: 10px;">⚠️</div>
+        <h2 style="font-size: 1.6rem; font-weight: 900; color: #f43f5e; margin-bottom: 10px;">اللوح ممتلئ!</h2>
+        <p style="color: #94a3b8; margin-bottom: 25px;">لا توجد مساحة كافية للتحرك</p>
+        <button id="reviveAdBtn" class="btn" onclick="watchRealAdForRevive()">📺 مشاهدة إعلان للإنقاذ</button>
+        <button class="btn btn-gold" onclick="restartCurrentMode()">إعادة من الصفر 🔄</button>
       </div>
     </div>
   </div>
 
   <script type="module">
-    import { AdMob, BannerAdPosition, BannerAdSize, RewardAdReward } from '@capacitor-community/admob';
-
+    import { AdMob, BannerAdPosition, BannerAdSize } from '@capacitor-community/admob';
     async function initAdMobSDK() {
       try {
         await AdMob.initialize({ requestTrackingAuthorization: true });
-        
-        // عرض بانر أسفل الشاشة
-        await AdMob.showBanner({
-          adId: 'ca-app-pub-8587982696741860/6049288587',
-          position: BannerAdPosition.BOTTOM_CENTER,
-          size: BannerAdSize.BANNER,
-          margin: 0,
-          isTesting: false
-        });
+        await AdMob.showBanner({ adId: 'ca-app-pub-8587982696741860/6049288587', position: BannerAdPosition.BOTTOM_CENTER, size: BannerAdSize.BANNER, margin: 0, isTesting: false });
         document.getElementById("bannerStatusText").style.display = "none";
-      } catch (e) {
-        document.getElementById("bannerStatusText").textContent = "Google AdMob Banner Space";
-      }
+      } catch (e) { document.getElementById("bannerStatusText").textContent = "Google AdMob Space"; }
     }
-
-    // تشغيل تهيئة الإعلانات عند بدء التطبيق
     initAdMobSDK();
-
-    // دالة عرض إعلان المكافأة الحقيقي لمنح الإنقاذ عند الخسارة
     window.watchRealAdForRevive = async function() {
-      initAudio();
+      window.initAudio();
       try {
-        await AdMob.prepareRewardVideoAd({
-          adId: 'ca-app-pub-8587982696741860/7846797435',
-          isTesting: false
-        });
-
+        await AdMob.prepareRewardVideoAd({ adId: 'ca-app-pub-8587982696741860/7846797435', isTesting: false });
         const reward = await AdMob.showRewardVideoAd();
-        if (reward) {
-          // تم مشاهدة الإعلان كاملاً بنجاح -> منح المكافأة الحقيقية
-          executeRevive();
-        }
-      } catch (e) {
-        // إذا فشل التحميل لسبب ما يتم منح المكافأة بسلاسة للمستخدم لعدم إزعاجه
-        executeRevive();
-      }
+        if (reward) window.executeRevive();
+      } catch (e) { window.executeRevive(); }
     };
   </script>
 
   <script>
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
-    const startModal = document.getElementById("startModal");
-    const settingsModal = document.getElementById("settingsModal");
-    const confirmRestartModal = document.getElementById("confirmRestartModal");
-    const guideModal = document.getElementById("guideModal");
-    const guideIcon = document.getElementById("guideIcon");
-    const guideTitle = document.getElementById("guideTitle");
-    const guideDesc = document.getElementById("guideDesc");
-    const mapModal = document.getElementById("mapModal");
-    const levelsGridContainer = document.getElementById("levelsGridContainer");
-    const totalStarsCount = document.getElementById("totalStarsCount");
-    const winModal = document.getElementById("winModal");
-    const winSubtext = document.getElementById("winSubtext");
-    const nextLevelBtn = document.getElementById("nextLevelBtn");
-    const lossControlBar = document.getElementById("lossControlBar");
-    const reviveAdBtn = document.getElementById("reviveAdBtn");
+
+    let INTERNAL_W = 400, INTERNAL_H = 720;
+    let GRID_OFFSET_X = 24, GRID_OFFSET_Y = 130;
+    const GRID_SIZE = 8, CELL_SIZE = 44;
+
+    let gameMode = "classic", activeLevel = 1, score = 0, redGemsCollected = 0, blueGemsCollected = 0;
+    let grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
+    let hand = [], draggedPiece = null, previewTarget = null;
+    let dragOffsetX = 0, dragOffsetY = 0, reviveCount = 0;
+    let gameLoopActive = false, isGameOverState = false;
+    let highScore = parseInt(localStorage.getItem("msw_high_score")) || 0;
+    let currentConfig = null;
+    let audioCtx = null;
+    
+    let bossSecondsElapsed = 0, heartbeatTimerInterval = null, inStrategicMode = false;
 
     let userSettings = JSON.parse(localStorage.getItem("msw_settings")) || { sound: true, haptic: true };
     document.getElementById("soundToggle").checked = userSettings.sound;
     document.getElementById("hapticToggle").checked = userSettings.haptic;
 
-    function toggleSound(val) { userSettings.sound = val; localStorage.setItem("msw_settings", JSON.stringify(userSettings)); }
-    function toggleHaptic(val) { userSettings.haptic = val; localStorage.setItem("msw_settings", JSON.stringify(userSettings)); }
+    const PALETTES = [ { base: "#3b82f6", light: "#60a5fa", dark: "#1d4ed8" }, { base: "#10b981", light: "#34d399", dark: "#059669" }, { base: "#f59e0b", light: "#fbbf24", dark: "#b45309" }, { base: "#8b5cf6", light: "#a78bfa", dark: "#6d28d9" } ];
+    
+    // المربع الفردي (dot) وزنه 1 من أصل أكثر من 80، يعني نسبة ظهوره نادرة جداً
+    const ALL_SHAPES = [
+      { id: "dot", weight: 1, blocks: [[0, 0]] }, 
+      { id: "line2h", weight: 14, blocks: [[0, 0], [0, 1]] },
+      { id: "line2v", weight: 14, blocks: [[0, 0], [1, 0]] },
+      { id: "line3h", weight: 10, blocks: [[0, 0], [0, 1], [0, 2]] },
+      { id: "line3v", weight: 10, blocks: [[0, 0], [1, 0], [2, 0]] },
+      { id: "sq2", weight: 8, blocks: [[0, 0], [0, 1], [1, 0], [1, 1]] },
+      { id: "l", weight: 7, blocks: [[0, 0], [1, 0], [2, 0], [2, 1]] },
+      { id: "t", weight: 7, blocks: [[0, 1], [1, 0], [1, 1], [1, 2]] }
+    ];
 
-    function openSettings() { settingsModal.style.display = "flex"; }
-    function closeSettings() { settingsModal.style.display = "none"; }
-
-    function stopHeartbeatEngine() {
-      if (heartbeatTimerInterval) {
-        clearInterval(heartbeatTimerInterval);
-        heartbeatTimerInterval = null;
-      }
+    if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.StatusBar) {
+        window.Capacitor.Plugins.StatusBar.hide().catch(()=>{});
     }
 
-    function askForRestart() {
-      if (!gameLoopActive && !isGameOverState) return;
-      initAudio();
-      confirmRestartModal.style.display = "flex";
+    window.addEventListener('load', () => {
+      setTimeout(() => { const splash = document.getElementById("splashScreen"); if(splash) { splash.style.opacity = "0"; setTimeout(() => splash.remove(), 600); } }, 1000);
+    });
+
+    function updateHandPositions() {
+      const PREVIEW_SIZE = 22; const slotWidth = INTERNAL_W / 3;
+      hand.forEach((p, idx) => {
+        const shapeW = (Math.max(...p.blocks.map(b => b[1])) + 1) * PREVIEW_SIZE;
+        const shapeH = (Math.max(...p.blocks.map(b => b[0])) + 1) * PREVIEW_SIZE;
+        p.origX = slotWidth * idx + slotWidth / 2 - shapeW / 2;
+        p.origY = INTERNAL_H - shapeH - (INTERNAL_H * 0.12);
+        if (!draggedPiece || draggedPiece !== p) { p.x = p.origX; p.y = p.origY; }
+      });
     }
 
-    function cancelRestartDialog() {
-      confirmRestartModal.style.display = "none";
-    }
-
-    function confirmRestartExecution() {
-      confirmRestartModal.style.display = "none";
-      restartCurrentMode();
-    }
-
-    let levelProgress = JSON.parse(localStorage.getItem("msw_progression")) || { 1: true };
-    function saveLevelCompleted(lvl) {
-      levelProgress[lvl] = true;
-      levelProgress[lvl + 1] = true;
-      localStorage.setItem("msw_progression", JSON.stringify(levelProgress));
-    }
-
-    let seenGuides = JSON.parse(localStorage.getItem("msw_seen_guides")) || {};
-    let pendingStartMode = "classic";
-    let pendingStartLevel = 1;
-
-    function initAndCheckGuide(mode, lvl = 1) {
-      initAudio();
-      stopHeartbeatEngine();
-      pendingStartMode = mode;
-      pendingStartLevel = lvl;
-
-      const guideKey = (mode === "levels") ? `guide_lvl_${getLevelConfiguration(lvl).goalType}` : `guide_${mode}`;
-      if (seenGuides[guideKey]) {
-        executeGameStart();
-        return;
-      }
-
-      startModal.style.display = "none";
-      mapModal.style.display = "none";
-
-      if (mode === "levels") {
-        const cfg = getLevelConfiguration(lvl);
-        if (cfg.hasTimer) {
-          guideIcon.textContent = "⏱️🧠";
-          guideTitle.textContent = "تحدي اللعب الاستراتيجي المؤقت";
-          guideDesc.textContent = "يبدأ المؤقت حتى الدقيقة 2:00، وعند الوصول للذروة تنطلق فترة 'لعب استراتيجي' لمدة 90 ثانية بصعوبة متوسطة ومتقدمة!";
-        } else if (cfg.reqRedGems > 0 && cfg.reqBlueGems > 0) {
-          guideIcon.textContent = "💎🔷";
-          guideTitle.textContent = "تحدي جمع الجواهر المزدوجة";
-          guideDesc.textContent = "فجّر الأسطر والأعمدة لتحرير الياقوت الأحمر والزمرد الأزرق للوصول إلى الهدف!";
-        } else {
-          guideIcon.textContent = "🎯";
-          guideTitle.textContent = "تحدي النقاط التكتيكي";
-          guideDesc.textContent = "اصنع ضربات الكومبو المتتالية وفجّر أكثر من سطر معاً لمضاعفة النقاط ×2 و ×3 و ×6!";
-        }
-      } else if (mode === "daily") {
-        guideIcon.textContent = "💎🔷";
-        guideTitle.textContent = "التحدي اليومي الخاص";
-        guideDesc.textContent = "اجمع 6 ياقوت أحمر و 6 زمرد أزرق لإحراز الكأس اليومي!";
-      } else {
-        guideIcon.textContent = "♾️";
-        guideTitle.textContent = "النمط اللانهائي التكتيكي";
-        guideDesc.textContent = "تحدَّ نفسك وحقق أعلى رقم قياسي مع حفظ تقدمك التلقائي عند الرجوع!";
-      }
-
-      guideModal.style.display = "flex";
-    }
-
-    function startAfterGuide() {
-      const guideKey = (pendingStartMode === "levels") ? `guide_lvl_${getLevelConfiguration(pendingStartLevel).goalType}` : `guide_${pendingStartMode}`;
-      seenGuides[guideKey] = true;
-      localStorage.setItem("msw_seen_guides", JSON.stringify(seenGuides));
-      guideModal.style.display = "none";
-      executeGameStart();
-    }
-
-    function executeGameStart() {
-      if (pendingStartMode === "levels") startSpecificLevel(pendingStartLevel);
-      else startGame(pendingStartMode);
-    }
-
-    window.addEventListener("popstate", handleHardwareBack);
-    history.pushState(null, null, window.location.href);
-
-    function handleHardwareBack() {
-      history.pushState(null, null, window.location.href);
-      stopHeartbeatEngine();
-      if (confirmRestartModal.style.display === "flex") { confirmRestartModal.style.display = "none"; return; }
-      if (guideModal.style.display === "flex") { guideModal.style.display = "none"; startModal.style.display = "flex"; return; }
-      if (settingsModal.style.display === "flex") { closeSettings(); return; }
-      if (mapModal.style.display === "flex") { closeLevelMap(); return; }
-      if (winModal.style.display === "flex" || lossControlBar.style.display === "flex") { openLevelMapFromGame(); return; }
-      if (gameLoopActive || isGameOverState || isVictoryWaitingClick) {
-        autoSaveCurrentMode();
-        gameLoopActive = false;
-        isGameOverState = false;
-        isVictoryWaitingClick = false;
-        startModal.style.display = "flex";
-      }
-    }
-
-    function setupHighDPI() {
+    function resizeCanvas() {
+      const container = document.getElementById("gameContainer");
+      const rect = container.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = (rect.width || 400) * dpr;
-      canvas.height = (rect.height || 720) * dpr;
-      ctx.scale(dpr, dpr);
+      INTERNAL_W = 400; INTERNAL_H = 400 * (rect.height / rect.width);
+      canvas.width = INTERNAL_W * dpr; canvas.height = INTERNAL_H * dpr; ctx.scale(dpr, dpr);
+      GRID_OFFSET_X = (INTERNAL_W - (GRID_SIZE * CELL_SIZE)) / 2; GRID_OFFSET_Y = Math.min(130, INTERNAL_H * 0.18);
+      if(hand && hand.length > 0) updateHandPositions();
     }
-    setupHighDPI();
-    window.addEventListener("resize", setupHighDPI);
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
 
-    let audioCtx = null;
-    function initAudio() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-    }
+    window.toggleSound = function(val) { userSettings.sound = val; localStorage.setItem("msw_settings", JSON.stringify(userSettings)); }
+    window.toggleHaptic = function(val) { userSettings.haptic = val; localStorage.setItem("msw_settings", JSON.stringify(userSettings)); }
 
-    function playSound(type, param = 1) {
+    window.initAudio = function() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume(); }
+    function playSound(type) {
       if (!userSettings.sound || !audioCtx) return;
       try {
         const now = audioCtx.currentTime;
-
-        if (type === 'pickup') {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(360, now);
-          osc.frequency.exponentialRampToValueAtTime(720, now + 0.07);
-          gain.gain.setValueAtTime(0.18, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start(now);
-          osc.stop(now + 0.07);
-        } 
-        else if (type === 'drop') {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(280, now);
-          osc.frequency.exponentialRampToValueAtTime(110, now + 0.08);
-          gain.gain.setValueAtTime(0.25, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start(now);
-          osc.stop(now + 0.08);
-        } 
-        else if (type === 'gem_collect') {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(587.33, now);
-          osc.frequency.setValueAtTime(880.00, now + 0.06);
-          gain.gain.setValueAtTime(0.25, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start(now);
-          osc.stop(now + 0.16);
-        }
-        else if (type === 'heartbeat') {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'sine';
-          const freq = 65 + (param * 15);
-          osc.frequency.setValueAtTime(freq, now);
-          osc.frequency.exponentialRampToValueAtTime(35, now + 0.09);
-          gain.gain.setValueAtTime(0.18, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start(now);
-          osc.stop(now + 0.09);
-        }
-        else if (type === 'step_cascade') {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(300 + (param * 12), now);
-          gain.gain.setValueAtTime(0.12, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start(now);
-          osc.stop(now + 0.05);
-        }
-        else if (type === 'clear') {
-          const chord = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99];
-          const base = chord[Math.min(param - 1, chord.length - 1)];
-
-          const osc1 = audioCtx.createOscillator();
-          const gain1 = audioCtx.createGain();
-          osc1.type = 'sine';
-          osc1.frequency.setValueAtTime(base, now);
-          osc1.frequency.exponentialRampToValueAtTime(base * 1.5, now + 0.28);
-          gain1.gain.setValueAtTime(0.3, now);
-          gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
-          osc1.connect(gain1);
-          gain1.connect(audioCtx.destination);
-          osc1.start(now);
-          osc1.stop(now + 0.28);
-
-          const osc2 = audioCtx.createOscillator();
-          const gain2 = audioCtx.createGain();
-          osc2.type = 'triangle';
-          osc2.frequency.setValueAtTime(150, now);
-          osc2.frequency.linearRampToValueAtTime(45, now + 0.2);
-          gain2.gain.setValueAtTime(0.35, now);
-          gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-          osc2.connect(gain2);
-          gain2.connect(audioCtx.destination);
-          osc2.start(now);
-          osc2.stop(now + 0.2);
-        } 
-        else if (type === 'victory') {
-          const notes = [
-            { f: 523.25, d: 0.12, t: 0 },
-            { f: 659.25, d: 0.12, t: 0.1 },
-            { f: 783.99, d: 0.14, t: 0.2 },
-            { f: 1046.50, d: 0.45, t: 0.32 }
-          ];
-          notes.forEach(n => {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(n.f, now + n.t);
-            gain.gain.setValueAtTime(0.001, now + n.t);
-            gain.gain.linearRampToValueAtTime(0.3, now + n.t + 0.02);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + n.t + n.d);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(now + n.t);
-            osc.stop(now + n.t + n.d);
-          });
+        if (type === 'pickup' || type === 'drop') {
+          const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+          osc.type = 'triangle'; osc.frequency.setValueAtTime(type==='pickup'?400:200, now);
+          osc.frequency.exponentialRampToValueAtTime(type==='pickup'?600:100, now + 0.05);
+          gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+          osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now); osc.stop(now + 0.05);
+        } else if (type === 'clear') {
+          const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+          osc.type = 'sine'; osc.frequency.setValueAtTime(500, now); osc.frequency.exponentialRampToValueAtTime(1200, now + 0.3);
+          gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+          osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now); osc.stop(now + 0.3);
+        } else if (type === 'heartbeat') { 
+          const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+          osc.type = 'sine'; osc.frequency.setValueAtTime(65, now); osc.frequency.exponentialRampToValueAtTime(35, now + 0.1);
+          gain.gain.setValueAtTime(0.4, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+          osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now); osc.stop(now + 0.1);
         }
       } catch (e) {}
     }
+    function triggerHaptic(ms = 25) { if (userSettings.haptic && navigator.vibrate) { try { navigator.vibrate(ms); } catch (e) {} } }
 
-    function triggerHaptic(ms = 25) {
-      if (userSettings.haptic && navigator.vibrate) {
-        try { navigator.vibrate(ms); } catch (e) {}
+    window.handleHardwareBack = function() {
+      if(document.getElementById('mapModal').style.display === "flex") { closeLevelMap(); return; }
+      if(document.getElementById('settingsModal').style.display === "flex") { closeSettings(); return; }
+      if(document.getElementById('confirmRestartModal').style.display === "flex") { cancelRestartDialog(); return; }
+      if(gameLoopActive || isGameOverState) {
+          gameLoopActive = false; isGameOverState = false; stopHeartbeatEngine();
+          document.getElementById('winModal').style.display = "none";
+          document.getElementById('lossControlBar').style.display = "none";
+          document.getElementById('restartTopBtn').style.display = "none";
+          document.getElementById('startModal').style.display = "flex";
       }
     }
 
-    const PALETTES = [
-      { base: "#d97706", light: "#fbbf24", dark: "#b45309" },
-      { base: "#2563eb", light: "#60a5fa", dark: "#1d4ed8" },
-      { base: "#7c3aed", light: "#a78bfa", dark: "#5b21b6" },
-      { base: "#16a34a", light: "#4ade80", dark: "#15803d" },
-      { base: "#ea580c", light: "#fb923c", dark: "#9a3412" }
-    ];
+    window.openSettings = function() { document.getElementById('settingsModal').style.display = "flex"; }
+    window.closeSettings = function() { document.getElementById('settingsModal').style.display = "none"; }
+    window.askForRestart = function() { if(gameLoopActive || isGameOverState) document.getElementById('confirmRestartModal').style.display = "flex"; }
+    window.cancelRestartDialog = function() { document.getElementById('confirmRestartModal').style.display = "none"; }
+    window.confirmRestartExecution = function() { cancelRestartDialog(); restartCurrentMode(); }
 
-    function getLevelConfiguration(lvl) {
-      let reqScore = 0, reqRedGems = 0, reqBlueGems = 0, prefilledBlocks = 0;
-      let hasTimer = false;
-      let goalType = "score";
-
-      if (lvl >= 10) prefilledBlocks = 3;
-      if (lvl >= 25) prefilledBlocks = 5;
-      if (lvl >= 50) prefilledBlocks = 7;
-      if (lvl >= 80) prefilledBlocks = 9;
-
-      if (lvl % 5 === 0) {
-        goalType = "timer_pulse";
-        hasTimer = true;
-        reqScore = 450 + (lvl * 30);
-        reqRedGems = 4 + Math.floor(lvl * 0.1);
-        reqBlueGems = 4 + Math.floor(lvl * 0.1);
-      } else if (lvl % 3 === 1) {
-        goalType = "red_gems";
-        reqRedGems = 6 + Math.floor(lvl * 0.2);
-      } else if (lvl % 3 === 2) {
-        goalType = "blue_gems";
-        reqBlueGems = 6 + Math.floor(lvl * 0.2);
-      } else {
-        goalType = "score";
-        reqScore = 250 + (lvl * 35);
-      }
-
-      return { 
-        level: lvl, 
-        goalType,
-        reqScore,
-        reqRedGems, 
-        reqBlueGems, 
-        prefilledBlocks,
-        hasTimer,
-        isBoss: (lvl % 5 === 0)
-      };
-    }
-
-    function renderMapGrid() {
-      levelsGridContainer.innerHTML = "";
-      for (let i = 1; i <= 100; i++) {
-        const cfg = getLevelConfiguration(i);
-        const node = document.createElement("div");
-        node.className = `level-node unlocked ${cfg.isBoss ? "boss-level" : ""}`;
-
-        let badge = "";
-        if (cfg.hasTimer) badge = `⏱️ ${cfg.reqScore}💎`;
-        else if (cfg.reqRedGems > 0 && cfg.reqBlueGems > 0) badge = `💎${cfg.reqRedGems} 🔷${cfg.reqBlueGems}`;
-        else if (cfg.reqRedGems > 0) badge = `💎 ${cfg.reqRedGems}`;
-        else if (cfg.reqBlueGems > 0) badge = `🔷 ${cfg.reqBlueGems}`;
-        else badge = `🎯 ${cfg.reqScore}`;
-
-        node.innerHTML = `
-          <div class="level-num">${cfg.isBoss ? "🔥" + i : i}</div>
-          <div class="level-badge">${badge}</div>
-        `;
-
-        node.onclick = () => initAndCheckGuide("levels", i);
-        levelsGridContainer.appendChild(node);
+    window.renderMapGrid = function() {
+      const container = document.getElementById("levelsGridContainer"); container.innerHTML = "";
+      for (let i = 1; i <= 200; i++) {
+        // الأهداف المنطقية الجديدة المتناسبة مع الصعوبة
+        let req = 500 + (i * 150); 
+        if (i%5===0) req = 800 + (i * 200);
+        
+        let badge = (i%5===0)?`⏱️ ${req}🎯`:((i%3===1)?`💎 ${4+Math.floor(i*0.15)}`:((i%3===2)?`🔷 ${4+Math.floor(i*0.15)}`:`🎯 ${req}`));
+        const node = document.createElement("div"); node.className = `level-node unlocked ${(i%5===0)?"boss-level":""}`;
+        node.innerHTML = `<div class="level-num">${(i%5===0)?"🔥"+i:i}</div><div style="font-size:0.65rem; color:#bae6fd; font-weight:700;">${badge}</div>`;
+        node.onclick = () => startSpecificLevel(i); container.appendChild(node);
       }
     }
-
-    function openLevelMap() {
-      initAudio();
-      stopHeartbeatEngine();
-      renderMapGrid();
-      startModal.style.display = "none";
-      mapModal.style.display = "flex";
-    }
-    function closeLevelMap() { mapModal.style.display = "none"; startModal.style.display = "flex"; }
-    function openLevelMapFromGame() { 
-      confettiList.length = 0; 
-      stopHeartbeatEngine();
-      isVictoryWaitingClick = false;
-      winModal.style.display = "none"; 
-      lossControlBar.style.display = "none"; 
-      openLevelMap(); 
-    }
-
-    const GRID_SIZE = 8;
-    const CELL_SIZE = 45;
-    const GRID_OFFSET_X = (400 - GRID_SIZE * CELL_SIZE) / 2;
-    const GRID_OFFSET_Y = 100;
-
-    let gameMode = "classic", activeLevel = 1, score = 0;
-    let redGemsCollected = 0, blueGemsCollected = 0;
-    let currentConfig = null;
-    let highScore = parseInt(localStorage.getItem("msw_high_score")) || 0;
-    let grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
-
-    let bossSecondsElapsed = 0, heartbeatTimerInterval = null, reviveCount = 0;
-    let inStrategicMode = false, strategicPhaseSeconds = 0;
-    let comboStreak = 0, gameLoopActive = false, isGameOverState = false;
-    let isVictoryWaitingClick = false;
-    let screenShake = 0;
-
-    let isVictoryCascadeActive = false;
-    let cascadeGridIndex = 0;
-    let victoryBonusAccumulator = 0;
-    let cascadeOrder = [];
-
-    const BALANCED_SHAPES = [
-      { id: "line_2_h", colorIndex: 0, blocks: [[0, 0], [0, 1]] },
-      { id: "line_2_v", colorIndex: 0, blocks: [[0, 0], [1, 0]] },
-      { id: "line_3_h", colorIndex: 1, blocks: [[0, 0], [0, 1], [0, 2]] },
-      { id: "line_3_v", colorIndex: 1, blocks: [[0, 0], [1, 0], [2, 0]] },
-      { id: "square_2x2", colorIndex: 0, blocks: [[0, 0], [0, 1], [1, 0], [1, 1]] },
-      { id: "corner", colorIndex: 2, blocks: [[0, 0], [1, 0], [1, 1]] },
-      { id: "corner_rev", colorIndex: 2, blocks: [[0, 1], [1, 1], [1, 0]] }
-    ];
-
-    const TACTICAL_SHAPES = [
-      { id: "l_shape", colorIndex: 3, blocks: [[0, 0], [1, 0], [2, 0], [2, 1]] },
-      { id: "j_shape", colorIndex: 3, blocks: [[0, 1], [1, 1], [2, 1], [2, 0]] },
-      { id: "line_4_h", colorIndex: 4, blocks: [[0, 0], [0, 1], [0, 2], [0, 3]] },
-      { id: "line_4_v", colorIndex: 4, blocks: [[0, 0], [1, 0], [2, 0], [3, 0]] },
-      { id: "t_shape", colorIndex: 2, blocks: [[0, 1], [1, 0], [1, 1], [1, 2]] },
-      { id: "s_shape", colorIndex: 1, blocks: [[0, 1], [0, 2], [1, 0], [1, 1]] }
-    ];
-
-    const ALL_SHAPES = [...BALANCED_SHAPES, ...TACTICAL_SHAPES];
-    const EMERGENCY_ESCAPE_DOT = { id: "dot", colorIndex: 0, blocks: [[0, 0]] };
-
-    let hand = [];
-    let draggedPiece = null;
-    let dragOffsetX = 0, dragOffsetY = 0;
-    let previewTarget = null;
-    let predictedLines = { rows: [], cols: [] };
-    const floatingTexts = [];
-    const particles = [];
-    const confettiList = [];
-
-    function autoSaveCurrentMode() {
-      if (!gameLoopActive) return;
-      const data = { score, redGemsCollected, blueGemsCollected, bossSecondsElapsed, inStrategicMode, strategicPhaseSeconds, grid, hand, activeLevel };
-      localStorage.setItem(`msw_autosave_${gameMode}`, JSON.stringify(data));
-    }
-
-    function loadModeSave(mode) {
-      const saved = localStorage.getItem(`msw_autosave_${mode}`);
-      return saved ? JSON.parse(saved) : null;
-    }
+    window.openLevelMap = function() { document.getElementById('startModal').style.display = "none"; renderMapGrid(); document.getElementById('mapModal').style.display = "flex"; }
+    window.closeLevelMap = function() { document.getElementById('mapModal').style.display = "none"; document.getElementById('startModal').style.display = "flex"; }
+    window.openLevelMapFromGame = function() { gameLoopActive=false; stopHeartbeatEngine(); document.getElementById('winModal').style.display="none"; document.getElementById('lossControlBar').style.display="none"; document.getElementById('restartTopBtn').style.display="none"; openLevelMap(); }
 
     function canPlace(shape, r0, c0) {
       for (const [dr, dc] of shape.blocks) {
@@ -773,929 +318,293 @@
       }
       return true;
     }
-
-    function countValidPositions(shape) {
-      let count = 0;
-      for (let r = 0; r < GRID_SIZE; r++) {
-        for (let c = 0; c < GRID_SIZE; c++) {
-          if (canPlace(shape, r, c)) count++;
+    
+    function getWeightedRandomShape() {
+        let totalWeight = ALL_SHAPES.reduce((sum, s) => sum + s.weight, 0);
+        let rand = Math.random() * totalWeight;
+        for (let shape of ALL_SHAPES) {
+            if (rand < shape.weight) return JSON.parse(JSON.stringify(shape));
+            rand -= shape.weight;
         }
-      }
-      return count;
+        return JSON.parse(JSON.stringify(ALL_SHAPES[1]));
     }
 
-    function generateSmartHand() {
-      let pool = ALL_SHAPES;
+    // فحص اللوح بذكاء: هل يحتاج اللاعب مساعدة صغيرة؟
+    function analyzeBoardForSmartDrop() {
+        let needsHelper = false;
+        for(let r=0; r<GRID_SIZE; r++) {
+            let filledCount = grid[r].filter(c => c !== 0).length;
+            if(filledCount === GRID_SIZE - 1) needsHelper = true; // يحتاج مربعاً لإكمال الخط
+        }
+        for(let c=0; c<GRID_SIZE; c++) {
+            let filledCount = 0;
+            for(let r=0; r<GRID_SIZE; r++) if(grid[r][c] !== 0) filledCount++;
+            if(filledCount === GRID_SIZE - 1) needsHelper = true;
+        }
+        return needsHelper;
+    }
 
-      if (inStrategicMode) {
-        pool = (Math.random() < 0.6) ? [...TACTICAL_SHAPES, ...BALANCED_SHAPES] : [...BALANCED_SHAPES, ...TACTICAL_SHAPES];
-      } else if (currentConfig?.hasTimer) {
-        pool = (bossSecondsElapsed < 105) ? [...BALANCED_SHAPES, ...TACTICAL_SHAPES] : [...TACTICAL_SHAPES, ...BALANCED_SHAPES];
-      }
-
-      let validShapes = pool.filter(s => countValidPositions(s) > 0);
-      if (validShapes.length === 0) validShapes = ALL_SHAPES.filter(s => countValidPositions(s) > 0);
-
-      const selected = [];
-      if (validShapes.length > 0) {
-        selected.push(JSON.parse(JSON.stringify(validShapes[Math.floor(Math.random() * validShapes.length)])));
-      } else {
-        selected.push(JSON.parse(JSON.stringify(EMERGENCY_ESCAPE_DOT)));
-      }
-
-      for (let i = 1; i < 3; i++) {
-        selected.push(JSON.parse(JSON.stringify(pool[Math.floor(Math.random() * pool.length)])));
-      }
-
-      for (let i = selected.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [selected[i], selected[j]] = [selected[j], selected[i]];
-      }
-
-      let targetGemType = null;
-      if (currentConfig) {
-        const redLeft = currentConfig.reqRedGems - redGemsCollected;
-        const blueLeft = currentConfig.reqBlueGems - blueGemsCollected;
-        if (redLeft > 0 && blueLeft > 0) targetGemType = (Math.random() < 0.5) ? 'red' : 'blue';
-        else if (redLeft > 0) targetGemType = 'red';
-        else if (blueLeft > 0) targetGemType = 'blue';
-      }
-
-      const gemPieceIdx = targetGemType ? (Math.random() < 0.75 ? Math.floor(Math.random() * 3) : 0) : -1;
-
-      const PREVIEW_SIZE = 24;
-      const slotWidth = 400 / 3;
+    function generateHand() {
+      hand = []; const PREVIEW_SIZE = 22;
+      let targetGem = (gameMode==="levels" && currentConfig) ? (currentConfig.reqRedGems>redGemsCollected?'red':(currentConfig.reqBlueGems>blueGemsCollected?'blue':null)) : null;
+      const gemIdx = targetGem ? Math.floor(Math.random()*3) : -1;
       
-      hand = selected.map((p, idx) => {
-        const shapeW = (Math.max(...p.blocks.map(b => b[1])) + 1) * PREVIEW_SIZE;
-        const shapeH = (Math.max(...p.blocks.map(b => b[0])) + 1) * PREVIEW_SIZE;
-        const cx = slotWidth * idx + slotWidth / 2 - shapeW / 2;
-        const cy = 575 - shapeH / 2;
-        
-        const hasGemInPiece = (idx === gemPieceIdx);
-        const gemBlockIdx = hasGemInPiece ? Math.floor(Math.random() * p.blocks.length) : -1;
-        const colorPalette = PALETTES[(p.colorIndex + idx * 2) % PALETTES.length];
+      let boardNeedsHelp = analyzeBoardForSmartDrop();
 
-        return { 
-          ...p, 
-          colorData: colorPalette, 
-          x: cx, y: cy, origX: cx, origY: cy, 
-          size: PREVIEW_SIZE, 
-          gemType: hasGemInPiece ? targetGemType : null,
-          gemBlockIndex: gemBlockIdx 
-        };
-      });
-
-      autoSaveCurrentMode();
-      checkGameState();
-    }
-
-    function spawnInitialElements(prefilledCount, redGems, blueGems) {
-      grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
-
-      let placedPrefilled = 0;
-      while (placedPrefilled < prefilledCount) {
-        const r = Math.floor(Math.random() * 6) + 1, c = Math.floor(Math.random() * 6) + 1;
-        if (grid[r][c] === 0) {
-          grid[r][c] = { colorData: PALETTES[0] };
-          placedPrefilled++;
-        }
-      }
-
-      let placedRed = 0;
-      while (placedRed < Math.min(3, redGems)) {
-        const r = Math.floor(Math.random() * GRID_SIZE), c = Math.floor(Math.random() * GRID_SIZE);
-        if (grid[r][c] === 0) {
-          grid[r][c] = { colorData: PALETTES[0], gem: 'red' };
-          placedRed++;
-        }
-      }
-
-      let placedBlue = 0;
-      while (placedBlue < Math.min(3, blueGems)) {
-        const r = Math.floor(Math.random() * GRID_SIZE), c = Math.floor(Math.random() * GRID_SIZE);
-        if (grid[r][c] === 0) {
-          grid[r][c] = { colorData: PALETTES[0], gem: 'blue' };
-          placedBlue++;
-        }
-      }
-    }
-
-    function calculatePredictedLines(shape, targetR, targetC) {
-      if (!shape || targetR === null || targetC === null) return { rows: [], cols: [] };
-      const tempGrid = grid.map(row => [...row]);
-      for (const [dr, dc] of shape.blocks) {
-        const r = targetR + dr, c = targetC + dc;
-        if (r >= 0 && r < GRID_SIZE && c >= 0 && c < GRID_SIZE) tempGrid[r][c] = 1;
-      }
-      const rows = [], cols = [];
-      for (let r = 0; r < GRID_SIZE; r++) { if (tempGrid[r].every(cell => cell !== 0)) rows.push(r); }
-      for (let c = 0; c < GRID_SIZE; c++) { if (tempGrid.every(row => row[c] !== 0)) cols.push(c); }
-      return { rows, cols };
-    }
-
-    function startSpecificLevel(lvl) {
-      confettiList.length = 0;
-      stopHeartbeatEngine();
-      isVictoryCascadeActive = false;
-      isVictoryWaitingClick = false;
-      isGameOverState = false;
-      gameMode = "levels";
-      activeLevel = lvl;
-      currentConfig = getLevelConfiguration(lvl);
-      reviveCount = 0;
-      inStrategicMode = false;
-      strategicPhaseSeconds = 0;
-      lossControlBar.style.display = "none";
-      winModal.style.display = "none";
-      confirmRestartModal.style.display = "none";
-      mapModal.style.display = "none";
-
-      score = 0; 
-      redGemsCollected = 0; 
-      blueGemsCollected = 0;
-      bossSecondsElapsed = 0;
-
-      spawnInitialElements(currentConfig.prefilledBlocks, currentConfig.reqRedGems, currentConfig.reqBlueGems);
-      
-      if (currentConfig.hasTimer) {
-        startTimedEngine();
-      }
-      
-      gameLoopActive = true;
-      generateSmartHand();
-    }
-
-    function startGame(mode) {
-      confettiList.length = 0;
-      stopHeartbeatEngine();
-      isVictoryCascadeActive = false;
-      isVictoryWaitingClick = false;
-      isGameOverState = false;
-      gameMode = mode;
-      reviveCount = 0;
-      inStrategicMode = false;
-      strategicPhaseSeconds = 0;
-      lossControlBar.style.display = "none";
-      winModal.style.display = "none";
-      confirmRestartModal.style.display = "none";
-      startModal.style.display = "none";
-
-      const saved = loadModeSave(mode);
-      if (mode === "classic" && saved && saved.grid) {
-        score = saved.score;
-        redGemsCollected = saved.redGemsCollected || 0;
-        blueGemsCollected = saved.blueGemsCollected || 0;
-        bossSecondsElapsed = saved.bossSecondsElapsed || 0;
-        grid = saved.grid;
-        hand = saved.hand;
-        currentConfig = { reqScore: 0, reqRedGems: 0, reqBlueGems: 0, hasTimer: false };
-      } else {
-        score = 0; redGemsCollected = 0; blueGemsCollected = 0; bossSecondsElapsed = 0;
-        if (mode === "daily") {
-          currentConfig = { reqScore: 0, reqRedGems: 6, reqBlueGems: 6, prefilledBlocks: 3, hasTimer: false };
-          spawnInitialElements(3, 6, 6);
+      for (let i = 0; i < 3; i++) {
+        let p;
+        // الذكاء الاصطناعي يقترح قطعة بطول 2 لمساعدتك إذا كنت قريباً من الإنجاز، وليس المربع الفردي!
+        if (i === 0 && boardNeedsHelp && Math.random() > 0.5) {
+             let helpers = ALL_SHAPES.filter(s => s.id === "line2h" || s.id === "line2v");
+             p = JSON.parse(JSON.stringify(helpers[Math.floor(Math.random() * helpers.length)]));
         } else {
-          currentConfig = { reqScore: 0, reqRedGems: 0, reqBlueGems: 0, prefilledBlocks: 0, hasTimer: false };
-          grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
+             p = getWeightedRandomShape();
         }
+
+        p.colorData = PALETTES[Math.floor(Math.random() * PALETTES.length)];
+        p.size = PREVIEW_SIZE; p.gemType = (i === gemIdx) ? targetGem : null;
+        p.gemBlockIndex = (i === gemIdx) ? Math.floor(Math.random() * p.blocks.length) : -1;
+        hand.push(p);
+      }
+      
+      // نظام الإنقاذ الأخير (طوق النجاة): إذا اقتربت من الخسارة الحتمية واللوح به فراغ صغير
+      let canPlayAny = hand.some(p => { for(let r=0;r<GRID_SIZE;r++) for(let c=0;c<GRID_SIZE;c++) if(canPlace(p,r,c)) return true; return false; });
+      if(!canPlayAny) {
+          let hasEmptySpace = false;
+          for(let r=0;r<GRID_SIZE;r++) for(let c=0;c<GRID_SIZE;c++) if(grid[r][c] === 0) hasEmptySpace = true;
+          // هنا فقط يتدخل المربع الصغير (1x1) لينقذك من الموت
+          if(hasEmptySpace) {
+              let rescueShape = JSON.parse(JSON.stringify(ALL_SHAPES.find(s => s.id === "dot"))); 
+              rescueShape.colorData = PALETTES[0]; rescueShape.size = PREVIEW_SIZE; rescueShape.gemType = null; rescueShape.gemBlockIndex = -1;
+              hand[0] = rescueShape;
+          }
       }
 
-      gameLoopActive = true;
-      if (!hand || hand.length === 0) generateSmartHand();
-      else checkGameState();
+      updateHandPositions();
+      checkGameOver();
+    }
+
+    function checkGameOver() {
+      if(hand.length===0) return;
+      const directFit = hand.some(p => { for(let r=0;r<GRID_SIZE;r++) for(let c=0;c<GRID_SIZE;c++) if(canPlace(p,r,c)) return true; return false; });
+      
+      if(!directFit) { 
+        gameLoopActive = false; 
+        stopHeartbeatEngine();
+        
+        // التوقف ثانية ونصف ليرى المستخدم أن اللوح ممتلئ تماماً
+        setTimeout(() => {
+            isGameOverState = true; 
+            document.getElementById('lossControlBar').style.display = "flex"; 
+            triggerHaptic(60); 
+            document.getElementById('reviveAdBtn').style.display=(reviveCount<1)?"block":"none"; 
+        }, 1500);
+      }
+    }
+
+    function stopHeartbeatEngine() {
+      if (heartbeatTimerInterval) { clearInterval(heartbeatTimerInterval); heartbeatTimerInterval = null; }
     }
 
     function startTimedEngine() {
       stopHeartbeatEngine();
-      
       heartbeatTimerInterval = setInterval(() => {
         if (!gameLoopActive || !currentConfig || !currentConfig.hasTimer || inStrategicMode) {
           if (!currentConfig || !currentConfig.hasTimer) stopHeartbeatEngine();
           return;
         }
-
         bossSecondsElapsed++;
-
+        
         if (bossSecondsElapsed >= 105 && bossSecondsElapsed <= 120) {
-          const urgency = (bossSecondsElapsed - 105) / 15;
-          playSound('heartbeat', 1 + urgency);
-          triggerHaptic(15);
+          playSound('heartbeat'); triggerHaptic(15);
         }
-
+        
         if (bossSecondsElapsed >= 120) {
-          inStrategicMode = true;
-          strategicPhaseSeconds = 0;
-          stopHeartbeatEngine();
-          spawnFeedbackBadge("🔥 لعب استراتيجي 🧠", "#fbbf24", 2.0);
-          playSound('victory');
-          triggerHaptic(40);
+          inStrategicMode = true; stopHeartbeatEngine(); triggerHaptic(40);
         }
       }, 1000);
     }
 
-    function spawnFeedbackBadge(text, color, scale = 1.6) {
-      floatingTexts.push({ text, x: 200, y: 190, alpha: 2.2, scale, color });
+    window.executeRevive = function() {
+      reviveCount++; isGameOverState = false; document.getElementById('lossControlBar').style.display = "none";
+      for (let r = 2; r <= 5; r++) for (let c = 2; c <= 5; c++) grid[r][c] = 0;
+      gameLoopActive = true; 
+      if (currentConfig && currentConfig.hasTimer && !inStrategicMode) startTimedEngine();
+      generateHand();
     }
 
-    function createExplosion(r, c, color) {
-      const cx = GRID_OFFSET_X + c * CELL_SIZE + CELL_SIZE / 2;
-      const cy = GRID_OFFSET_Y + r * CELL_SIZE + CELL_SIZE / 2;
-      for (let i = 0; i < 8; i++) {
-        particles.push({
-          x: cx, y: cy, color: color || "#38bdf8",
-          vx: (Math.random() - 0.5) * 6, vy: (Math.random() - 0.5) * 6,
-          size: Math.random() * 4 + 2, alpha: 1
-        });
-      }
+    window.restartCurrentMode = function() {
+      document.getElementById('lossControlBar').style.display="none"; document.getElementById('winModal').style.display="none"; isGameOverState=false; stopHeartbeatEngine();
+      if (gameMode === "classic") startGame("classic"); else startSpecificLevel(activeLevel);
     }
 
-    function triggerWinConfetti() {
-      for (let i = 0; i < 80; i++) {
-        confettiList.push({
-          x: 200 + (Math.random() - 0.5) * 120,
-          y: 220 + (Math.random() - 0.5) * 80,
-          vx: (Math.random() - 0.5) * 14,
-          vy: (Math.random() - 0.8) * 16,
-          size: Math.random() * 7 + 4,
-          color: PALETTES[Math.floor(Math.random() * PALETTES.length)].light,
-          alpha: 1.0,
-          rot: Math.random() * Math.PI,
-          vRot: (Math.random() - 0.5) * 0.25
-        });
-      }
-    }
+    function startSpecificLevel(lvl) {
+      gameMode = "levels"; activeLevel = lvl; score = redGemsCollected = blueGemsCollected = reviveCount = 0;
+      bossSecondsElapsed = 0; inStrategicMode = false;
+      document.getElementById('restartTopBtn').style.display = "flex"; 
 
-    function placeAndProcess(piece, tr, tc) {
-      piece.blocks.forEach(([dr, dc], idx) => {
-        const isGemBlock = (piece.gemBlockIndex === idx);
-        grid[tr + dr][tc + dc] = isGemBlock
-          ? { colorData: piece.colorData, gem: piece.gemType }
-          : { colorData: piece.colorData };
-      });
-
-      score += piece.blocks.length;
-
-      let rowsToClear = [], colsToClear = [];
-      for (let r = 0; r < GRID_SIZE; r++) { if (grid[r].every(c => c !== 0)) rowsToClear.push(r); }
-      for (let c = 0; c < GRID_SIZE; c++) { if (grid.every(row => row[c] !== 0)) colsToClear.push(c); }
-
-      const totalLines = rowsToClear.length + colsToClear.length;
-
-      if (totalLines > 0) {
-        comboStreak++;
-        screenShake = 6 + totalLines * 3.5;
-        triggerHaptic(45);
-
-        let gemsFound = 0;
-        const checkAndClear = (r, c) => {
-          const cell = grid[r][c];
-          if (cell && cell.gem) {
-            if (cell.gem === 'red') redGemsCollected++;
-            if (cell.gem === 'blue') blueGemsCollected++;
-            gemsFound++;
-          }
-          createExplosion(r, c, cell?.colorData?.light || "#38bdf8");
-          grid[r][c] = 0;
-        };
-
-        rowsToClear.forEach(r => { for (let c = 0; c < GRID_SIZE; c++) checkAndClear(r, c); });
-        colsToClear.forEach(c => { for (let r = 0; r < GRID_SIZE; r++) checkAndClear(r, c); });
-
-        if (gemsFound > 0) {
-          playSound('gem_collect');
-        } else {
-          playSound('clear', comboStreak);
-        }
-
-        let multiplier = 2;
-        let badgeText = "CLEAR ×2 🔥";
-        let badgeColor = "#38bdf8";
-
-        if (totalLines === 2) { multiplier = 3; badgeText = "DOUBLE ×3 ⚡"; badgeColor = "#fbbf24"; }
-        else if (totalLines === 3) { multiplier = 4; badgeText = "TRIPLE ×4 💥"; badgeColor = "#f97316"; }
-        else if (totalLines >= 4) { multiplier = 6; badgeText = "MEGA STRIKE ×6 👑"; badgeColor = "#ec4899"; }
-
-        if (inStrategicMode) {
-          multiplier += 1;
-          badgeText = `STRATEGIC ×${multiplier} 🧠⚡`;
-          badgeColor = "#38bdf8";
-        }
-
-        if (comboStreak > 1) {
-          multiplier += (comboStreak - 1);
-          badgeText = `COMBO STREAK ×${multiplier} ⚡🔥`;
-          badgeColor = "#c084fc";
-        }
-
-        const isBoardEmpty = grid.every(row => row.every(cell => cell === 0));
-        if (isBoardEmpty) {
-          multiplier = 10;
-          badgeText = "🌟 BOARD CLEARED ×10 🌟";
-          badgeColor = "#10b981";
-          score += 200;
-        }
-
-        spawnFeedbackBadge(badgeText, badgeColor, multiplier >= 4 ? 1.8 : 1.5);
-        score += (totalLines * 10) * multiplier;
-      } else {
-        comboStreak = 0;
-        playSound('drop');
-      }
-
-      if (score > highScore) {
-        highScore = score;
-        localStorage.setItem("msw_high_score", highScore);
-      }
-
-      hand = hand.filter(p => p !== piece);
-
-      if (checkWinConditions()) {
-        startVictoryCascade();
-        return;
-      }
-
-      if (hand.length === 0) generateSmartHand();
-      else {
-        autoSaveCurrentMode();
-        checkGameState();
-      }
-    }
-
-    function checkWinConditions() {
-      if (gameMode !== "levels" && gameMode !== "daily") return false;
-      if (!currentConfig) return false;
+      // أهداف منطقية وموزونة حسب الصعوبة الجديدة
+      let reqRed=0, reqBlue=0, reqScore=500+(lvl*150), hasTimer=false;
+      if(lvl%5===0) { hasTimer=true; reqScore = 800+(lvl*200); }
+      else if(lvl%3===1) reqRed = 4+Math.floor(lvl*0.15); 
+      else if(lvl%3===2) reqBlue = 4+Math.floor(lvl*0.15);
       
-      const redGoalMet = (currentConfig.reqRedGems === 0) || (redGemsCollected >= currentConfig.reqRedGems);
-      const blueGoalMet = (currentConfig.reqBlueGems === 0) || (blueGemsCollected >= currentConfig.reqBlueGems);
-      const scoreGoalMet = (currentConfig.reqScore === 0) || (score >= currentConfig.reqScore);
-
-      return redGoalMet && blueGoalMet && scoreGoalMet;
-    }
-
-    function checkGameState() {
-      if (hand.length === 0 || isVictoryCascadeActive || isVictoryWaitingClick) return;
-      const directFit = hand.some(p => {
-        for (let r = 0; r < GRID_SIZE; r++) {
-          for (let c = 0; c < GRID_SIZE; c++) {
-            if (canPlace(p, r, c)) return true;
-          }
-        }
-        return false;
-      });
-      if (!directFit) triggerGameOver();
-    }
-
-    function startVictoryCascade() {
-      gameLoopActive = false;
-      isVictoryCascadeActive = true;
-      stopHeartbeatEngine();
-      cascadeGridIndex = 0;
-      victoryBonusAccumulator = 0;
-      localStorage.removeItem(`msw_autosave_${gameMode}`);
-
-      cascadeOrder = [];
-      for (let r = 0; r < GRID_SIZE; r++) {
-        for (let c = 0; c < GRID_SIZE; c++) {
-          cascadeOrder.push({ r, c });
-        }
+      currentConfig = { reqScore, reqRedGems:reqRed, reqBlueGems:reqBlue, hasTimer };
+      grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
+      
+      // تقليل الحد الأقصى للعقبات ليكون منطقياً (أقصى حد 10 عقبات فقط)
+      let difficultyFactor = (lvl % 4 === 0) ? 0.2 : 1.0; // مرحلة استراحة كل 4 مراحل
+      let prefilledAmount = Math.floor(Math.min(10, Math.floor(lvl / 3.5)) * difficultyFactor); 
+      
+      for(let i=0; i<prefilledAmount; i++) {
+          let r = Math.floor(Math.random()*8), c = Math.floor(Math.random()*8);
+          if(grid[r][c] === 0) grid[r][c] = {colorData: PALETTES[3]}; 
       }
 
-      const cascadeInterval = setInterval(() => {
-        if (cascadeGridIndex < cascadeOrder.length) {
-          const { r, c } = cascadeOrder[cascadeGridIndex];
-          grid[r][c] = { colorData: PALETTES[(r + c) % PALETTES.length], isCascade: true };
-          createExplosion(r, c, PALETTES[(r + c) % PALETTES.length].light);
-          
-          score += 5;
-          victoryBonusAccumulator += 5;
-          playSound('step_cascade', cascadeGridIndex);
-          triggerHaptic(12);
-
-          cascadeGridIndex++;
-        } else {
-          clearInterval(cascadeInterval);
-          isVictoryCascadeActive = false;
-          isVictoryWaitingClick = true;
-          playSound('victory');
-          triggerHaptic(60);
-          triggerWinConfetti();
-
-          if (gameMode === "levels") {
-            saveLevelCompleted(activeLevel);
-            winSubtext.textContent = `المرحلة ${activeLevel} مكتملة بنجاح! النقاط: ${score}`;
-          } else {
-            winSubtext.textContent = `أنهيت لغز اليوم بنجاح وجمعت الجواهر الذهبية 💎`;
-          }
-        }
-      }, 25);
-    }
-
-    function showWinModalExplicitly() {
-      isVictoryWaitingClick = false;
-      winModal.style.display = "flex";
-    }
-
-    function goToNextLevel() {
-      confettiList.length = 0;
-      isVictoryWaitingClick = false;
-      winModal.style.display = "none";
-      startSpecificLevel(activeLevel + 1);
-    }
-
-    function triggerGameOver() {
-      isGameOverState = true;
-      gameLoopActive = false;
-      stopHeartbeatEngine();
-      localStorage.removeItem(`msw_autosave_${gameMode}`);
-
-      triggerHaptic(80);
-      reviveAdBtn.style.display = (reviveCount < 2) ? "flex" : "none";
-    }
-
-    function executeRevive() {
-      reviveCount++;
-      isGameOverState = false;
-      isVictoryWaitingClick = false;
-      lossControlBar.style.display = "none";
-
-      for (let r = 2; r <= 5; r++) {
-        for (let c = 2; c <= 5; c++) {
-          if (grid[r][c]) createExplosion(r, c, grid[r][c]?.colorData?.light || "#38bdf8");
-          grid[r][c] = 0;
-        }
+      let placedReds = 0;
+      while (placedReds < Math.min(4, reqRed)) {
+          let r = Math.floor(Math.random()*8), c = Math.floor(Math.random()*8);
+          if(grid[r][c] === 0) { grid[r][c]={colorData:PALETTES[1], gem:'red'}; placedReds++; }
+      }
+      let placedBlues = 0;
+      while (placedBlues < Math.min(4, reqBlue)) {
+          let r = Math.floor(Math.random()*8), c = Math.floor(Math.random()*8);
+          if(grid[r][c] === 0) { grid[r][c]={colorData:PALETTES[0], gem:'blue'}; placedBlues++; }
       }
 
-      gameLoopActive = true;
-      if (currentConfig?.hasTimer && !inStrategicMode) startTimedEngine();
-      autoSaveCurrentMode();
-      checkGameState();
+      document.getElementById('mapModal').style.display = "none"; document.getElementById('startModal').style.display = "none";
+      gameLoopActive = true; 
+      if(hasTimer) startTimedEngine();
+      generateHand();
     }
 
-    function restartCurrentMode() {
-      initAudio();
-      confettiList.length = 0;
-      stopHeartbeatEngine();
-      isVictoryCascadeActive = false;
-      isVictoryWaitingClick = false;
-      lossControlBar.style.display = "none";
-      winModal.style.display = "none";
-      confirmRestartModal.style.display = "none";
-      isGameOverState = false;
-      if (gameMode === "levels") startSpecificLevel(activeLevel);
-      else startGame(gameMode);
+    window.startGame = function(mode) {
+      gameMode = mode; score = reviveCount = 0; currentConfig = null; bossSecondsElapsed = 0; inStrategicMode = false;
+      document.getElementById('restartTopBtn').style.display = "flex";
+      grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
+      document.getElementById('startModal').style.display = "none"; gameLoopActive = true; generateHand();
     }
+    window.goToNextLevel = function() { document.getElementById('winModal').style.display = "none"; startSpecificLevel(activeLevel + 1); }
 
     function getCanvasCoords(e) {
       const rect = canvas.getBoundingClientRect();
-      const scaleX = 400 / rect.width;
-      const scaleY = 720 / rect.height;
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const scaleX = INTERNAL_W / rect.width; 
+      const scaleY = INTERNAL_H / rect.height;
+      const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
       return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
     }
 
-    canvas.addEventListener("touchstart", onDown, { passive: false });
-    canvas.addEventListener("mousedown", onDown);
-    window.addEventListener("touchmove", onMove, { passive: false });
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("touchend", onUp, { passive: false });
-    window.addEventListener("mouseup", onUp);
-
-    function onDown(e) {
-      if (isVictoryWaitingClick) {
-        initAudio();
-        showWinModalExplicitly();
-        if (e.cancelable) e.preventDefault();
-        return;
+    function handleDown(e) {
+      if(!gameLoopActive) return; window.initAudio(); const pos = getCanvasCoords(e);
+      let closest = null, minDist = 70;
+      hand.forEach(p=>{ const w = (Math.max(...p.blocks.map(b=>b[1]))+1)*p.size, h = (Math.max(...p.blocks.map(b=>b[0]))+1)*p.size;
+        const dist = Math.hypot(pos.x - (p.x+w/2), pos.y - (p.y+h/2));
+        if(dist<minDist){ minDist=dist; closest=p; }
+      });
+      if(closest){ draggedPiece=closest; draggedPiece.size=CELL_SIZE; playSound('pickup'); triggerHaptic(15);
+        dragOffsetX = ((Math.max(...draggedPiece.blocks.map(b=>b[1]))+1)*CELL_SIZE)/2;
+        dragOffsetY = ((Math.max(...draggedPiece.blocks.map(b=>b[0]))+1)*CELL_SIZE)+80;
+        draggedPiece.x = pos.x - dragOffsetX; draggedPiece.y = pos.y - dragOffsetY;
+        if(e.cancelable) e.preventDefault();
       }
+    }
+    canvas.addEventListener("touchstart", handleDown, {passive:false});
+    canvas.addEventListener("mousedown", handleDown);
 
-      if (isGameOverState) {
-        initAudio();
-        lossControlBar.style.display = "flex";
-        if (e.cancelable) e.preventDefault();
-        return;
-      }
+    function handleMove(e) {
+      if(!draggedPiece) return; if(e.cancelable) e.preventDefault();
+      const pos = getCanvasCoords(e); draggedPiece.x = pos.x - dragOffsetX; draggedPiece.y = pos.y - dragOffsetY;
+      const tc = Math.round((draggedPiece.x - GRID_OFFSET_X)/CELL_SIZE), tr = Math.round((draggedPiece.y - GRID_OFFSET_Y)/CELL_SIZE);
+      previewTarget = canPlace(draggedPiece, tr, tc) ? {r:tr, c:tc} : null;
+    }
+    canvas.addEventListener("touchmove", handleMove, {passive:false});
+    canvas.addEventListener("mousemove", handleMove);
 
-      if (!gameLoopActive || isVictoryCascadeActive || confirmRestartModal.style.display === "flex") return;
-      initAudio();
-      const pos = getCanvasCoords(e);
-
-      let closestPiece = null;
-      let minDistance = 85;
-
-      for (const piece of hand) {
-        const shapeW = (Math.max(...piece.blocks.map(b => b[1])) + 1) * piece.size;
-        const shapeH = (Math.max(...piece.blocks.map(b => b[0])) + 1) * piece.size;
-        const centerX = piece.x + shapeW / 2;
-        const centerY = piece.y + shapeH / 2;
+    function handleUp(e) {
+      if(!draggedPiece) return; if(e && e.cancelable) e.preventDefault();
+      const tc = Math.round((draggedPiece.x - GRID_OFFSET_X)/CELL_SIZE), tr = Math.round((draggedPiece.y - GRID_OFFSET_Y)/CELL_SIZE);
+      if(canPlace(draggedPiece, tr, tc)){
+        draggedPiece.blocks.forEach(([dr, dc], i)=>{ grid[tr+dr][tc+dc] = (draggedPiece.gemBlockIndex===i) ? {colorData:draggedPiece.colorData, gem:draggedPiece.gemType} : {colorData:draggedPiece.colorData}; });
         
-        const dist = Math.hypot(pos.x - centerX, pos.y - centerY);
-        if (dist < minDistance) {
-          minDistance = dist;
-          closestPiece = piece;
+        let pointsEarned = draggedPiece.blocks.length * 5;
+        if (inStrategicMode) pointsEarned *= 2;
+        score += pointsEarned;
+
+        let rows=[], cols=[];
+        for(let r=0;r<GRID_SIZE;r++) if(grid[r].every(c=>c!==0)) rows.push(r);
+        for(let c=0;c<GRID_SIZE;c++) if(grid.every(row=>row[c]!==0)) cols.push(c);
+        
+        if(rows.length+cols.length > 0){
+          triggerHaptic(50); playSound('clear');
+          rows.forEach(r=>{ for(let c=0;c<GRID_SIZE;c++){ if(grid[r][c]&&grid[r][c].gem==='red')redGemsCollected++; if(grid[r][c]&&grid[r][c].gem==='blue')blueGemsCollected++; grid[r][c]=0; }});
+          cols.forEach(c=>{ for(let r=0;r<GRID_SIZE;r++){ if(grid[r][c]&&grid[r][c].gem==='red')redGemsCollected++; if(grid[r][c]&&grid[r][c].gem==='blue')blueGemsCollected++; grid[r][c]=0; }});
+          
+          let lines = rows.length + cols.length;
+          let lineScore = lines * 150; 
+          if (lines > 1) lineScore += (lines - 1) * 150; // بونص للكومبو
+          if (inStrategicMode) lineScore *= 2;
+          score += lineScore;
+        } else playSound('drop');
+
+        if(score>highScore) { highScore = score; localStorage.setItem("msw_high_score", highScore); }
+        hand = hand.filter(p=>p!==draggedPiece);
+        
+        if(gameMode==="levels" && currentConfig && (currentConfig.reqRedGems===0||redGemsCollected>=currentConfig.reqRedGems) && (currentConfig.reqBlueGems===0||blueGemsCollected>=currentConfig.reqBlueGems) && (currentConfig.reqScore===0||score>=currentConfig.reqScore)){
+          gameLoopActive=false; stopHeartbeatEngine(); triggerHaptic(60); document.getElementById('winSubtext').textContent=`مرحلة ${activeLevel} اكتملت بنجاح!`; document.getElementById('winModal').style.display="flex"; return;
         }
-      }
-
-      if (closestPiece) {
-        draggedPiece = closestPiece;
-        draggedPiece.size = CELL_SIZE;
-
-        playSound('pickup');
-        triggerHaptic(20);
-
-        const fullW = (Math.max(...draggedPiece.blocks.map(b => b[1])) + 1) * CELL_SIZE;
-        const fullH = (Math.max(...draggedPiece.blocks.map(b => b[0])) + 1) * CELL_SIZE;
-        dragOffsetX = fullW / 2;
-        dragOffsetY = fullH + 90;
-
-        draggedPiece.x = pos.x - dragOffsetX;
-        draggedPiece.y = pos.y - dragOffsetY;
-
-        if (e.cancelable) e.preventDefault();
-      }
+        
+        if(hand.length===0) generateHand(); else checkGameOver();
+      } else { draggedPiece.x=draggedPiece.origX; draggedPiece.y=draggedPiece.origY; draggedPiece.size=22; }
+      previewTarget=null; draggedPiece=null;
     }
+    canvas.addEventListener("touchend", handleUp, {passive:false});
+    canvas.addEventListener("mouseup", handleUp);
 
-    function onMove(e) {
-      if (!draggedPiece) return;
-      if (e.cancelable) e.preventDefault();
-
-      const pos = getCanvasCoords(e);
-      draggedPiece.x = pos.x - dragOffsetX;
-      draggedPiece.y = pos.y - dragOffsetY;
-
-      const tc = Math.round((draggedPiece.x - GRID_OFFSET_X) / CELL_SIZE);
-      const tr = Math.round((draggedPiece.y - GRID_OFFSET_Y) / CELL_SIZE);
-
-      if (canPlace(draggedPiece, tr, tc)) {
-        previewTarget = { r: tr, c: tc };
-        predictedLines = calculatePredictedLines(draggedPiece, tr, tc);
-      } else {
-        previewTarget = null;
-        predictedLines = { rows: [], cols: [] };
-      }
-    }
-
-    function onUp(e) {
-      if (!draggedPiece) return;
-      if (e && e.cancelable) e.preventDefault();
-
-      const tc = Math.round((draggedPiece.x - GRID_OFFSET_X) / CELL_SIZE);
-      const tr = Math.round((draggedPiece.y - GRID_OFFSET_Y) / CELL_SIZE);
-
-      if (canPlace(draggedPiece, tr, tc)) {
-        placeAndProcess(draggedPiece, tr, tc);
-      } else {
-        draggedPiece.x = draggedPiece.origX;
-        draggedPiece.y = draggedPiece.origY;
-        draggedPiece.size = 24;
-      }
-
-      previewTarget = null;
-      predictedLines = { rows: [], cols: [] };
-      draggedPiece = null;
-    }
-
-    function draw3DBlock(x, y, size, colorData, isGlowing = false, isGrayscale = false) {
-      const radius = 6;
-      const w = size - 3;
-      const h = size - 3;
-
-      ctx.save();
-      ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
-      ctx.beginPath();
-      ctx.roundRect(x + 2, y + 4, w, h, radius);
-      ctx.fill();
-
-      ctx.fillStyle = isGrayscale ? "#475569" : colorData.base;
-      ctx.beginPath();
-      ctx.roundRect(x + 1, y + 1, w, h, radius);
-      ctx.fill();
-
-      ctx.fillStyle = isGrayscale ? "#334155" : colorData.dark;
-      ctx.beginPath();
-      ctx.roundRect(x + 1, y + h - 5, w, 6, [0, 0, radius, radius]);
-      ctx.fill();
-
-      ctx.fillStyle = isGlowing ? "#ffffff" : (isGrayscale ? "#64748b" : colorData.light);
-      ctx.beginPath();
-      ctx.roundRect(x + 1, y + 1, w, 5, [radius, radius, 0, 0]);
-      ctx.fill();
-
-      ctx.fillStyle = "rgba(255, 255, 255, 0.22)";
-      ctx.beginPath();
-      ctx.roundRect(x + 4, y + 4, w - 8, (h - 8) / 2, 4);
-      ctx.fill();
-      ctx.restore();
+    function draw3DBlock(x, y, s, color) {
+      ctx.save(); ctx.fillStyle="rgba(0,0,0,0.4)"; ctx.beginPath(); ctx.roundRect(x+2, y+4, s-3, s-3, 6); ctx.fill();
+      ctx.fillStyle=color.base; ctx.beginPath(); ctx.roundRect(x+1, y+1, s-3, s-3, 6); ctx.fill();
+      ctx.fillStyle=color.dark; ctx.beginPath(); ctx.roundRect(x+1, y+s-9, s-3, 6, [0,0,6,6]); ctx.fill();
+      ctx.fillStyle=color.light; ctx.beginPath(); ctx.roundRect(x+1, y+1, s-3, 5, [6,6,0,0]); ctx.fill(); ctx.restore();
     }
 
     function draw() {
-      ctx.save();
-      if (screenShake > 0) {
-        ctx.translate((Math.random() - 0.5) * screenShake, (Math.random() - 0.5) * screenShake);
-        screenShake *= 0.85;
-        if (screenShake < 0.5) screenShake = 0;
-      }
-
-      ctx.clearRect(0, 0, 400, 720);
-
-      // الشريط العلوي للأهداف
-      if (gameMode === "levels") {
-        ctx.save();
-        ctx.textAlign = "center";
-        
-        const redLeft = Math.max(0, currentConfig.reqRedGems - redGemsCollected);
-        const blueLeft = Math.max(0, currentConfig.reqBlueGems - blueGemsCollected);
-        const scoreLeft = Math.max(0, currentConfig.reqScore - score);
-
+      ctx.clearRect(0,0,INTERNAL_W,INTERNAL_H);
+      ctx.save(); ctx.textAlign="center";
+      
+      if(gameMode==="levels" && currentConfig){
         if (currentConfig.hasTimer) {
-          if (!inStrategicMode) {
-            const mins = Math.floor(bossSecondsElapsed / 60);
-            const secs = bossSecondsElapsed % 60;
-            const timeFormatted = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-            const isTension = (bossSecondsElapsed >= 105);
-
-            ctx.fillStyle = isTension ? "#ef4444" : "#ffffff";
-            ctx.font = "900 22px system-ui";
-            ctx.fillText(`⏱️ ${timeFormatted}`, 140, 48);
-
-            ctx.fillStyle = "#ffffff";
-            ctx.font = "900 20px system-ui";
-            ctx.fillText(`🎯 ${scoreLeft}`, 260, 48);
-          } else {
-            ctx.fillStyle = "#fbbf24";
-            ctx.font = "900 20px system-ui";
-            ctx.fillText("🧠 لعب استراتيجي", 140, 48);
-
-            ctx.fillStyle = "#ffffff";
-            ctx.font = "900 20px system-ui";
-            ctx.fillText(`🎯 ${scoreLeft}`, 260, 48);
-          }
-
-        } else if (currentConfig.reqRedGems > 0 && currentConfig.reqBlueGems > 0) {
-          ctx.font = "26px system-ui";
-          ctx.fillText("💎", 160, 44);
-          ctx.fillText("🔷", 240, 44);
-
-          ctx.fillStyle = "#ffffff";
-          ctx.font = "900 22px system-ui";
-          ctx.shadowColor = "rgba(0,0,0,0.4)";
-          ctx.shadowBlur = 6;
-          ctx.fillText(`${redLeft}`, 160, 72);
-          ctx.fillText(`${blueLeft}`, 240, 72);
-
-        } else if (currentConfig.reqRedGems > 0) {
-          ctx.font = "28px system-ui";
-          ctx.fillText("💎", 200, 44);
-
-          ctx.fillStyle = "#ffffff";
-          ctx.font = "900 24px system-ui";
-          ctx.shadowColor = "rgba(0,0,0,0.4)";
-          ctx.shadowBlur = 6;
-          ctx.fillText(`${redLeft}`, 200, 72);
-
-        } else if (currentConfig.reqBlueGems > 0) {
-          ctx.font = "28px system-ui";
-          ctx.fillText("🔷", 200, 44);
-
-          ctx.fillStyle = "#ffffff";
-          ctx.font = "900 24px system-ui";
-          ctx.shadowColor = "rgba(0,0,0,0.4)";
-          ctx.shadowBlur = 6;
-          ctx.fillText(`${blueLeft}`, 200, 72);
-
-        } else {
-          ctx.font = "28px system-ui";
-          ctx.fillText("🎯", 200, 44);
-
-          ctx.fillStyle = "#ffffff";
-          ctx.font = "900 24px system-ui";
-          ctx.shadowColor = "rgba(0,0,0,0.4)";
-          ctx.shadowBlur = 6;
-          ctx.fillText(`${scoreLeft}`, 200, 72);
-        }
-        ctx.restore();
-
-      } else if (gameMode === "daily") {
-        ctx.save();
-        ctx.textAlign = "center";
-        const redLeft = Math.max(0, currentConfig.reqRedGems - redGemsCollected);
-        const blueLeft = Math.max(0, currentConfig.reqBlueGems - blueGemsCollected);
-        
-        ctx.font = "26px system-ui";
-        ctx.fillText("💎", 160, 44);
-        ctx.fillText("🔷", 240, 44);
-
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "900 22px system-ui";
-        ctx.shadowColor = "rgba(0,0,0,0.4)";
-        ctx.shadowBlur = 6;
-        ctx.fillText(`${redLeft}`, 160, 72);
-        ctx.fillText(`${blueLeft}`, 240, 72);
-        ctx.restore();
-
-      } else if (gameMode === "classic") {
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "900 24px system-ui";
-        ctx.textAlign = "center";
-        ctx.fillText(`${score}`, 200, 48);
-
-        ctx.fillStyle = "#cbd5e1";
-        ctx.font = "700 13px system-ui";
-        ctx.fillText(`🏆 الأعلى: ${highScore}`, 200, 72);
-      }
-
-      ctx.fillStyle = "#1e293b";
-      ctx.beginPath();
-      ctx.roundRect(GRID_OFFSET_X - 6, GRID_OFFSET_Y - 6, GRID_SIZE * CELL_SIZE + 12, GRID_SIZE * CELL_SIZE + 12, 16);
-      ctx.fill();
-
-      // شبكة المربعات
-      for (let r = 0; r < GRID_SIZE; r++) {
-        for (let c = 0; c < GRID_SIZE; c++) {
-          const x = GRID_OFFSET_X + c * CELL_SIZE;
-          const y = GRID_OFFSET_Y + r * CELL_SIZE;
-          const cell = grid[r][c];
-          const isPredictGlow = predictedLines.rows.includes(r) || predictedLines.cols.includes(c);
-
-          if (!cell) {
-            ctx.fillStyle = isGameOverState ? "rgba(239, 68, 68, 0.15)" : (isPredictGlow ? "rgba(56, 189, 248, 0.35)" : "#0f172a");
-            ctx.beginPath();
-            ctx.roundRect(x + 1, y + 1, CELL_SIZE - 2, CELL_SIZE - 2, 8);
-            ctx.fill();
-
-            if (isPredictGlow) {
-              ctx.strokeStyle = "#38bdf8";
-              ctx.lineWidth = 1.5;
-              ctx.stroke();
+            if (!inStrategicMode) {
+                const mins = Math.floor(bossSecondsElapsed / 60); const secs = bossSecondsElapsed % 60;
+                ctx.fillStyle = (bossSecondsElapsed >= 105) ? "#f43f5e" : "#38bdf8"; ctx.font="900 20px system-ui";
+                ctx.fillText(`⏱️ ${mins}:${secs < 10 ? '0' : ''}${secs}`, INTERNAL_W/2 - 70, Math.min(70, GRID_OFFSET_Y - 40));
+            } else {
+                ctx.fillStyle = "#fbbf24"; ctx.font="900 18px system-ui";
+                ctx.fillText("🧠 استراتيجي!", INTERNAL_W/2 - 70, Math.min(70, GRID_OFFSET_Y - 40));
             }
-          } else {
-            draw3DBlock(x, y, CELL_SIZE, cell.colorData || PALETTES[0], cell.isCascade, isGameOverState);
-            if (isPredictGlow) {
-              ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
-              ctx.beginPath();
-              ctx.roundRect(x + 1, y + 1, CELL_SIZE - 2, CELL_SIZE - 2, 6);
-              ctx.fill();
-            }
-            if (cell.gem) {
-              ctx.fillStyle = "#ffffff";
-              ctx.font = "20px system-ui";
-              ctx.textAlign = "center";
-              ctx.fillText(cell.gem === 'red' ? "💎" : "🔷", x + CELL_SIZE / 2, y + CELL_SIZE / 2 + 7);
-            }
-          }
-        }
+            ctx.fillStyle="#fff"; ctx.font="900 22px system-ui"; ctx.fillText(`🎯 ${score}/${currentConfig.reqScore}`, INTERNAL_W/2 + 60, Math.min(70, GRID_OFFSET_Y - 40));
+        } else if(currentConfig.reqRedGems>0 || currentConfig.reqBlueGems>0){
+          ctx.fillStyle="#f43f5e"; ctx.font="900 22px system-ui"; ctx.fillText(`💎 ${Math.max(0, currentConfig.reqRedGems-redGemsCollected)}`, INTERNAL_W/2 - 60, Math.min(70, GRID_OFFSET_Y - 40));
+          ctx.fillStyle="#38bdf8"; ctx.fillText(`🔷 ${Math.max(0, currentConfig.reqBlueGems-blueGemsCollected)}`, INTERNAL_W/2 + 60, Math.min(70, GRID_OFFSET_Y - 40));
+        } else { ctx.fillStyle="#fff"; ctx.font="900 24px system-ui"; ctx.fillText(`الهدف: ${score}/${currentConfig.reqScore}`, INTERNAL_W/2, Math.min(70, GRID_OFFSET_Y - 40)); }
+      } else if (gameMode==="classic") {
+        ctx.fillStyle="#fff"; ctx.font="900 28px system-ui"; ctx.fillText(`${score}`, INTERNAL_W/2, Math.min(60, GRID_OFFSET_Y - 45));
+        ctx.fillStyle="#94a3b8"; ctx.font="700 14px system-ui"; ctx.fillText(`🏆 الأعلى: ${highScore}`, INTERNAL_W/2, Math.min(90, GRID_OFFSET_Y - 15));
       }
-
-      // تنبيه الخسارة
-      if (isGameOverState) {
-        ctx.save();
-        ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
-        ctx.beginPath();
-        ctx.roundRect(35, 285, 330, 75, 18);
-        ctx.fill();
-
-        ctx.fillStyle = "#ef4444";
-        ctx.font = "900 16px system-ui";
-        ctx.textAlign = "center";
-        ctx.fillText("⚠️ لا توجد مساحات شاغرة للقطع", 200, 314);
-
-        ctx.fillStyle = "#f8fafc";
-        ctx.font = "700 13px system-ui";
-        ctx.fillText("انقر على الشاشة لخيارات المتابعة 👆", 200, 340);
-        ctx.restore();
-      }
-
-      // تنبيه الفوز
-      if (isVictoryWaitingClick) {
-        ctx.save();
-        ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
-        ctx.beginPath();
-        ctx.roundRect(35, 285, 330, 80, 18);
-        ctx.fill();
-
-        ctx.fillStyle = "#10b981";
-        ctx.font = "900 18px system-ui";
-        ctx.textAlign = "center";
-        ctx.fillText("🏆 اكتمل الهدف بنجاح!", 200, 314);
-
-        ctx.fillStyle = "#fbbf24";
-        ctx.font = "700 13.5px system-ui";
-        ctx.fillText("انقر على الشاشة للمتابعة ⏭️", 200, 342);
-        ctx.restore();
-      }
-
-      // عداد بونص الختام
-      if (isVictoryCascadeActive) {
-        ctx.save();
-        ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
-        ctx.fillRect(0, 0, 400, 720);
-
-        ctx.fillStyle = "#fbbf24";
-        ctx.font = "900 36px system-ui";
-        ctx.textAlign = "center";
-        ctx.shadowColor = "rgba(251, 191, 36, 0.8)";
-        ctx.shadowBlur = 20;
-        ctx.fillText(`+${victoryBonusAccumulator}`, 200, 310);
-
-        ctx.fillStyle = "#38bdf8";
-        ctx.font = "900 18px system-ui";
-        ctx.fillText("🎉 جاري احتساب بونص الساحة...", 200, 350);
-
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "700 24px system-ui";
-        ctx.fillText(`إجمالي النقاط: ${score}`, 200, 400);
-        ctx.restore();
-      }
-
-      // شبح التموضع
-      if (draggedPiece && previewTarget && !isGameOverState && !isVictoryCascadeActive && !isVictoryWaitingClick) {
-        for (const [dr, dc] of draggedPiece.blocks) {
-          const gx = GRID_OFFSET_X + (previewTarget.c + dc) * CELL_SIZE;
-          const gy = GRID_OFFSET_Y + (previewTarget.r + dr) * CELL_SIZE;
-          ctx.save();
-          ctx.globalAlpha = 0.55;
-          draw3DBlock(gx, gy, CELL_SIZE, draggedPiece.colorData);
-          ctx.restore();
-        }
-      }
-
-      // جزيئات الانفجار
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        p.x += p.vx; p.y += p.vy; p.alpha -= 0.03;
-        ctx.save();
-        ctx.globalAlpha = Math.max(0, p.alpha);
-        ctx.fillStyle = p.color;
-        ctx.fillRect(p.x, p.y, p.size, p.size);
-        ctx.restore();
-        if (p.alpha <= 0) { particles.splice(i, 1); i--; }
-      }
-
-      // زينة الفوز
-      for (let i = 0; i < confettiList.length; i++) {
-        const c = confettiList[i];
-        c.x += c.vx; c.y += c.vy; c.vy += 0.35; c.rot += c.vRot; c.alpha -= 0.012;
-
-        ctx.save();
-        ctx.globalAlpha = Math.max(0, c.alpha);
-        ctx.translate(c.x, c.y);
-        ctx.rotate(c.rot);
-        ctx.fillStyle = c.color;
-        ctx.fillRect(-c.size / 2, -c.size / 2, c.size, c.size * 0.6);
-        ctx.restore();
-
-        if (c.alpha <= 0 || c.y > 710) { confettiList.splice(i, 1); i--; }
-      }
-
-      // شارات المضاعفات
-      for (let i = 0; i < floatingTexts.length; i++) {
-        const t = floatingTexts[i];
-        t.y -= 1.3; t.alpha -= 0.02;
-        ctx.save();
-        ctx.globalAlpha = Math.max(0, t.alpha);
-        ctx.fillStyle = t.color || "#38bdf8";
-        ctx.font = `900 ${Math.floor(20 * (t.scale || 1))}px system-ui`;
-        ctx.textAlign = "center";
-        ctx.shadowColor = "rgba(0,0,0,0.9)";
-        ctx.shadowBlur = 10;
-        ctx.fillText(t.text, t.x, t.y);
-        ctx.restore();
-        if (t.alpha <= 0) { floatingTexts.splice(i, 1); i--; }
-      }
-
-      // قطع اليد
-      if (!isVictoryCascadeActive) {
-        hand.forEach(p => {
-          if (p === draggedPiece) return;
-          drawShape(p, (isGameOverState || isVictoryWaitingClick) ? 0.35 : 1.0, isGameOverState);
-        });
-
-        if (draggedPiece) drawShape(draggedPiece, 1.0);
-      }
-
       ctx.restore();
+
+      ctx.fillStyle="#1e293b"; ctx.beginPath(); ctx.roundRect(GRID_OFFSET_X-6, GRID_OFFSET_Y-6, GRID_SIZE*CELL_SIZE+12, GRID_SIZE*CELL_SIZE+12, 16); ctx.fill();
+      for(let r=0;r<GRID_SIZE;r++) for(let c=0;c<GRID_SIZE;c++){
+        const x=GRID_OFFSET_X+c*CELL_SIZE, y=GRID_OFFSET_Y+r*CELL_SIZE;
+        if(!grid[r][c]) { ctx.fillStyle="#0f172a"; ctx.beginPath(); ctx.roundRect(x+1, y+1, CELL_SIZE-2, CELL_SIZE-2, 6); ctx.fill(); }
+        else { draw3DBlock(x,y,CELL_SIZE,grid[r][c].colorData); if(grid[r][c].gem){ ctx.fillStyle="#fff"; ctx.font="20px system-ui"; ctx.textAlign="center"; ctx.fillText(grid[r][c].gem==='red'?"💎":"🔷", x+CELL_SIZE/2, y+CELL_SIZE/2+7); } }
+      }
+
+      if(draggedPiece && previewTarget){ ctx.save(); ctx.globalAlpha=0.4; draggedPiece.blocks.forEach(([dr,dc])=>{ draw3DBlock(GRID_OFFSET_X+(previewTarget.c+dc)*CELL_SIZE, GRID_OFFSET_Y+(previewTarget.r+dr)*CELL_SIZE, CELL_SIZE, draggedPiece.colorData); }); ctx.restore(); }
+      hand.forEach(p=>{ if(p!==draggedPiece) { p.blocks.forEach(([dr,dc],i)=>{ draw3DBlock(p.x+dc*p.size, p.y+dr*p.size, p.size, p.colorData); if(p.gemType&&p.gemBlockIndex===i){ ctx.fillStyle="#fff"; ctx.font=`${p.size*0.7}px system-ui`; ctx.textAlign="center"; ctx.fillText(p.gemType==='red'?"💎":"🔷", p.x+dc*p.size+p.size/2, p.y+dr*p.size+p.size*0.75); }}); }});
+      if(draggedPiece) draggedPiece.blocks.forEach(([dr,dc],i)=>{ draw3DBlock(draggedPiece.x+dc*draggedPiece.size, draggedPiece.y+dr*draggedPiece.size, draggedPiece.size, draggedPiece.colorData); if(draggedPiece.gemType&&draggedPiece.gemBlockIndex===i){ ctx.fillStyle="#fff"; ctx.font=`${draggedPiece.size*0.7}px system-ui`; ctx.textAlign="center"; ctx.fillText(draggedPiece.gemType==='red'?"💎":"🔷", draggedPiece.x+dc*draggedPiece.size+draggedPiece.size/2, draggedPiece.y+dr*draggedPiece.size+draggedPiece.size*0.75); }});
       requestAnimationFrame(draw);
     }
-
-    function drawShape(piece, opacity = 1.0, isGrayscale = false) {
-      ctx.save();
-      ctx.globalAlpha = opacity;
-      piece.blocks.forEach(([dr, dc], idx) => {
-        const x = piece.x + dc * piece.size;
-        const y = piece.y + dr * piece.size;
-        draw3DBlock(x, y, piece.size, piece.colorData, false, isGrayscale);
-
-        if (piece.gemType && piece.gemBlockIndex === idx) {
-          ctx.fillStyle = "#ffffff";
-          ctx.font = `${Math.floor(piece.size * 0.7)}px system-ui`;
-          ctx.textAlign = "center";
-          ctx.fillText(piece.gemType === 'red' ? "💎" : "🔷", x + piece.size / 2, y + piece.size / 2 + (piece.size * 0.24));
-        }
-      });
-      ctx.restore();
-    }
-
     draw();
   </script>
 </body>
