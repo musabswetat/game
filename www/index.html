@@ -42,7 +42,6 @@
     }
     .ad-badge { border: 1px solid #475569; padding: 2px 6px; border-radius: 4px; margin-left: 8px; color: #94a3b8; }
 
-    /* الأزرار العلوية (تم نقل زر الإعادة للإعدادات لتجنب الضغط الخطأ) */
     .top-nav-btn {
       position: absolute; top: 15px;
       background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255,255,255,0.15);
@@ -52,8 +51,8 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.4); transition: transform 0.1s;
     }
     .top-nav-btn:active { transform: scale(0.9); }
-    #backTopBtn { left: 20px; }       /* زر الرجوع أقصى اليسار */
-    #settingsTopBtn { right: 20px; }  /* زر الإعدادات أقصى اليمين */
+    #backTopBtn { left: 20px; }       
+    #settingsTopBtn { right: 20px; }  
 
     .modal {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -95,7 +94,6 @@
       <div class="splash-title">musab sw</div>
     </div>
 
-    <!-- الأزرار العلوية النظيفة -->
     <button id="backTopBtn" class="top-nav-btn" onclick="handleHardwareBack()" title="رجوع">❮</button>
     <button id="settingsTopBtn" class="top-nav-btn" onclick="openSettings()" title="الإعدادات">⚙️</button>
 
@@ -113,7 +111,6 @@
       <button class="btn btn-secondary" onclick="startGame('classic')">♾️ اللعب اللانهائي</button>
     </div>
 
-    <!-- نافذة الإعدادات (تحتوي الآن على زر إعادة المرحلة بوضوح تام لعدم الضغط بالخطأ) -->
     <div id="settingsModal" class="modal">
       <div class="dialog-card">
         <h2 style="font-size: 1.6rem; color: #38bdf8; margin-bottom: 20px;">⚙️ الإعدادات</h2>
@@ -121,7 +118,6 @@
         <div class="setting-row"><span>🔊 المؤثرات الصوتية</span><input type="checkbox" id="soundToggle" onchange="toggleSound(this.checked)" style="transform: scale(1.5);"></div>
         <div class="setting-row"><span>📳 الاهتزاز التكتيكي</span><input type="checkbox" id="hapticToggle" onchange="toggleHaptic(this.checked)" style="transform: scale(1.5);"></div>
         
-        <!-- زر إعادة المرحلة واضح وآمن داخل الإعدادات -->
         <button class="btn btn-gold" style="margin: 15px 0 10px 0; font-size: 1rem; padding: 12px;" onclick="closeSettings(); askForRestart();">🔄 إعادة المرحلة الحالية</button>
 
         <button class="btn" style="margin-top: 10px;" onclick="closeSettings()">حفظ وإغلاق 👍</button>
@@ -189,7 +185,7 @@
     const ctx = canvas.getContext("2d");
 
     let INTERNAL_W = 400, INTERNAL_H = 720;
-    let GRID_OFFSET_X = 24, GRID_OFFSET_Y = 135; // تم إنزال اللوح لمنتصف الشاشة تماماً ليعطي مساحة علوية مريحة ونظيفة
+    let GRID_OFFSET_X = 24, GRID_OFFSET_Y = 135; 
     const GRID_SIZE = 8, CELL_SIZE = 44;
 
     let gameMode = "classic", activeLevel = 1, score = 0, redGemsCollected = 0, blueGemsCollected = 0;
@@ -245,8 +241,12 @@
       const dpr = window.devicePixelRatio || 1;
       INTERNAL_W = 400; INTERNAL_H = 400 * (rect.height / rect.width);
       canvas.width = INTERNAL_W * dpr; canvas.height = INTERNAL_H * dpr; ctx.scale(dpr, dpr);
+      
       GRID_OFFSET_X = (INTERNAL_W - (GRID_SIZE * CELL_SIZE)) / 2; 
-      GRID_OFFSET_Y = Math.min(135, INTERNAL_H * 0.19); // ضبط دقيق لموقع اللوح بالمنتصف تماماً
+      
+      // التعديل هنا: تم إنزال اللوح بذكاء للمنتصف ليكون قريباً من الأشكال ولإلغاء الفراغ السفلي تماماً
+      GRID_OFFSET_Y = (INTERNAL_H - (GRID_SIZE * CELL_SIZE)) / 2 - 15; 
+      
       if(hand && hand.length > 0) updateHandPositions();
     }
     window.addEventListener("resize", resizeCanvas);
@@ -559,7 +559,6 @@
       ctx.clearRect(0,0,INTERNAL_W,INTERNAL_H);
       ctx.save(); ctx.textAlign="center";
       
-      // التنسيق النظيف المريح بالمنتصف تماماً
       if(gameMode==="levels" && currentConfig){
         if (currentConfig.hasTimer) {
             if (!inStrategicMode) {
