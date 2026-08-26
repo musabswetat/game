@@ -243,8 +243,6 @@
       canvas.width = INTERNAL_W * dpr; canvas.height = INTERNAL_H * dpr; ctx.scale(dpr, dpr);
       
       GRID_OFFSET_X = (INTERNAL_W - (GRID_SIZE * CELL_SIZE)) / 2; 
-      
-      // التعديل هنا: تم إنزال اللوح بذكاء للمنتصف ليكون قريباً من الأشكال ولإلغاء الفراغ السفلي تماماً
       GRID_OFFSET_Y = (INTERNAL_H - (GRID_SIZE * CELL_SIZE)) / 2 - 15; 
       
       if(hand && hand.length > 0) updateHandPositions();
@@ -433,10 +431,18 @@
       gameMode = "levels"; activeLevel = lvl; score = redGemsCollected = blueGemsCollected = reviveCount = 0;
       bossSecondsElapsed = 0; inStrategicMode = false;
 
+      // تعديل المرحلة الأولى لتكون نقطية صافية تماماً بدون جواهر لتبدأ اللعبة بشكل مريح
       let reqRed=0, reqBlue=0, reqScore=500+(lvl*150), hasTimer=false;
-      if(lvl%5===0) { hasTimer=true; reqScore = 800+(lvl*200); }
-      else if(lvl%3===1) reqRed = 4+Math.floor(lvl*0.15); 
-      else if(lvl%3===2) reqBlue = 4+Math.floor(lvl*0.15);
+      if(lvl === 1) {
+          reqScore = 500; // المرحلة الأولى نقاط صافية
+      } else if(lvl%5===0) { 
+          hasTimer=true; 
+          reqScore = 800+(lvl*200); 
+      } else if(lvl%3===1) { 
+          reqRed = 4+Math.floor(lvl*0.15); 
+      } else if(lvl%3===2) { 
+          reqBlue = 4+Math.floor(lvl*0.15); 
+      }
       
       currentConfig = { reqScore, reqRedGems:reqRed, reqBlueGems:reqBlue, hasTimer };
       grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
@@ -559,24 +565,27 @@
       ctx.clearRect(0,0,INTERNAL_W,INTERNAL_H);
       ctx.save(); ctx.textAlign="center";
       
+      // ضبط مكان كتابة الأهداف ليصبح تماماً في المكان المطلوب (بين الأزرار واللوح)
+      const TEXT_POS_Y = GRID_OFFSET_Y - 25;
+
       if(gameMode==="levels" && currentConfig){
         if (currentConfig.hasTimer) {
             if (!inStrategicMode) {
                 const mins = Math.floor(bossSecondsElapsed / 60); const secs = bossSecondsElapsed % 60;
                 ctx.fillStyle = (bossSecondsElapsed >= 105) ? "#f43f5e" : "#38bdf8"; ctx.font="900 18px system-ui";
-                ctx.fillText(`⏱️ ${mins}:${secs < 10 ? '0' : ''}${secs}`, INTERNAL_W/2 - 70, 50);
+                ctx.fillText(`⏱️ ${mins}:${secs < 10 ? '0' : ''}${secs}`, INTERNAL_W/2 - 70, TEXT_POS_Y);
             } else {
                 ctx.fillStyle = "#fbbf24"; ctx.font="900 16px system-ui";
-                ctx.fillText("🧠 استراتيجي!", INTERNAL_W/2 - 70, 50);
+                ctx.fillText("🧠 استراتيجي!", INTERNAL_W/2 - 70, TEXT_POS_Y);
             }
-            ctx.fillStyle="#fff"; ctx.font="900 20px system-ui"; ctx.fillText(`🎯 ${score}/${currentConfig.reqScore}`, INTERNAL_W/2 + 65, 50);
+            ctx.fillStyle="#fff"; ctx.font="900 20px system-ui"; ctx.fillText(`🎯 ${score}/${currentConfig.reqScore}`, INTERNAL_W/2 + 65, TEXT_POS_Y);
         } else if(currentConfig.reqRedGems>0 || currentConfig.reqBlueGems>0){
-          ctx.fillStyle="#f43f5e"; ctx.font="900 20px system-ui"; ctx.fillText(`💎 ${Math.max(0, currentConfig.reqRedGems-redGemsCollected)}`, INTERNAL_W/2 - 50, 50);
-          ctx.fillStyle="#38bdf8"; ctx.font="900 20px system-ui"; ctx.fillText(`🔷 ${Math.max(0, currentConfig.reqBlueGems-blueGemsCollected)}`, INTERNAL_W/2 + 50, 50);
-        } else { ctx.fillStyle="#fff"; ctx.font="900 22px system-ui"; ctx.fillText(`الهدف: ${score}/${currentConfig.reqScore}`, INTERNAL_W/2, 50); }
+          ctx.fillStyle="#f43f5e"; ctx.font="900 20px system-ui"; ctx.fillText(`💎 ${Math.max(0, currentConfig.reqRedGems-redGemsCollected)}`, INTERNAL_W/2 - 50, TEXT_POS_Y);
+          ctx.fillStyle="#38bdf8"; ctx.font="900 20px system-ui"; ctx.fillText(`🔷 ${Math.max(0, currentConfig.reqBlueGems-blueGemsCollected)}`, INTERNAL_W/2 + 50, TEXT_POS_Y);
+        } else { ctx.fillStyle="#fff"; ctx.font="900 22px system-ui"; ctx.fillText(`الهدف: ${score}/${currentConfig.reqScore}`, INTERNAL_W/2, TEXT_POS_Y); }
       } else if (gameMode==="classic") {
-        ctx.fillStyle="#fff"; ctx.font="900 26px system-ui"; ctx.fillText(`${score}`, INTERNAL_W/2, 45);
-        ctx.fillStyle="#94a3b8"; ctx.font="700 13px system-ui"; ctx.fillText(`🏆 الأعلى: ${highScore}`, INTERNAL_W/2, 70);
+        ctx.fillStyle="#fff"; ctx.font="900 26px system-ui"; ctx.fillText(`${score}`, INTERNAL_W/2, TEXT_POS_Y - 5);
+        ctx.fillStyle="#94a3b8"; ctx.font="700 13px system-ui"; ctx.fillText(`🏆 الأعلى: ${highScore}`, INTERNAL_W/2, TEXT_POS_Y + 20);
       }
       ctx.restore();
 
