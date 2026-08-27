@@ -5,7 +5,7 @@
   <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <title>musab sw</title>
+  <title>musab sw - Master Backup Version</title>
   
   <style>
     * { box-sizing: border-box; user-select: none; -webkit-user-select: none; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -22,16 +22,16 @@
       overflow: hidden; box-shadow: 0 0 30px rgba(0,0,0,0.8);
     }
 
-    /* شاشة البداية (تم زيادة مدة العرض لتصبح أطول وأنيق) */
+    /* شاشة البداية الاحترافية */
     #splashScreen {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: linear-gradient(135deg, #0f172a 0%, #312e81 100%);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       z-index: 9999; transition: opacity 0.8s ease;
     }
-    .splash-logo { font-size: 5.5rem; margin-bottom: 15px; animation: pulse 1.5s infinite alternate; }
+    .splash-logo { font-size: 6rem; margin-bottom: 15px; animation: pulse 1.5s infinite alternate; }
     @keyframes pulse { 0% { transform: scale(0.9); } 100% { transform: scale(1.1); } }
-    .splash-title { font-size: 3.5rem; font-weight: 900; color: #38bdf8; text-shadow: 0 4px 15px rgba(0,0,0,0.6); }
+    .splash-title { font-size: 3.8rem; font-weight: 900; color: #38bdf8; text-shadow: 0 4px 15px rgba(0,0,0,0.6); }
 
     canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 
@@ -39,16 +39,17 @@
       position: absolute; bottom: 0; left: 0; width: 100%; height: 50px;
       background: #090d16; border-top: 1px solid #1e293b;
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.8rem; color: #64748b; z-index: 50;
+      font-size: 0.85rem; color: #64748b; z-index: 50;
     }
     .ad-badge { border: 1px solid #475569; padding: 2px 6px; border-radius: 4px; margin-left: 8px; color: #94a3b8; }
 
+    /* الأزرار العلوية المريحة لضعاف البصر */
     .top-nav-btn {
       position: absolute; top: 15px;
       background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 14px; color: #fff; font-size: 1.4rem; cursor: pointer; pointer-events: auto;
+      border-radius: 16px; color: #fff; font-size: 1.6rem; cursor: pointer; pointer-events: auto;
       z-index: 2000; display: flex; align-items: center; justify-content: center;
-      width: 42px; height: 42px; backdrop-filter: blur(10px);
+      width: 48px; height: 48px; backdrop-filter: blur(10px);
       box-shadow: 0 4px 15px rgba(0,0,0,0.4); transition: transform 0.1s;
     }
     .top-nav-btn:active { transform: scale(0.9); }
@@ -59,45 +60,45 @@
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
       display: none; flex-direction: column; align-items: center; justify-content: center;
-      z-index: 1000; padding: 20px; text-align: center; background: rgba(2, 6, 23, 0.85);
+      z-index: 1000; padding: 20px; text-align: center; background: rgba(2, 6, 23, 0.9);
     }
     .dialog-card {
       background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155;
-      border-radius: 30px; padding: 30px 20px; width: 92%; max-width: 340px;
+      border-radius: 30px; padding: 35px 25px; width: 92%; max-width: 360px;
       box-shadow: 0 25px 50px rgba(0,0,0,0.9);
     }
 
     .btn {
       background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%); border: none; border-bottom: 4px solid #0369a1; color: white;
-      padding: 16px 20px; font-size: 1.15rem; border-radius: 20px; cursor: pointer; font-weight: 800; margin: 8px 0; width: 100%;
+      padding: 18px 22px; font-size: 1.25rem; border-radius: 20px; cursor: pointer; font-weight: 800; margin: 10px 0; width: 100%;
       box-shadow: 0 8px 20px rgba(2,132,199,0.4); transition: transform 0.1s;
     }
     .btn:active { transform: translateY(4px); border-bottom-width: 0px; }
     .btn-gold { background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%); border-bottom-color: #b45309; box-shadow: 0 8px 20px rgba(217,119,6,0.4); }
     .btn-secondary { background: linear-gradient(180deg, #475569 0%, #334155 100%); border-bottom-color: #1e293b; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
 
-    #mapModal { background: #0f172a; justify-content: flex-start; padding-top: 30px; }
+    #mapModal { background: #0f172a; justify-content: flex-start; padding-top: 35px; }
     .map-header { display: flex; justify-content: space-between; align-items: center; width: 100%; border-bottom: 2px solid #334155; padding-bottom: 15px; margin-bottom: 15px; }
-    .levels-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; max-height: 65vh; overflow-y: auto; padding-right: 5px; }
-    .level-node { background: #1e293b; border: 2px solid #334155; border-radius: 18px; padding: 15px 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
+    .levels-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%; max-height: 65vh; overflow-y: auto; padding-right: 5px; }
+    .level-node { background: #1e293b; border: 2px solid #334155; border-radius: 20px; padding: 18px 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
     .level-node.unlocked { border-color: #38bdf8; background: #0369a1; }
     .level-node.boss-level { border-color: #f43f5e; background: #be123c; }
-    .level-num { font-size: 1.3rem; font-weight: 900; color: #fff; }
+    .level-num { font-size: 1.4rem; font-weight: 900; color: #fff; }
     
-    .setting-row { display: flex; justify-content: space-between; align-items: center; margin: 20px 0; font-size: 1.1rem; font-weight: 700; }
+    .setting-row { display: flex; justify-content: space-between; align-items: center; margin: 20px 0; font-size: 1.2rem; font-weight: 700; }
   </style>
 </head>
 <body>
 
   <div id="gameContainer">
+    <!-- شاشة البداية -->
     <div id="splashScreen">
       <div class="splash-logo">💎</div>
       <div class="splash-title">musab sw</div>
     </div>
 
-    <!-- زر الرجوع (يعيدك للقائمة بأمان تام) -->
-    <button id="backTopBtn" class="top-nav-btn" onclick="handleHardwareBack()" title="رجوع">❮</button>
-    <button id="settingsTopBtn" class="top-nav-btn" onclick="openSettings()" title="الإعدادات">⚙️</button>
+    <button id="backTopBtn" class="top-nav-btn" onclick="window.handleHardwareBack()" title="رجوع">❮</button>
+    <button id="settingsTopBtn" class="top-nav-btn" onclick="window.openSettings()" title="الإعدادات">⚙️</button>
 
     <canvas id="gameCanvas"></canvas>
 
@@ -106,68 +107,88 @@
       <span id="bannerStatusText">جاري تحميل البانر...</span>
     </div>
 
+    <!-- القائمة الرئيسية -->
     <div id="startModal" class="modal" style="display:flex;">
-      <div style="font-size: 4.5rem; margin-bottom: 10px;">🧩</div>
-      <h1 style="font-size: 3rem; font-weight: 900; color: #38bdf8; margin-bottom: 30px;">musab sw</h1>
-      <button class="btn btn-gold" onclick="openLevelMap()">🗺️ خريطة المراحل (200)</button>
-      <button class="btn btn-secondary" onclick="startGame('classic')">♾️ اللعب اللانهائي</button>
+      <div style="font-size: 5rem; margin-bottom: 10px;">🧩</div>
+      <h1 style="font-size: 3.2rem; font-weight: 900; color: #38bdf8; margin-bottom: 30px;">musab sw</h1>
+      <button class="btn btn-gold" onclick="window.openLevelMap()">🗺️ خريطة المراحل (200)</button>
+      <button class="btn btn-secondary" onclick="window.startGame('classic')">♾️ اللعب اللانهائي</button>
     </div>
 
+    <!-- نافذة الإعدادات -->
     <div id="settingsModal" class="modal">
       <div class="dialog-card">
-        <h2 style="font-size: 1.6rem; color: #38bdf8; margin-bottom: 20px;">⚙️ الإعدادات</h2>
+        <h2 style="font-size: 1.8rem; color: #38bdf8; margin-bottom: 20px;">⚙️ الإعدادات</h2>
         
-        <div class="setting-row"><span>🔊 المؤثرات الصوتية</span><input type="checkbox" id="soundToggle" onchange="toggleSound(this.checked)" style="transform: scale(1.5);"></div>
-        <div class="setting-row"><span>📳 الاهتزاز التكتيكي</span><input type="checkbox" id="hapticToggle" onchange="toggleHaptic(this.checked)" style="transform: scale(1.5);"></div>
+        <div class="setting-row"><span>🔊 المؤثرات الصوتية</span><input type="checkbox" id="soundToggle" onchange="window.toggleSound(this.checked)" style="transform: scale(1.6);"></div>
+        <div class="setting-row"><span>📳 الاهتزاز التكتيكي</span><input type="checkbox" id="hapticToggle" onchange="window.toggleHaptic(this.checked)" style="transform: scale(1.6);"></div>
         
-        <button class="btn btn-gold" style="margin: 15px 0 10px 0; font-size: 1rem; padding: 12px;" onclick="closeSettings(); askForRestart();">🔄 إعادة المرحلة الحالية</button>
+        <button class="btn btn-gold" style="margin: 20px 0 10px 0; font-size: 1.1rem; padding: 14px;" onclick="window.closeSettings(); window.askForRestart();">🔄 إعادة المرحلة الحالية</button>
 
-        <button class="btn" style="margin-top: 10px;" onclick="closeSettings()">حفظ وإغلاق 👍</button>
+        <button class="btn" style="margin-top: 10px;" onclick="window.closeSettings()">حفظ وإغلاق 👍</button>
       </div>
     </div>
 
+    <!-- تأكيد إعادة التعيين -->
     <div id="confirmRestartModal" class="modal">
       <div class="dialog-card">
-        <h2 style="font-size: 1.5rem; color: #fff; margin-bottom: 15px;">🔄 إعادة التعيين</h2>
-        <p style="color: #94a3b8; margin-bottom: 25px;">هل تريد مسح الشبكة والبدء من جديد؟</p>
-        <button class="btn btn-gold" onclick="confirmRestartExecution()">نعم 🔄</button>
-        <button class="btn btn-secondary" onclick="cancelRestartDialog()">إلغاء ❌</button>
+        <h2 style="font-size: 1.6rem; color: #fff; margin-bottom: 15px;">🔄 إعادة التعيين</h2>
+        <p style="color: #94a3b8; font-size: 1.1rem; margin-bottom: 25px;">هل تريد مسح الشبكة والبدء من جديد؟</p>
+        <button class="btn btn-gold" onclick="window.confirmRestartExecution()">نعم 🔄</button>
+        <button class="btn btn-secondary" onclick="window.cancelRestartDialog()">إلغاء ❌</button>
       </div>
     </div>
 
+    <!-- خريطة المراحل (200) -->
     <div id="mapModal" class="modal">
       <div class="map-header">
-        <h2 style="font-size: 1.5rem; font-weight: 800; color: #fff;">خريطة المراحل</h2>
+        <h2 style="font-size: 1.6rem; font-weight: 800; color: #fff;">خريطة المراحل</h2>
       </div>
       <div class="levels-grid" id="levelsGridContainer"></div>
-      <button class="btn btn-secondary" style="margin-top: 20px;" onclick="closeLevelMap()">العودة للقائمة</button>
+      <button class="btn btn-secondary" style="margin-top: 20px;" onclick="window.closeLevelMap()">العودة للقائمة</button>
     </div>
 
+    <!-- نافذة الفوز -->
     <div id="winModal" class="modal">
-      <div style="font-size: 4rem; margin-bottom: 10px;">🏆</div>
-      <h2 style="font-size: 2.5rem; font-weight: 900; color: #38bdf8; margin-bottom: 15px;">رائع!</h2>
-      <p id="winSubtext" style="font-size: 1.1rem; color: #cbd5e1; margin-bottom: 30px;"></p>
-      <button id="nextLevelBtn" class="btn" onclick="goToNextLevel()">المرحلة التالية ⏭️</button>
-      <button class="btn btn-secondary" onclick="openLevelMapFromGame()">خريطة المراحل</button>
+      <div style="font-size: 4.5rem; margin-bottom: 10px;">🏆</div>
+      <h2 style="font-size: 2.8rem; font-weight: 900; color: #38bdf8; margin-bottom: 15px;">رائع!</h2>
+      <p id="winSubtext" style="font-size: 1.2rem; color: #cbd5e1; margin-bottom: 30px;"></p>
+      <button id="nextLevelBtn" class="btn" onclick="window.goToNextLevel()">المرحلة التالية ⏭️</button>
+      <button class="btn btn-secondary" onclick="window.openLevelMapFromGame()">خريطة المراحل</button>
     </div>
 
+    <!-- نافذة الخسارة -->
     <div id="lossControlBar" class="modal">
       <div class="dialog-card">
-        <div style="font-size: 3.5rem; margin-bottom: 10px;">⚠️</div>
-        <h2 style="font-size: 1.6rem; font-weight: 900; color: #f43f5e; margin-bottom: 10px;">اللوح ممتلئ!</h2>
-        <p style="color: #94a3b8; margin-bottom: 25px;">لا توجد مساحة كافية للتحرك</p>
-        <button id="reviveAdBtn" class="btn" onclick="watchRealAdForRevive()">📺 مشاهدة إعلان للإنقاذ</button>
-        <button class="btn btn-gold" onclick="restartCurrentMode()">إعادة من الصفر 🔄</button>
+        <div style="font-size: 4rem; margin-bottom: 10px;">⚠️</div>
+        <h2 style="font-size: 1.8rem; font-weight: 900; color: #f43f5e; margin-bottom: 10px;">اللوح ممتلئ!</h2>
+        <p style="color: #94a3b8; font-size: 1.1rem; margin-bottom: 25px;">لا توجد مساحة كافية للتحرك</p>
+        <button id="reviveAdBtn" class="btn" onclick="window.watchRealAdForRevive()">📺 مشاهدة إعلان للإنقاذ</button>
+        <button class="btn btn-gold" onclick="window.restartCurrentMode()">إعادة من الصفر 🔄</button>
       </div>
     </div>
   </div>
 
+  <!-- نظام تهيئة المكونات الأصلية (Capacitor & AdMob) -->
   <script type="module">
     import { AdMob, BannerAdPosition, BannerAdSize } from '@capacitor-community/admob';
     import { StatusBar } from '@capacitor/status-bar';
+    import { App } from '@capacitor/app';
 
+    // تفعيل وضع ملء الشاشة المطلق وإخفاء شريط الإشعارات
     try {
-      await StatusBar.hide();
+      if (StatusBar && StatusBar.hide) {
+        await StatusBar.hide();
+      }
+    } catch (e) {}
+
+    // ربط إيماءة وزر الهاردوير للرجوع بدون إغلاق التطبيق
+    try {
+      if (App && App.addListener) {
+        App.addListener('backButton', () => {
+          if (window.handleHardwareBack) window.handleHardwareBack();
+        });
+      }
     } catch (e) {}
 
     async function initAdMobSDK() {
@@ -178,8 +199,9 @@
       } catch (e) { document.getElementById("bannerStatusText").textContent = "Google AdMob Space"; }
     }
     initAdMobSDK();
+    
     window.watchRealAdForRevive = async function() {
-      window.initAudio();
+      if (window.initAudio) window.initAudio();
       try {
         await AdMob.prepareRewardVideoAd({ adId: 'ca-app-pub-8587982696741860/7846797435', isTesting: false });
         const reward = await AdMob.showRewardVideoAd();
@@ -188,15 +210,20 @@
     };
   </script>
 
+  <!-- محرك اللعبة الأساسي (Master Script) -->
   <script>
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
 
     let INTERNAL_W = 400, INTERNAL_H = 720;
-    let GRID_OFFSET_X = 24, GRID_OFFSET_Y = 135; 
-    const GRID_SIZE = 8, CELL_SIZE = 44;
+    let GRID_OFFSET_X = 16; 
+    let GRID_OFFSET_Y = 125; 
+    const GRID_SIZE = 8; 
+    const CELL_SIZE = 48; // مكبر لسهولة الرؤية والتحكم (ضعاف البصر)
 
-    let gameMode = "classic", activeLevel = 1, score = 0, redGemsCollected = 0, blueGemsCollected = 0;
+    let gameMode = "classic", activeLevel = 1, score = 0;
+    let gemsCollected = { red: 0, blue: 0, green: 0, yellow: 0, purple: 0 };
+    
     let grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
     let hand = [], draggedPiece = null, previewTarget = null;
     let dragOffsetX = 0, dragOffsetY = 0, reviveCount = 0;
@@ -206,15 +233,23 @@
     let audioCtx = null;
     
     let bossSecondsElapsed = 0, heartbeatTimerInterval = null, inStrategicMode = false;
-    let floatingTexts = []; // للمؤثرات البصرية والعبارات العائمة (Great, Combo)
+    let floatingTexts = [];
+    let particles = [];
+    let predictedLines = { rows: [], cols: [] };
 
     let userSettings = JSON.parse(localStorage.getItem("msw_settings")) || { sound: true, haptic: true };
     document.getElementById("soundToggle").checked = userSettings.sound;
     document.getElementById("hapticToggle").checked = userSettings.haptic;
 
-    const PALETTES = [ { base: "#3b82f6", light: "#60a5fa", dark: "#1d4ed8" }, { base: "#10b981", light: "#34d399", dark: "#059669" }, { base: "#f59e0b", light: "#fbbf24", dark: "#b45309" }, { base: "#8b5cf6", light: "#a78bfa", dark: "#6d28d9" } ];
+    const GEM_ICONS = { red: "💎", blue: "🔷", green: "🟩", yellow: "⭐", purple: "🔮" };
+    const PALETTES = [
+      { base: "#3b82f6", light: "#60a5fa", dark: "#1d4ed8" }, 
+      { base: "#10b981", light: "#34d399", dark: "#059669" }, 
+      { base: "#f59e0b", light: "#fbbf24", dark: "#b45309" }, 
+      { base: "#8b5cf6", light: "#a78bfa", dark: "#6d28d9" }, 
+      { base: "#ef4444", light: "#f87171", dark: "#b91c1c" }  
+    ];
     
-    // المربع الفردي نادر جداً (وزن 1) ولا يظهر إلا كإنقاذ أخير
     const ALL_SHAPES = [
       { id: "dot", weight: 1, blocks: [[0, 0]] }, 
       { id: "line2h", weight: 16, blocks: [[0, 0], [0, 1]] },
@@ -226,18 +261,43 @@
       { id: "t", weight: 8, blocks: [[0, 1], [1, 0], [1, 1], [1, 2]] }
     ];
 
+    // إخفاء شاشة البداية بسلاسة
     window.addEventListener('load', () => {
-      // زيادة وقت عرض شاشة البداية لتصبح أطول وأوضح
       setTimeout(() => { const splash = document.getElementById("splashScreen"); if(splash) { splash.style.opacity = "0"; setTimeout(() => splash.remove(), 800); } }, 2500);
     });
 
+    // نظام الرجوع الآمن للمتصفح والنظام
+    window.handleHardwareBack = function() {
+      stopHeartbeatEngine();
+      gameLoopActive = false; 
+      isGameOverState = false;
+      draggedPiece = null;
+      hand = [];
+      floatingTexts = [];
+      particles = [];
+      
+      document.getElementById('settingsModal').style.display = "none";
+      document.getElementById('confirmRestartModal').style.display = "none";
+      document.getElementById('winModal').style.display = "none";
+      document.getElementById('lossControlBar').style.display = "none";
+      document.getElementById('mapModal').style.display = "none";
+      document.getElementById('startModal').style.display = "flex";
+    };
+
+    window.history.pushState({page: 1}, "", "");
+    window.addEventListener('popstate', function(e) {
+        window.history.pushState({page: 1}, "", "");
+        window.handleHardwareBack();
+    });
+
     function updateHandPositions() {
-      const PREVIEW_SIZE = 22; const slotWidth = INTERNAL_W / 3;
+      const PREVIEW_SIZE = 26; 
+      const slotWidth = INTERNAL_W / 3;
       hand.forEach((p, idx) => {
         const shapeW = (Math.max(...p.blocks.map(b => b[1])) + 1) * PREVIEW_SIZE;
         const shapeH = (Math.max(...p.blocks.map(b => b[0])) + 1) * PREVIEW_SIZE;
         p.origX = slotWidth * idx + slotWidth / 2 - shapeW / 2;
-        p.origY = INTERNAL_H - shapeH - (INTERNAL_H * 0.12);
+        p.origY = INTERNAL_H - shapeH - (INTERNAL_H * 0.10);
         if (!draggedPiece || draggedPiece !== p) { p.x = p.origX; p.y = p.origY; }
       });
     }
@@ -249,83 +309,73 @@
       INTERNAL_W = 400; INTERNAL_H = 400 * (rect.height / rect.width);
       canvas.width = INTERNAL_W * dpr; canvas.height = INTERNAL_H * dpr; ctx.scale(dpr, dpr);
       GRID_OFFSET_X = (INTERNAL_W - (GRID_SIZE * CELL_SIZE)) / 2; 
-      GRID_OFFSET_Y = (INTERNAL_H - (GRID_SIZE * CELL_SIZE)) / 2 - 15; 
+      GRID_OFFSET_Y = (INTERNAL_H - (GRID_SIZE * CELL_SIZE)) / 2 - 10; 
       if(hand && hand.length > 0) updateHandPositions();
     }
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
 
-    window.toggleSound = function(val) { userSettings.sound = val; localStorage.setItem("msw_settings", JSON.stringify(userSettings)); }
-    window.toggleHaptic = function(val) { userSettings.haptic = val; localStorage.setItem("msw_settings", JSON.stringify(userSettings)); }
+    // خوارزمية تكوين المستويات (حتى 200 مرحلة، وتصاعد حتى 60 جوهرة من كل لون)
+    function getLevelConfiguration(lvl) {
+      let reqGems = { red: 0, blue: 0, green: 0, yellow: 0, purple: 0 };
+      let reqScore = 400 + (lvl * 120);
+      let hasTimer = (lvl % 5 === 0);
 
-    window.initAudio = function() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume(); }
-    function playSound(type) {
-      if (!userSettings.sound || !audioCtx) return;
-      try {
-        const now = audioCtx.currentTime;
-        if (type === 'pickup' || type === 'drop') {
-          const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-          osc.type = 'triangle'; osc.frequency.setValueAtTime(type==='pickup'?400:200, now);
-          osc.frequency.exponentialRampToValueAtTime(type==='pickup'?600:100, now + 0.05);
-          gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-          osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now); osc.stop(now + 0.05);
-        } else if (type === 'clear') {
-          const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-          osc.type = 'sine'; osc.frequency.setValueAtTime(500, now); osc.frequency.exponentialRampToValueAtTime(1400, now + 0.35);
-          gain.gain.setValueAtTime(0.35, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-          osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now); osc.stop(now + 0.35);
-        } else if (type === 'heartbeat') { 
-          const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-          osc.type = 'sine'; osc.frequency.setValueAtTime(65, now); osc.frequency.exponentialRampToValueAtTime(35, now + 0.1);
-          gain.gain.setValueAtTime(0.4, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
-          osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now); osc.stop(now + 0.1);
-        }
-      } catch (e) {}
-    }
-    function triggerHaptic(ms = 25) { if (userSettings.haptic && navigator.vibrate) { try { navigator.vibrate(ms); } catch (e) {} } }
-
-    // زر الرجوع الآمن (يعيدك للقائمة أو الخريطة دون إغلاق التطبيق)
-    window.handleHardwareBack = function() {
-      if(document.getElementById('mapModal').style.display === "flex") { closeLevelMap(); return; }
-      if(document.getElementById('settingsModal').style.display === "flex") { closeSettings(); return; }
-      if(document.getElementById('confirmRestartModal').style.display === "flex") { cancelRestartDialog(); return; }
-      if(gameLoopActive || isGameOverState) {
-          gameLoopActive = false; isGameOverState = false; stopHeartbeatEngine();
-          document.getElementById('winModal').style.display = "none";
-          document.getElementById('lossControlBar').style.display = "none";
-          document.getElementById('startModal').style.display = "flex";
+      if (lvl === 1) {
+        reqScore = 400; 
+      } else if (lvl >= 199) {
+        reqGems = { red: 60, blue: 60, green: 60, yellow: 60, purple: 60 };
+        reqScore = 0;
       } else {
-          openLevelMap();
+        let activeColorsCount = Math.min(5, Math.floor(lvl / 25) + 1);
+        let baseCount = Math.min(58, 4 + Math.floor(lvl * 0.28));
+        const colorKeys = ['red', 'blue', 'green', 'yellow', 'purple'];
+        
+        for (let i = 0; i < activeColorsCount; i++) {
+          reqGems[colorKeys[i]] = baseCount;
+        }
+        if (hasTimer) reqScore = 800 + (lvl * 150);
       }
-    }
 
-    window.openSettings = function() { document.getElementById('settingsModal').style.display = "flex"; }
-    window.closeSettings = function() { document.getElementById('settingsModal').style.display = "none"; }
-    window.askForRestart = function() { if(gameLoopActive || isGameOverState) document.getElementById('confirmRestartModal').style.display = "flex"; }
-    window.cancelRestartDialog = function() { document.getElementById('confirmRestartModal').style.display = "none"; }
-    window.confirmRestartExecution = function() { cancelRestartDialog(); restartCurrentMode(); }
+      return { level: lvl, reqScore, reqGems, hasTimer };
+    }
 
     window.renderMapGrid = function() {
       const container = document.getElementById("levelsGridContainer"); container.innerHTML = "";
       for (let i = 1; i <= 200; i++) {
-        let req = 400 + (i * 120); 
-        if (i%5===0) req = 800 + (i * 150);
-        
-        // دمج الأهداف (نقاط + جواهر متعددة الألوان إذا دعت الحاجة بذكاء)
+        let cfg = getLevelConfiguration(i);
         let badge = "";
-        if(i%5===0) badge = `⏱️ ${req}🎯`;
-        else if(i%3===1) badge = `💎 ${3+Math.floor(i*0.1)}`;
-        else if(i%3===2) badge = `🔷 ${3+Math.floor(i*0.1)}`;
-        else badge = `🎯 ${req}`;
+        let totalGems = Object.values(cfg.reqGems).reduce((a,b)=>a+b, 0);
+        
+        if (cfg.hasTimer) badge = `⏱️ ${cfg.reqScore}🎯`;
+        else if (totalGems > 0) {
+          if (i >= 199) badge = `👑 60x5 💎`;
+          else badge = `💎 ${totalGems}`;
+        } else badge = `🎯 ${cfg.reqScore}`;
 
         const node = document.createElement("div"); node.className = `level-node unlocked ${(i%5===0)?"boss-level":""}`;
-        node.innerHTML = `<div class="level-num">${(i%5===0)?"🔥"+i:i}</div><div style="font-size:0.65rem; color:#bae6fd; font-weight:700;">${badge}</div>`;
-        node.onclick = () => startSpecificLevel(i); container.appendChild(node);
+        node.innerHTML = `<div class="level-num">${(i%5===0)?"🔥"+i:i}</div><div style="font-size:0.7rem; color:#bae6fd; font-weight:700;">${badge}</div>`;
+        node.onclick = () => window.startSpecificLevel(i); container.appendChild(node);
       }
-    }
-    window.openLevelMap = function() { document.getElementById('startModal').style.display = "none"; renderMapGrid(); document.getElementById('mapModal').style.display = "flex"; }
-    window.closeLevelMap = function() { document.getElementById('mapModal').style.display = "none"; document.getElementById('startModal').style.display = "flex"; }
-    window.openLevelMapFromGame = function() { gameLoopActive=false; stopHeartbeatEngine(); document.getElementById('winModal').style.display="none"; document.getElementById('lossControlBar').style.display="none"; openLevelMap(); }
+    };
+
+    window.openLevelMap = function() { 
+      stopHeartbeatEngine();
+      gameLoopActive = false;
+      document.getElementById('startModal').style.display = "none"; 
+      window.renderMapGrid(); 
+      document.getElementById('mapModal').style.display = "flex"; 
+    };
+
+    window.closeLevelMap = function() { document.getElementById('mapModal').style.display = "none"; document.getElementById('startModal').style.display = "flex"; };
+    
+    window.openLevelMapFromGame = function() { 
+      stopHeartbeatEngine();
+      gameLoopActive=false; 
+      document.getElementById('winModal').style.display="none"; 
+      document.getElementById('lossControlBar').style.display="none"; 
+      window.openLevelMap(); 
+    };
 
     function canPlace(shape, r0, c0) {
       for (const [dr, dc] of shape.blocks) {
@@ -346,23 +396,28 @@
     }
 
     function generateHand() {
-      hand = []; const PREVIEW_SIZE = 22;
-      let targetGem = null;
+      hand = []; const PREVIEW_SIZE = 26; 
+      let neededGemTypes = [];
       if (gameMode === "levels" && currentConfig) {
-          if (currentConfig.reqRedGems > redGemsCollected) targetGem = 'red';
-          else if (currentConfig.reqBlueGems > blueGemsCollected) targetGem = 'blue';
+        for (let [color, req] of Object.entries(currentConfig.reqGems)) {
+          if (req > gemsCollected[color]) neededGemTypes.push(color);
+        }
       }
-      const gemIdx = targetGem ? Math.floor(Math.random()*3) : -1;
 
       for (let i = 0; i < 3; i++) {
         let p = getWeightedRandomShape();
         p.colorData = PALETTES[Math.floor(Math.random() * PALETTES.length)];
-        p.size = PREVIEW_SIZE; p.gemType = (i === gemIdx) ? targetGem : null;
-        p.gemBlockIndex = (i === gemIdx) ? Math.floor(Math.random() * p.blocks.length) : -1;
+        p.size = PREVIEW_SIZE; 
+        
+        let targetGem = (neededGemTypes.length > 0 && Math.random() < 0.6) 
+          ? neededGemTypes[Math.floor(Math.random() * neededGemTypes.length)] 
+          : null;
+
+        p.gemType = targetGem;
+        p.gemBlockIndex = targetGem ? Math.floor(Math.random() * p.blocks.length) : -1;
         hand.push(p);
       }
       
-      // طوق النجاة (مربع 1x1 نادر جداً لا يظهر إلا للضرورة القصوى)
       let canPlayAny = hand.some(p => { for(let r=0;r<GRID_SIZE;r++) for(let c=0;c<GRID_SIZE;c++) if(canPlace(p,r,c)) return true; return false; });
       if(!canPlayAny) {
           let hasEmptySpace = false;
@@ -418,37 +473,16 @@
       gameLoopActive = true; 
       if (currentConfig && currentConfig.hasTimer && !inStrategicMode) startTimedEngine();
       generateHand();
-    }
+    };
 
-    window.restartCurrentMode = function() {
-      document.getElementById('lossControlBar').style.display="none"; document.getElementById('winModal').style.display="none"; isGameOverState=false; stopHeartbeatEngine();
-      if (gameMode === "classic") startGame("classic"); else startSpecificLevel(activeLevel);
-    }
-
-    function startSpecificLevel(lvl) {
-      gameMode = "levels"; activeLevel = lvl; score = redGemsCollected = blueGemsCollected = reviveCount = 0;
+    window.startSpecificLevel = function(lvl) {
+      stopHeartbeatEngine();
+      gameMode = "levels"; activeLevel = lvl; score = reviveCount = 0;
+      gemsCollected = { red: 0, blue: 0, green: 0, yellow: 0, purple: 0 };
       bossSecondsElapsed = 0; inStrategicMode = false;
+      draggedPiece = null;
 
-      // أهداف مراحل منطقية متصاعدة ومدروسة
-      let reqRed=0, reqBlue=0, reqScore=400+(lvl*120), hasTimer=false;
-      if(lvl === 1) {
-          reqScore = 400; // المرحلة الأولى نقاط صافية مريحة
-      } else if(lvl%5===0) { 
-          hasTimer=true; 
-          reqScore = 700+(lvl*150); 
-      } else if(lvl%3===1) { 
-          reqRed = 3+Math.floor(lvl*0.12); 
-      } else if(lvl%3===2) { 
-          reqBlue = 3+Math.floor(lvl*0.12); 
-      }
-      
-      // دمج أهداف متعددة في المراحل المتقدمة (مثلاً بعد المرحلة 20 تتطلب نقاط + جواهر معاً)
-      if (lvl > 20 && lvl % 5 !== 0) {
-          reqRed = 2 + Math.floor(lvl * 0.08);
-          reqScore = 500 + (lvl * 100);
-      }
-
-      currentConfig = { reqScore, reqRedGems:reqRed, reqBlueGems:reqBlue, hasTimer };
+      currentConfig = getLevelConfiguration(lvl);
       grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
       
       let difficultyFactor = (lvl % 4 === 0) ? 0.2 : 1.0;
@@ -459,29 +493,40 @@
           if(grid[r][c] === 0) grid[r][c] = {colorData: PALETTES[3]}; 
       }
 
-      let placedReds = 0;
-      while (placedReds < Math.min(3, reqRed)) {
-          let r = Math.floor(Math.random()*8), c = Math.floor(Math.random()*8);
-          if(grid[r][c] === 0) { grid[r][c]={colorData:PALETTES[1], gem:'red'}; placedReds++; }
-      }
-      let placedBlues = 0;
-      while (placedBlues < Math.min(3, reqBlue)) {
-          let r = Math.floor(Math.random()*8), c = Math.floor(Math.random()*8);
-          if(grid[r][c] === 0) { grid[r][c]={colorData:PALETTES[0], gem:'blue'}; placedBlues++; }
+      for (let [color, req] of Object.entries(currentConfig.reqGems)) {
+        if (req > 0) {
+          let placed = 0;
+          while (placed < Math.min(2, req)) {
+            let r = Math.floor(Math.random()*8), c = Math.floor(Math.random()*8);
+            if(grid[r][c] === 0) { grid[r][c]={colorData: PALETTES[0], gem: color}; placed++; }
+          }
+        }
       }
 
-      document.getElementById('mapModal').style.display = "none"; document.getElementById('startModal').style.display = "none";
+      document.getElementById('mapModal').style.display = "none"; 
+      document.getElementById('startModal').style.display = "none";
+      document.getElementById('winModal').style.display = "none";
+      document.getElementById('lossControlBar').style.display = "none";
+      
       gameLoopActive = true; 
-      if(hasTimer) startTimedEngine();
+      if(currentConfig.hasTimer) startTimedEngine();
       generateHand();
-    }
+    };
 
     window.startGame = function(mode) {
+      stopHeartbeatEngine();
       gameMode = mode; score = reviveCount = 0; currentConfig = null; bossSecondsElapsed = 0; inStrategicMode = false;
+      gemsCollected = { red: 0, blue: 0, green: 0, yellow: 0, purple: 0 };
       grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
-      document.getElementById('startModal').style.display = "none"; gameLoopActive = true; generateHand();
-    }
-    window.goToNextLevel = function() { document.getElementById('winModal').style.display = "none"; startSpecificLevel(activeLevel + 1); }
+      draggedPiece = null;
+      document.getElementById('startModal').style.display = "none"; 
+      document.getElementById('winModal').style.display = "none";
+      document.getElementById('lossControlBar').style.display = "none";
+      gameLoopActive = true; 
+      generateHand();
+    };
+
+    window.goToNextLevel = function() { document.getElementById('winModal').style.display = "none"; window.startSpecificLevel(activeLevel + 1); };
 
     function getCanvasCoords(e) {
       const rect = canvas.getBoundingClientRect();
@@ -494,7 +539,7 @@
 
     function handleDown(e) {
       if(!gameLoopActive) return; window.initAudio(); const pos = getCanvasCoords(e);
-      let closest = null, minDist = 70;
+      let closest = null, minDist = 80;
       hand.forEach(p=>{ const w = (Math.max(...p.blocks.map(b=>b[1]))+1)*p.size, h = (Math.max(...p.blocks.map(b=>b[0]))+1)*p.size;
         const dist = Math.hypot(pos.x - (p.x+w/2), pos.y - (p.y+h/2));
         if(dist<minDist){ minDist=dist; closest=p; }
@@ -518,14 +563,20 @@
       }
       const rows = [], cols = [];
       for (let r = 0; r < GRID_SIZE; r++) { if (tempGrid[r].every(val => val === 1)) rows.push(r); }
-      for (let c = 0; c < GRID_SIZE; c++) { if (tempGrid.every(row => row[c] === 1)) cols.push(c); }
+      for (let c = 0; c < GRID_SIZE; c++) {
+        let isFull = true;
+        for (let r = 0; r < GRID_SIZE; r++) { if (tempGrid[r][c] === 0) { isFull = false; break; } }
+        if (isFull) cols.push(c);
+      }
       return { rows, cols };
     }
 
     function handleMove(e) {
       if(!draggedPiece) return; if(e.cancelable) e.preventDefault();
       const pos = getCanvasCoords(e); draggedPiece.x = pos.x - dragOffsetX; draggedPiece.y = pos.y - dragOffsetY;
-      const tc = Math.round((draggedPiece.x - GRID_OFFSET_X)/CELL_SIZE), tr = Math.round((draggedPiece.y - GRID_OFFSET_Y)/CELL_SIZE);
+      const tc = Math.round((draggedPiece.x - GRID_OFFSET_X)/CELL_SIZE);
+      const tr = Math.round((draggedPiece.y - GRID_OFFSET_Y)/CELL_SIZE);
+      
       if (canPlace(draggedPiece, tr, tc)) {
         previewTarget = {r:tr, c:tc};
         predictedLines = calculatePredictedLines(draggedPiece, tr, tc);
@@ -537,122 +588,192 @@
     canvas.addEventListener("touchmove", handleMove, {passive:false});
     canvas.addEventListener("mousemove", handleMove);
 
-    let predictedLines = { rows: [], cols: [] };
-
     function handleUp(e) {
       if(!draggedPiece) return; if(e && e.cancelable) e.preventDefault();
-      const tc = Math.round((draggedPiece.x - GRID_OFFSET_X)/CELL_SIZE), tr = Math.round((draggedPiece.y - GRID_OFFSET_Y)/CELL_SIZE);
+      const tc = Math.round((draggedPiece.x - GRID_OFFSET_X)/CELL_SIZE);
+      const tr = Math.round((draggedPiece.y - GRID_OFFSET_Y)/CELL_SIZE);
+      
       if(canPlace(draggedPiece, tr, tc)){
         draggedPiece.blocks.forEach(([dr, dc], i)=>{ grid[tr+dr][tc+dc] = (draggedPiece.gemBlockIndex===i) ? {colorData:draggedPiece.colorData, gem:draggedPiece.gemType} : {colorData:draggedPiece.colorData}; });
         
-        let pointsEarned = draggedPiece.blocks.length; // 1 نقطة لكل مربع تماماً كما طلبت
+        let pointsEarned = draggedPiece.blocks.length;
         if (inStrategicMode) pointsEarned *= 2;
         score += pointsEarned;
 
         let rows=[], cols=[];
-        for(let r=0;r<GRID_SIZE;r++) if(grid[r].every(c=>c!==0)) rows.push(r);
-        for(let c=0;c<GRID_SIZE;c++) if(grid.every(row=>row[c]!==0)) cols.push(c);
+        for(let r=0;r<GRID_SIZE;r++) { if(grid[r].every(c => c !== 0)) rows.push(r); }
+        for(let c=0;c<GRID_SIZE;c++) {
+          let isFull = true;
+          for(let r=0;r<GRID_SIZE;r++) { if(grid[r][c] === 0) { isFull = false; break; } }
+          if(isFull) cols.push(c);
+        }
         
-        if(rows.length+cols.length > 0){
+        if(rows.length + cols.length > 0){
           triggerHaptic(50); playSound('clear');
-          rows.forEach(r=>{ for(let c=0;c<GRID_SIZE;c++){ if(grid[r][c]&&grid[r][c].gem==='red')redGemsCollected++; if(grid[r][c]&&grid[r][c].gem==='blue')blueGemsCollected++; grid[r][c]=0; }});
-          cols.forEach(c=>{ for(let r=0;r<GRID_SIZE;r++){ if(grid[r][c]&&grid[r][c].gem==='red')redGemsCollected++; if(grid[r][c]&&grid[r][c].gem==='blue')blueGemsCollected++; grid[r][c]=0; }});
+          const checkAndCollect = (cell, rx, ry) => {
+            if (cell && cell.gem && gemsCollected[cell.gem] !== undefined) {
+              gemsCollected[cell.gem]++;
+              for(let k=0; k<6; k++) {
+                particles.push({
+                  x: GRID_OFFSET_X + rx * CELL_SIZE + CELL_SIZE/2,
+                  y: GRID_OFFSET_Y + ry * CELL_SIZE + CELL_SIZE/2,
+                  vx: (Math.random() - 0.5) * 5,
+                  vy: (Math.random() - 0.5) * 5,
+                  alpha: 1.0,
+                  color: "#38bdf8"
+                });
+              }
+            }
+          };
+
+          rows.forEach(r => { for(let c=0; c<GRID_SIZE; c++) { checkAndCollect(grid[r][c], c, r); grid[r][c] = 0; } });
+          cols.forEach(c => { for(let r=0; r<GRID_SIZE; r++) { checkAndCollect(grid[r][c], c, r); grid[r][c] = 0; } });
           
           let lines = rows.length + cols.length;
           let lineScore = lines * 100; 
-          if (lines > 1) lineScore += (lines - 1) * 100; // بونص الكومبو
+          if (lines > 1) lineScore += (lines - 1) * 100;
           if (inStrategicMode) lineScore *= 2;
           score += lineScore;
 
-          // إضافة نص عائم بصري تحفيزي (Great, Combo)
           floatingTexts.push({ text: lines > 1 ? `Combo x${lines}!` : "Great!", x: INTERNAL_W/2, y: GRID_OFFSET_Y + (tr * CELL_SIZE), alpha: 1.0 });
-        } else playSound('drop');
+        } else {
+          playSound('drop');
+        }
 
         if(score>highScore) { highScore = score; localStorage.setItem("msw_high_score", highScore); }
         hand = hand.filter(p=>p!==draggedPiece);
         
-        if(gameMode==="levels" && currentConfig && (currentConfig.reqRedGems===0||redGemsCollected>=currentConfig.reqRedGems) && (currentConfig.reqBlueGems===0||blueGemsCollected>=currentConfig.reqBlueGems) && (currentConfig.reqScore===0||score>=currentConfig.reqScore)){
-          gameLoopActive=false; stopHeartbeatEngine(); triggerHaptic(60); document.getElementById('winSubtext').textContent=`مرحلة ${activeLevel} اكتملت بنجاح!`; document.getElementById('winModal').style.display="flex"; return;
+        if(gameMode==="levels" && currentConfig) {
+          let scoreReached = (currentConfig.reqScore === 0 || score >= currentConfig.reqScore);
+          let allGemsCollected = true;
+          for (let [color, req] of Object.entries(currentConfig.reqGems)) {
+            if (req > 0 && gemsCollected[color] < req) allGemsCollected = false;
+          }
+
+          if (scoreReached && allGemsCollected) {
+            gameLoopActive=false; stopHeartbeatEngine(); triggerHaptic(60); 
+            document.getElementById('winSubtext').textContent=`مرحلة ${activeLevel} اكتملت بنجاح!`; 
+            document.getElementById('winModal').style.display="flex"; 
+            return;
+          }
         }
         
         if(hand.length===0) generateHand(); else checkGameOver();
-      } else { draggedPiece.x=draggedPiece.origX; draggedPiece.y=draggedPiece.origY; draggedPiece.size=22; }
+      } else { draggedPiece.x=draggedPiece.origX; draggedPiece.y=draggedPiece.origY; draggedPiece.size=26; }
       previewTarget=null; predictedLines = { rows: [], cols: [] }; draggedPiece=null;
     }
     canvas.addEventListener("touchend", handleUp, {passive:false});
     canvas.addEventListener("mouseup", handleUp);
 
     function draw3DBlock(x, y, s, color) {
-      ctx.save(); ctx.fillStyle="rgba(0,0,0,0.4)"; ctx.beginPath(); ctx.roundRect(x+2, y+4, s-3, s-3, 6); ctx.fill();
-      ctx.fillStyle=color.base; ctx.beginPath(); ctx.roundRect(x+1, y+1, s-3, s-3, 6); ctx.fill();
-      ctx.fillStyle=color.dark; ctx.beginPath(); ctx.roundRect(x+1, y+s-9, s-3, 6, [0,0,6,6]); ctx.fill();
-      ctx.fillStyle=color.light; ctx.beginPath(); ctx.roundRect(x+1, y+1, s-3, 5, [6,6,0,0]); ctx.fill(); ctx.restore();
+      ctx.save(); ctx.fillStyle="rgba(0,0,0,0.4)"; ctx.beginPath(); ctx.roundRect(x+2, y+4, s-3, s-3, 8); ctx.fill();
+      ctx.fillStyle=color.base; ctx.beginPath(); ctx.roundRect(x+1, y+1, s-3, s-3, 8); ctx.fill();
+      ctx.fillStyle=color.dark; ctx.beginPath(); ctx.roundRect(x+1, y+s-10, s-3, 7, [0,0,8,8]); ctx.fill();
+      ctx.fillStyle=color.light; ctx.beginPath(); ctx.roundRect(x+1, y+1, s-3, 6, [8,8,0,0]); ctx.fill(); ctx.restore();
     }
 
     function draw() {
       ctx.clearRect(0,0,INTERNAL_W,INTERNAL_H);
       ctx.save(); ctx.textAlign="center";
       
-      const TEXT_POS_Y = GRID_OFFSET_Y - 25;
+      const TEXT_POS_Y = GRID_OFFSET_Y - 30;
 
       if(gameMode==="levels" && currentConfig){
         if (currentConfig.hasTimer) {
             if (!inStrategicMode) {
                 const mins = Math.floor(bossSecondsElapsed / 60); const secs = bossSecondsElapsed % 60;
-                ctx.fillStyle = (bossSecondsElapsed >= 75) ? "#f43f5e" : "#38bdf8"; ctx.font="900 18px system-ui";
-                ctx.fillText(`⏱️ ${mins}:${secs < 10 ? '0' : ''}${secs}`, INTERNAL_W/2 - 70, TEXT_POS_Y);
+                ctx.fillStyle = (bossSecondsElapsed >= 75) ? "#f43f5e" : "#38bdf8"; ctx.font="900 20px system-ui";
+                ctx.fillText(`⏱️ ${mins}:${secs < 10 ? '0' : ''}${secs}`, INTERNAL_W/2 - 75, TEXT_POS_Y);
             } else {
-                ctx.fillStyle = "#fbbf24"; ctx.font="900 16px system-ui";
-                ctx.fillText("🧠 استراتيجي!", INTERNAL_W/2 - 70, TEXT_POS_Y);
+                ctx.fillStyle = "#fbbf24"; ctx.font="900 18px system-ui";
+                ctx.fillText("🧠 استراتيجي!", INTERNAL_W/2 - 75, TEXT_POS_Y);
             }
-            ctx.fillStyle="#fff"; ctx.font="900 20px system-ui"; ctx.fillText(`🎯 ${score}/${currentConfig.reqScore}`, INTERNAL_W/2 + 65, TEXT_POS_Y);
-        } else if(currentConfig.reqRedGems > 0 || currentConfig.reqBlueGems > 0){
-          if (currentConfig.reqRedGems > 0 && currentConfig.reqBlueGems > 0) {
-              ctx.fillStyle="#f43f5e"; ctx.font="900 18px system-ui"; ctx.fillText(`💎 ${Math.max(0, currentConfig.reqRedGems-redGemsCollected)}`, INTERNAL_W/2 - 50, TEXT_POS_Y);
-              ctx.fillStyle="#38bdf8"; ctx.font="900 18px system-ui"; ctx.fillText(`🔷 ${Math.max(0, currentConfig.reqBlueGems-blueGemsCollected)}`, INTERNAL_W/2 + 50, TEXT_POS_Y);
-          } else if (currentConfig.reqRedGems > 0) {
-              ctx.fillStyle="#f43f5e"; ctx.font="900 20px system-ui"; ctx.fillText(`💎 ${Math.max(0, currentConfig.reqRedGems-redGemsCollected)}`, INTERNAL_W/2, TEXT_POS_Y);
-          } else if (currentConfig.reqBlueGems > 0) {
-              ctx.fillStyle="#38bdf8"; ctx.font="900 20px system-ui"; ctx.fillText(`🔷 ${Math.max(0, currentConfig.reqBlueGems-blueGemsCollected)}`, INTERNAL_W/2, TEXT_POS_Y);
+            ctx.fillStyle="#fff"; ctx.font="900 22px system-ui"; ctx.fillText(`🎯 ${score}/${currentConfig.reqScore}`, INTERNAL_W/2 + 70, TEXT_POS_Y);
+        } else {
+          let activeGems = Object.entries(currentConfig.reqGems).filter(([c, req]) => req > 0);
+          if (activeGems.length > 0) {
+            let totalW = activeGems.length * 60;
+            let startX = (INTERNAL_W - totalW) / 2 + 30;
+            
+            activeGems.forEach(([color, req], idx) => {
+              let currentX = startX + idx * 60;
+              let left = Math.max(0, req - gemsCollected[color]);
+              ctx.font = "900 16px system-ui";
+              ctx.fillStyle = (left === 0) ? "#10b981" : "#f8fafc";
+              ctx.fillText(`${GEM_ICONS[color]}${left}`, currentX, TEXT_POS_Y);
+            });
+          } else { 
+            ctx.fillStyle="#fff"; ctx.font="900 24px system-ui"; ctx.fillText(`الهدف: ${score}/${currentConfig.reqScore}`, INTERNAL_W/2, TEXT_POS_Y); 
           }
-        } else { ctx.fillStyle="#fff"; ctx.font="900 22px system-ui"; ctx.fillText(`الهدف: ${score}/${currentConfig.reqScore}`, INTERNAL_W/2, TEXT_POS_Y); }
+        }
       } else if (gameMode==="classic") {
-        ctx.fillStyle="#fff"; ctx.font="900 26px system-ui"; ctx.fillText(`${score}`, INTERNAL_W/2, TEXT_POS_Y - 5);
-        ctx.fillStyle="#94a3b8"; ctx.font="700 13px system-ui"; ctx.fillText(`🏆 الأعلى: ${highScore}`, INTERNAL_W/2, TEXT_POS_Y + 20);
+        ctx.fillStyle="#fff"; ctx.font="900 28px system-ui"; ctx.fillText(`${score}`, INTERNAL_W/2, TEXT_POS_Y - 5);
+        ctx.fillStyle="#94a3b8"; ctx.font="700 14px system-ui"; ctx.fillText(`🏆 الأعلى: ${highScore}`, INTERNAL_W/2, TEXT_POS_Y + 22);
       }
       ctx.restore();
 
-      ctx.fillStyle="#1e293b"; ctx.beginPath(); ctx.roundRect(GRID_OFFSET_X-6, GRID_OFFSET_Y-6, GRID_SIZE*CELL_SIZE+12, GRID_SIZE*CELL_SIZE+12, 16); ctx.fill();
-      for(let r=0;r<GRID_SIZE;r++) for(let c=0;c<GRID_SIZE;c++){
-        const x=GRID_OFFSET_X+c*CELL_SIZE, y=GRID_OFFSET_Y+r*CELL_SIZE;
-        let isGlow = predictedLines.rows.includes(r) || predictedLines.cols.includes(c);
-        if(!grid[r][c]) { 
-          ctx.fillStyle = isGlow ? "rgba(56, 189, 248, 0.4)" : "#0f172a"; 
-          ctx.beginPath(); ctx.roundRect(x+1, y+1, CELL_SIZE-2, CELL_SIZE-2, 6); ctx.fill(); 
-        } else { 
-          draw3DBlock(x,y,CELL_SIZE,grid[r][c].colorData); 
-          if(grid[r][c].gem){ ctx.fillStyle="#fff"; ctx.font="20px system-ui"; ctx.textAlign="center"; ctx.fillText(grid[r][c].gem==='red'?"💎":"🔷", x+CELL_SIZE/2, y+CELL_SIZE/2+7); } 
+      ctx.fillStyle="#1e293b"; ctx.beginPath(); ctx.roundRect(GRID_OFFSET_X-6, GRID_OFFSET_Y-6, GRID_SIZE*CELL_SIZE+12, GRID_SIZE*CELL_SIZE+12, 18); ctx.fill();
+      
+      for(let r=0; r<GRID_SIZE; r++) {
+        for(let c=0; c<GRID_SIZE; c++) {
+          const x = GRID_OFFSET_X + c * CELL_SIZE;
+          const y = GRID_OFFSET_Y + r * CELL_SIZE;
+          let isGlow = predictedLines.rows.includes(r) || predictedLines.cols.includes(c);
+          
+          if(!grid[r][c]) {
+            ctx.fillStyle = isGlow ? "rgba(56, 189, 248, 0.5)" : "#0f172a";
+            ctx.beginPath(); ctx.roundRect(x+1, y+1, CELL_SIZE-2, CELL_SIZE-2, 8); ctx.fill();
+            if (isGlow) {
+              ctx.strokeStyle = "#38bdf8";
+              ctx.lineWidth = 2.5;
+              ctx.strokeRect(x+1, y+1, CELL_SIZE-2, CELL_SIZE-2);
+            }
+          } else {
+            draw3DBlock(x, y, CELL_SIZE, grid[r][c].colorData);
+            if (isGlow) {
+              ctx.save();
+              ctx.fillStyle = "rgba(56, 189, 248, 0.4)";
+              ctx.beginPath(); ctx.roundRect(x+1, y+1, CELL_SIZE-2, CELL_SIZE-2, 8); ctx.fill();
+              ctx.restore();
+            }
+            if(grid[r][c].gem && GEM_ICONS[grid[r][c].gem]){
+              ctx.fillStyle = "#fff"; ctx.font = "22px system-ui"; ctx.textAlign = "center";
+              ctx.fillText(GEM_ICONS[grid[r][c].gem], x + CELL_SIZE/2, y + CELL_SIZE/2 + 8);
+            }
+          }
         }
       }
 
-      // شبح القطعة المسحوبة
       if(draggedPiece && previewTarget){ 
-        ctx.save(); ctx.globalAlpha=0.4; 
+        ctx.save(); ctx.globalAlpha=0.45; 
         draggedPiece.blocks.forEach(([dr,dc])=>{ 
           draw3DBlock(GRID_OFFSET_X+(previewTarget.c+dc)*CELL_SIZE, GRID_OFFSET_Y+(previewTarget.r+dr)*CELL_SIZE, CELL_SIZE, draggedPiece.colorData); 
         }); 
         ctx.restore(); 
       }
 
-      hand.forEach(p=>{ if(p!==draggedPiece) { p.blocks.forEach(([dr,dc],i)=>{ draw3DBlock(p.x+dc*p.size, p.y+dr*p.size, p.size, p.colorData); if(p.gemType&&p.gemBlockIndex===i){ ctx.fillStyle="#fff"; ctx.font=`${p.size*0.7}px system-ui`; ctx.textAlign="center"; ctx.fillText(p.gemType==='red'?"💎":"🔷", p.x+dc*p.size+p.size/2, p.y+dr*p.size+p.size*0.75); }}); }});
-      if(draggedPiece) draggedPiece.blocks.forEach(([dr,dc],i)=>{ draw3DBlock(draggedPiece.x+dc*draggedPiece.size, draggedPiece.y+dr*draggedPiece.size, draggedPiece.size, draggedPiece.colorData); if(draggedPiece.gemType&&draggedPiece.gemBlockIndex===i){ ctx.fillStyle="#fff"; ctx.font=`${draggedPiece.size*0.7}px system-ui`; ctx.textAlign="center"; ctx.fillText(draggedPiece.gemType==='red'?"💎":"🔷", draggedPiece.x+dc*draggedPiece.size+draggedPiece.size/2, draggedPiece.y+dr*draggedPiece.size+draggedPiece.size*0.75); }});
+      hand.forEach(p=>{ if(p!==draggedPiece) { p.blocks.forEach(([dr,dc],i)=>{ draw3DBlock(p.x+dc*p.size, p.y+dr*p.size, p.size, p.colorData); if(p.gemType&&p.gemBlockIndex===i){ ctx.fillStyle="#fff"; ctx.font=`${p.size*0.75}px system-ui`; ctx.textAlign="center"; ctx.fillText(GEM_ICONS[p.gemType], p.x+dc*p.size+p.size/2, p.y+dr*p.size+p.size*0.78); }}); }});
+      if(draggedPiece) draggedPiece.blocks.forEach(([dr,dc],i)=>{ draw3DBlock(draggedPiece.x+dc*draggedPiece.size, draggedPiece.y+dr*draggedPiece.size, draggedPiece.size, draggedPiece.colorData); if(draggedPiece.gemType&&draggedPiece.gemBlockIndex===i){ ctx.fillStyle="#fff"; ctx.font=`${draggedPiece.size*0.75}px system-ui`; ctx.textAlign="center"; ctx.fillText(GEM_ICONS[draggedPiece.gemType], draggedPiece.x+dc*draggedPiece.size+draggedPiece.size/2, draggedPiece.y+dr*draggedPiece.size+draggedPiece.size*0.78); }});
 
-      // رسم النصوص العائمة التحفيزية
+      particles.forEach((pt, idx) => {
+        ctx.save();
+        ctx.globalAlpha = pt.alpha;
+        ctx.fillStyle = pt.color;
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        pt.x += pt.vx;
+        pt.y += pt.vy;
+        pt.alpha -= 0.04;
+        if (pt.alpha <= 0) particles.splice(idx, 1);
+      });
+
       floatingTexts.forEach((ft, idx) => {
         ctx.save();
         ctx.globalAlpha = ft.alpha;
         ctx.fillStyle = "#38bdf8";
-        ctx.font = "900 24px system-ui";
+        ctx.font = "900 26px system-ui";
         ctx.textAlign = "center";
         ctx.fillText(ft.text, ft.x, ft.y);
         ctx.restore();
