@@ -5,7 +5,7 @@
   <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <title>musab sw - Master Backup Version</title>
+  <title>musab sw</title>
   
   <style>
     * { box-sizing: border-box; user-select: none; -webkit-user-select: none; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -22,7 +22,7 @@
       overflow: hidden; box-shadow: 0 0 30px rgba(0,0,0,0.8);
     }
 
-    /* شاشة البداية الاحترافية */
+    /* شاشة البداية الاحترافية بمدة عرض ممتازة */
     #splashScreen {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: linear-gradient(135deg, #0f172a 0%, #312e81 100%);
@@ -43,7 +43,7 @@
     }
     .ad-badge { border: 1px solid #475569; padding: 2px 6px; border-radius: 4px; margin-left: 8px; color: #94a3b8; }
 
-    /* الأزرار العلوية المريحة لضعاف البصر */
+    /* الأزرار العلوية كبيرة لسهولة التحكم */
     .top-nav-btn {
       position: absolute; top: 15px;
       background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255,255,255,0.15);
@@ -91,12 +91,12 @@
 <body>
 
   <div id="gameContainer">
-    <!-- شاشة البداية -->
     <div id="splashScreen">
       <div class="splash-logo">💎</div>
       <div class="splash-title">musab sw</div>
     </div>
 
+    <!-- زر الرجوع والإعدادات (آمنة تماماً) -->
     <button id="backTopBtn" class="top-nav-btn" onclick="window.handleHardwareBack()" title="رجوع">❮</button>
     <button id="settingsTopBtn" class="top-nav-btn" onclick="window.openSettings()" title="الإعدادات">⚙️</button>
 
@@ -115,7 +115,7 @@
       <button class="btn btn-secondary" onclick="window.startGame('classic')">♾️ اللعب اللانهائي</button>
     </div>
 
-    <!-- نافذة الإعدادات -->
+    <!-- الإعدادات -->
     <div id="settingsModal" class="modal">
       <div class="dialog-card">
         <h2 style="font-size: 1.8rem; color: #38bdf8; margin-bottom: 20px;">⚙️ الإعدادات</h2>
@@ -129,7 +129,6 @@
       </div>
     </div>
 
-    <!-- تأكيد إعادة التعيين -->
     <div id="confirmRestartModal" class="modal">
       <div class="dialog-card">
         <h2 style="font-size: 1.6rem; color: #fff; margin-bottom: 15px;">🔄 إعادة التعيين</h2>
@@ -139,7 +138,6 @@
       </div>
     </div>
 
-    <!-- خريطة المراحل (200) -->
     <div id="mapModal" class="modal">
       <div class="map-header">
         <h2 style="font-size: 1.6rem; font-weight: 800; color: #fff;">خريطة المراحل</h2>
@@ -148,7 +146,6 @@
       <button class="btn btn-secondary" style="margin-top: 20px;" onclick="window.closeLevelMap()">العودة للقائمة</button>
     </div>
 
-    <!-- نافذة الفوز -->
     <div id="winModal" class="modal">
       <div style="font-size: 4.5rem; margin-bottom: 10px;">🏆</div>
       <h2 style="font-size: 2.8rem; font-weight: 900; color: #38bdf8; margin-bottom: 15px;">رائع!</h2>
@@ -157,7 +154,6 @@
       <button class="btn btn-secondary" onclick="window.openLevelMapFromGame()">خريطة المراحل</button>
     </div>
 
-    <!-- نافذة الخسارة -->
     <div id="lossControlBar" class="modal">
       <div class="dialog-card">
         <div style="font-size: 4rem; margin-bottom: 10px;">⚠️</div>
@@ -169,20 +165,19 @@
     </div>
   </div>
 
-  <!-- نظام تهيئة المكونات الأصلية (Capacitor & AdMob) -->
   <script type="module">
     import { AdMob, BannerAdPosition, BannerAdSize } from '@capacitor-community/admob';
     import { StatusBar } from '@capacitor/status-bar';
     import { App } from '@capacitor/app';
 
-    // تفعيل وضع ملء الشاشة المطلق وإخفاء شريط الإشعارات
+    // الإخفاء الآمن لشريط الإشعارات
     try {
       if (StatusBar && StatusBar.hide) {
-        await StatusBar.hide();
+        StatusBar.hide().catch(()=>{});
       }
     } catch (e) {}
 
-    // ربط إيماءة وزر الهاردوير للرجوع بدون إغلاق التطبيق
+    // التقاط زر الرجوع من نظام أندرويد لعدم الخروج من التطبيق
     try {
       if (App && App.addListener) {
         App.addListener('backButton', () => {
@@ -210,7 +205,6 @@
     };
   </script>
 
-  <!-- محرك اللعبة الأساسي (Master Script) -->
   <script>
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
@@ -219,7 +213,7 @@
     let GRID_OFFSET_X = 16; 
     let GRID_OFFSET_Y = 125; 
     const GRID_SIZE = 8; 
-    const CELL_SIZE = 48; // مكبر لسهولة الرؤية والتحكم (ضعاف البصر)
+    const CELL_SIZE = 46; // حجم مثالي وكبير لسهولة الرؤية
 
     let gameMode = "classic", activeLevel = 1, score = 0;
     let gemsCollected = { red: 0, blue: 0, green: 0, yellow: 0, purple: 0 };
@@ -241,6 +235,7 @@
     document.getElementById("soundToggle").checked = userSettings.sound;
     document.getElementById("hapticToggle").checked = userSettings.haptic;
 
+    // أيقونات مجوهرات حقيقية
     const GEM_ICONS = { red: "💎", blue: "🔷", green: "🟩", yellow: "⭐", purple: "🔮" };
     const PALETTES = [
       { base: "#3b82f6", light: "#60a5fa", dark: "#1d4ed8" }, 
@@ -250,10 +245,11 @@
       { base: "#ef4444", light: "#f87171", dark: "#b91c1c" }  
     ];
     
+    // المربع الفردي تم إيقاف توليده العشوائي تماماً (الوزن 0) لمنع كثرته
     const ALL_SHAPES = [
-      { id: "dot", weight: 1, blocks: [[0, 0]] }, 
-      { id: "line2h", weight: 16, blocks: [[0, 0], [0, 1]] },
-      { id: "line2v", weight: 16, blocks: [[0, 0], [1, 0]] },
+      { id: "dot", weight: 0, blocks: [[0, 0]] }, 
+      { id: "line2h", weight: 15, blocks: [[0, 0], [0, 1]] },
+      { id: "line2v", weight: 15, blocks: [[0, 0], [1, 0]] },
       { id: "line3h", weight: 12, blocks: [[0, 0], [0, 1], [0, 2]] },
       { id: "line3v", weight: 12, blocks: [[0, 0], [1, 0], [2, 0]] },
       { id: "sq2", weight: 10, blocks: [[0, 0], [0, 1], [1, 0], [1, 1]] },
@@ -261,27 +257,25 @@
       { id: "t", weight: 8, blocks: [[0, 1], [1, 0], [1, 1], [1, 2]] }
     ];
 
-    // إخفاء شاشة البداية بسلاسة
     window.addEventListener('load', () => {
+      // شاشة البداية تستمر لـ 2.5 ثانية
       setTimeout(() => { const splash = document.getElementById("splashScreen"); if(splash) { splash.style.opacity = "0"; setTimeout(() => splash.remove(), 800); } }, 2500);
     });
 
-    // نظام الرجوع الآمن للمتصفح والنظام
+    // --- نظام التقاط زر الرجوع العكسي (إيماءات الهاتف والمتصفح) لعدم الخروج الكلي ---
     window.handleHardwareBack = function() {
-      stopHeartbeatEngine();
-      gameLoopActive = false; 
-      isGameOverState = false;
-      draggedPiece = null;
-      hand = [];
-      floatingTexts = [];
-      particles = [];
+      if(document.getElementById('mapModal').style.display === "flex") { window.closeLevelMap(); return; }
+      if(document.getElementById('settingsModal').style.display === "flex") { window.closeSettings(); return; }
+      if(document.getElementById('confirmRestartModal').style.display === "flex") { window.cancelRestartDialog(); return; }
+      if(document.getElementById('winModal').style.display === "flex") { window.openLevelMapFromGame(); return; }
+      if(document.getElementById('lossControlBar').style.display === "flex") { window.openLevelMapFromGame(); return; }
       
-      document.getElementById('settingsModal').style.display = "none";
-      document.getElementById('confirmRestartModal').style.display = "none";
-      document.getElementById('winModal').style.display = "none";
-      document.getElementById('lossControlBar').style.display = "none";
-      document.getElementById('mapModal').style.display = "none";
-      document.getElementById('startModal').style.display = "flex";
+      if(gameLoopActive || isGameOverState) {
+          gameLoopActive = false; isGameOverState = false; stopHeartbeatEngine();
+          document.getElementById('winModal').style.display = "none";
+          document.getElementById('lossControlBar').style.display = "none";
+          document.getElementById('startModal').style.display = "flex";
+      }
     };
 
     window.history.pushState({page: 1}, "", "");
@@ -305,9 +299,11 @@
     function resizeCanvas() {
       const container = document.getElementById("gameContainer");
       const rect = container.getBoundingClientRect();
+      if (!rect || rect.width === 0) return;
       const dpr = window.devicePixelRatio || 1;
       INTERNAL_W = 400; INTERNAL_H = 400 * (rect.height / rect.width);
       canvas.width = INTERNAL_W * dpr; canvas.height = INTERNAL_H * dpr; ctx.scale(dpr, dpr);
+      
       GRID_OFFSET_X = (INTERNAL_W - (GRID_SIZE * CELL_SIZE)) / 2; 
       GRID_OFFSET_Y = (INTERNAL_H - (GRID_SIZE * CELL_SIZE)) / 2 - 10; 
       if(hand && hand.length > 0) updateHandPositions();
@@ -315,7 +311,42 @@
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
 
-    // خوارزمية تكوين المستويات (حتى 200 مرحلة، وتصاعد حتى 60 جوهرة من كل لون)
+    window.toggleSound = function(val) { userSettings.sound = val; localStorage.setItem("msw_settings", JSON.stringify(userSettings)); };
+    window.toggleHaptic = function(val) { userSettings.haptic = val; localStorage.setItem("msw_settings", JSON.stringify(userSettings)); };
+
+    window.initAudio = function() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume(); };
+    function playSound(type) {
+      if (!userSettings.sound || !audioCtx) return;
+      try {
+        const now = audioCtx.currentTime;
+        if (type === 'pickup' || type === 'drop') {
+          const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+          osc.type = 'triangle'; osc.frequency.setValueAtTime(type==='pickup'?400:200, now);
+          osc.frequency.exponentialRampToValueAtTime(type==='pickup'?600:100, now + 0.05);
+          gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+          osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now); osc.stop(now + 0.05);
+        } else if (type === 'clear') {
+          const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+          osc.type = 'sine'; osc.frequency.setValueAtTime(500, now); osc.frequency.exponentialRampToValueAtTime(1400, now + 0.35);
+          gain.gain.setValueAtTime(0.35, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now); osc.stop(now + 0.35);
+        } else if (type === 'heartbeat') { 
+          const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+          osc.type = 'sine'; osc.frequency.setValueAtTime(65, now); osc.frequency.exponentialRampToValueAtTime(35, now + 0.1);
+          gain.gain.setValueAtTime(0.4, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+          osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now); osc.stop(now + 0.1);
+        }
+      } catch (e) {}
+    }
+    function triggerHaptic(ms = 25) { if (userSettings.haptic && navigator.vibrate) { try { navigator.vibrate(ms); } catch (e) {} } }
+
+    window.openSettings = function() { document.getElementById('settingsModal').style.display = "flex"; };
+    window.closeSettings = function() { document.getElementById('settingsModal').style.display = "none"; };
+    window.askForRestart = function() { if(gameLoopActive || isGameOverState) document.getElementById('confirmRestartModal').style.display = "flex"; };
+    window.cancelRestartDialog = function() { document.getElementById('confirmRestartModal').style.display = "none"; };
+    window.confirmRestartExecution = function() { window.cancelRestartDialog(); window.restartCurrentMode(); };
+
+    // خوارزمية المستويات المنطقية والمتصاعدة (60 جوهرة من كل لون بالوصول لـ 200)
     function getLevelConfiguration(lvl) {
       let reqGems = { red: 0, blue: 0, green: 0, yellow: 0, purple: 0 };
       let reqScore = 400 + (lvl * 120);
@@ -392,6 +423,7 @@
             if (rand < shape.weight) return JSON.parse(JSON.stringify(shape));
             rand -= shape.weight;
         }
+        // Fallback
         return JSON.parse(JSON.stringify(ALL_SHAPES[1]));
     }
 
@@ -418,12 +450,14 @@
         hand.push(p);
       }
       
+      // طوق النجاة (إنزال مربع فردي فقط إذا كان اللوح سيمتلئ ولا يمكنك اللعب)
       let canPlayAny = hand.some(p => { for(let r=0;r<GRID_SIZE;r++) for(let c=0;c<GRID_SIZE;c++) if(canPlace(p,r,c)) return true; return false; });
       if(!canPlayAny) {
           let hasEmptySpace = false;
           for(let r=0;r<GRID_SIZE;r++) for(let c=0;c<GRID_SIZE;c++) if(grid[r][c] === 0) hasEmptySpace = true;
           if(hasEmptySpace) {
-              let rescueShape = JSON.parse(JSON.stringify(ALL_SHAPES.find(s => s.id === "dot"))); 
+              // توفير القطعة الصغيرة للإنقاذ
+              let rescueShape = { id: "dot", blocks: [[0,0]] };
               rescueShape.colorData = PALETTES[0]; rescueShape.size = PREVIEW_SIZE; rescueShape.gemType = null; rescueShape.gemBlockIndex = -1;
               hand[0] = rescueShape;
           }
@@ -475,12 +509,18 @@
       generateHand();
     };
 
+    window.restartCurrentMode = function() {
+      document.getElementById('lossControlBar').style.display="none"; document.getElementById('winModal').style.display="none"; isGameOverState=false; stopHeartbeatEngine();
+      if (gameMode === "classic") window.startGame("classic"); else window.startSpecificLevel(activeLevel);
+    };
+
     window.startSpecificLevel = function(lvl) {
       stopHeartbeatEngine();
       gameMode = "levels"; activeLevel = lvl; score = reviveCount = 0;
       gemsCollected = { red: 0, blue: 0, green: 0, yellow: 0, purple: 0 };
       bossSecondsElapsed = 0; inStrategicMode = false;
       draggedPiece = null;
+      predictedLines = { rows: [], cols: [] };
 
       currentConfig = getLevelConfiguration(lvl);
       grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
@@ -519,6 +559,8 @@
       gemsCollected = { red: 0, blue: 0, green: 0, yellow: 0, purple: 0 };
       grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
       draggedPiece = null;
+      predictedLines = { rows: [], cols: [] };
+      
       document.getElementById('startModal').style.display = "none"; 
       document.getElementById('winModal').style.display = "none";
       document.getElementById('lossControlBar').style.display = "none";
@@ -530,6 +572,7 @@
 
     function getCanvasCoords(e) {
       const rect = canvas.getBoundingClientRect();
+      if (!rect || rect.width === 0) return { x: 0, y: 0 };
       const scaleX = INTERNAL_W / rect.width; 
       const scaleY = INTERNAL_H / rect.height;
       const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
@@ -539,14 +582,14 @@
 
     function handleDown(e) {
       if(!gameLoopActive) return; window.initAudio(); const pos = getCanvasCoords(e);
-      let closest = null, minDist = 80;
+      let closest = null, minDist = 120; // تكبير مساحة التفاعل لتسهيل سحب القطع
       hand.forEach(p=>{ const w = (Math.max(...p.blocks.map(b=>b[1]))+1)*p.size, h = (Math.max(...p.blocks.map(b=>b[0]))+1)*p.size;
         const dist = Math.hypot(pos.x - (p.x+w/2), pos.y - (p.y+h/2));
         if(dist<minDist){ minDist=dist; closest=p; }
       });
       if(closest){ draggedPiece=closest; draggedPiece.size=CELL_SIZE; playSound('pickup'); triggerHaptic(15);
         dragOffsetX = ((Math.max(...draggedPiece.blocks.map(b=>b[1]))+1)*CELL_SIZE)/2;
-        dragOffsetY = ((Math.max(...draggedPiece.blocks.map(b=>b[0]))+1)*CELL_SIZE)+80;
+        dragOffsetY = ((Math.max(...draggedPiece.blocks.map(b=>b[0]))+1)*CELL_SIZE)+90; // رفع القطعة جيداً فوق الإصبع
         draggedPiece.x = pos.x - dragOffsetX; draggedPiece.y = pos.y - dragOffsetY;
         if(e.cancelable) e.preventDefault();
       }
@@ -554,6 +597,7 @@
     canvas.addEventListener("touchstart", handleDown, {passive:false});
     canvas.addEventListener("mousedown", handleDown);
 
+    // --- توهج المعاينة الذكي والشامل للصفوف والأعمدة ---
     function calculatePredictedLines(shape, targetR, targetC) {
       if (!shape || targetR === null || targetC === null) return { rows: [], cols: [] };
       const tempGrid = grid.map(row => row.map(cell => cell !== 0 ? 1 : 0));
@@ -579,7 +623,7 @@
       
       if (canPlace(draggedPiece, tr, tc)) {
         previewTarget = {r:tr, c:tc};
-        predictedLines = calculatePredictedLines(draggedPiece, tr, tc);
+        predictedLines = calculatePredictedLines(draggedPiece, tr, tc); // حساب التوهج لحظياً
       } else { 
         previewTarget = null; 
         predictedLines = { rows: [], cols: [] };
@@ -613,6 +657,7 @@
           const checkAndCollect = (cell, rx, ry) => {
             if (cell && cell.gem && gemsCollected[cell.gem] !== undefined) {
               gemsCollected[cell.gem]++;
+              // مؤثرات الانفجارات الجسيمية للمجوهرات
               for(let k=0; k<6; k++) {
                 particles.push({
                   x: GRID_OFFSET_X + rx * CELL_SIZE + CELL_SIZE/2,
@@ -635,6 +680,7 @@
           if (inStrategicMode) lineScore *= 2;
           score += lineScore;
 
+          // إضافة نص عائم مرئي للتحفيز
           floatingTexts.push({ text: lines > 1 ? `Combo x${lines}!` : "Great!", x: INTERNAL_W/2, y: GRID_OFFSET_Y + (tr * CELL_SIZE), alpha: 1.0 });
         } else {
           playSound('drop');
@@ -721,6 +767,7 @@
           let isGlow = predictedLines.rows.includes(r) || predictedLines.cols.includes(c);
           
           if(!grid[r][c]) {
+            // توهج الخلايا الفارغة في الصف أو العمود المتوقع تدميره
             ctx.fillStyle = isGlow ? "rgba(56, 189, 248, 0.5)" : "#0f172a";
             ctx.beginPath(); ctx.roundRect(x+1, y+1, CELL_SIZE-2, CELL_SIZE-2, 8); ctx.fill();
             if (isGlow) {
@@ -730,9 +777,10 @@
             }
           } else {
             draw3DBlock(x, y, CELL_SIZE, grid[r][c].colorData);
+            // توهج الخلايا الممتلئة التي سيتم تدميرها
             if (isGlow) {
               ctx.save();
-              ctx.fillStyle = "rgba(56, 189, 248, 0.4)";
+              ctx.fillStyle = "rgba(255, 255, 255, 0.4)"; // طبقة بيضاء لامعة
               ctx.beginPath(); ctx.roundRect(x+1, y+1, CELL_SIZE-2, CELL_SIZE-2, 8); ctx.fill();
               ctx.restore();
             }
@@ -755,6 +803,7 @@
       hand.forEach(p=>{ if(p!==draggedPiece) { p.blocks.forEach(([dr,dc],i)=>{ draw3DBlock(p.x+dc*p.size, p.y+dr*p.size, p.size, p.colorData); if(p.gemType&&p.gemBlockIndex===i){ ctx.fillStyle="#fff"; ctx.font=`${p.size*0.75}px system-ui`; ctx.textAlign="center"; ctx.fillText(GEM_ICONS[p.gemType], p.x+dc*p.size+p.size/2, p.y+dr*p.size+p.size*0.78); }}); }});
       if(draggedPiece) draggedPiece.blocks.forEach(([dr,dc],i)=>{ draw3DBlock(draggedPiece.x+dc*draggedPiece.size, draggedPiece.y+dr*draggedPiece.size, draggedPiece.size, draggedPiece.colorData); if(draggedPiece.gemType&&draggedPiece.gemBlockIndex===i){ ctx.fillStyle="#fff"; ctx.font=`${draggedPiece.size*0.75}px system-ui`; ctx.textAlign="center"; ctx.fillText(GEM_ICONS[draggedPiece.gemType], draggedPiece.x+dc*draggedPiece.size+draggedPiece.size/2, draggedPiece.y+dr*draggedPiece.size+draggedPiece.size*0.78); }});
 
+      // رسم وتحريك جسيمات الانفجارات
       particles.forEach((pt, idx) => {
         ctx.save();
         ctx.globalAlpha = pt.alpha;
@@ -769,16 +818,19 @@
         if (pt.alpha <= 0) particles.splice(idx, 1);
       });
 
+      // رسم وتحريك النصوص العائمة
       floatingTexts.forEach((ft, idx) => {
         ctx.save();
         ctx.globalAlpha = ft.alpha;
         ctx.fillStyle = "#38bdf8";
-        ctx.font = "900 26px system-ui";
+        ctx.font = "900 28px system-ui";
+        ctx.shadowColor = "#000";
+        ctx.shadowBlur = 8;
         ctx.textAlign = "center";
         ctx.fillText(ft.text, ft.x, ft.y);
         ctx.restore();
-        ft.y -= 1.2;
-        ft.alpha -= 0.03;
+        ft.y -= 1.5; // ارتفاع أسرع ليكون مرئياً
+        ft.alpha -= 0.02; // اختفاء أبطأ ليبقى مدة كافية
         if (ft.alpha <= 0) floatingTexts.splice(idx, 1);
       });
 
